@@ -16,6 +16,11 @@ struct Traits<LBOutput> {
 };
 
 template<>
+struct Traits<MigrationElement> {
+  const unsigned int AllocationBlock = 4;
+};
+
+template<>
 struct Traits<BasicInput> {
   typedef unsigned int Load;
 };

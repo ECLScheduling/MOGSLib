@@ -3,6 +3,7 @@
 
 // Load Balancer Output
 class LBOutput;
+class MigrationElement;
 
 // Load Balancer Input
 class BasicInput;
