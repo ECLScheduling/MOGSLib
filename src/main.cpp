@@ -5,6 +5,10 @@
 typedef NaiveBasicInput::Load Load;
 typedef NaiveBasicInput::LoadArray LoadArray;
 
+/**
+ * This main is temporary and only usable while no test libraries are added to the project. DO NOT ADD any relevant code here.
+ * TODO: add a test library to make things the right way :D
+ */
 int main() {
   const unsigned int peCount = 4;
   const unsigned int taskCount = 4;
