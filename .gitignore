@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+
+# Makefile's created dependencies
+bin/
+.deps/
