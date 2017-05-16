@@ -9,6 +9,7 @@
 class BasicInput {
 public:
   typedef Traits<BasicInput>::Load Load;
+  typedef Traits<BasicInput>::TaskId TaskId;
 
   /**
    * @return The number of PE (processing units) in the environment.
@@ -26,6 +27,13 @@ public:
    * @return The task's load.
    */
   virtual const Load& getTaskLoad(const unsigned long &index) const = 0;
+
+  /**
+   * @param index The index of the task.
+   * @return Get the task id in the index.
+   */
+  virtual const TaskId& getTaskId(const unsigned long &index) const = 0;
+
 };
 
 #endif

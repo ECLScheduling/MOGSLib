@@ -10,6 +10,7 @@ struct Traits {};
 template<>
 struct Traits<BasicInput> {
   typedef unsigned int Load;
+  typedef unsigned int TaskId;
 };
 
 #endif

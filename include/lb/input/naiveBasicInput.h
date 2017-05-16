@@ -3,14 +3,15 @@
 
 #include <lb/input/basicInput.h>
 #include <memory>
+#include <vector>
 
 /**
  * This class serves as the implementation of a load balancer's input which only contains the simplest information available, the number of PEs and each task's load.
  */
 class NaiveBasicInput : public BasicInput {
 public:
-  typedef std::shared_ptr<const Load> LoadArrayConst;
-  typedef std::shared_ptr<Load> LoadArray;
+  typedef std::shared_ptr<std::vector<TaskId> > TaskIdSetPtr;
+  typedef std::shared_ptr<std::vector<Load> > TaskLoadSetPtr;
 
 protected:
 
@@ -27,7 +28,12 @@ protected:
   /**
    * The array of task's load.
    */
-  const LoadArrayConst _taskLoads;
+  const TaskLoadSetPtr _taskLoads;
+
+  /**
+   * The array of task's id.
+   */
+  const TaskIdSetPtr _taskIds;
 
 public:
 
@@ -37,7 +43,7 @@ public:
    * @param taskCount The number of tasks in the environment.
    * @param taskLoads The load of each task in the environment.
    */
-  NaiveBasicInput(const unsigned int &peCount, const unsigned int &taskCount, const LoadArrayConst taskLoads ) : _peCount(peCount), _taskCount(taskCount) , _taskLoads(taskLoads){}
+  NaiveBasicInput(const unsigned int &peCount, const unsigned int &taskCount, const TaskLoadSetPtr taskLoads, const TaskIdSetPtr taskIds  ) : _peCount(peCount), _taskCount(taskCount) , _taskLoads(taskLoads), _taskIds(taskIds){}
 
   /**
    * @return Get the ammount of processing elements in this input.
@@ -51,9 +57,15 @@ public:
 
   /**
    * @param index the index of a specific task.
-   * @return Get a task's load value, which is identified by it's index.
+   * @return Get a task's load value, which is identified by it's element index.
    */
-  inline const BasicInput::Load& getTaskLoad(const unsigned long &index) const { return _taskLoads.get()[index]; } 
+  inline const BasicInput::Load& getTaskLoad(const unsigned long &index) const;
+
+  /**
+   * @param index the index of a specific task.
+   * @return Get a task's id value, which is identified by it's element index.
+   */
+  inline const TaskId& getTaskId(const unsigned long &index) const;
 };
 
 #endif
