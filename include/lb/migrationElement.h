@@ -1,5 +1,4 @@
-#ifndef __MIGRATION_ELEMENT_H__
-#define __MIGRATION_ELEMENT_H__
+#pragma once
 
 #include <system/traits.h>
 #include <vector>
@@ -17,14 +16,13 @@ protected:
    * The property array "taskId" of the migrations.
    */
   std::vector<Id> _taskId;
-  
   /**
    * The property array "peId" (Processing Element Id) of the migrations.
    */
   std::vector<Id> _peId;
 
 public:
-  
+
   /**
    * @return The number of migration elements.
    */
@@ -32,12 +30,12 @@ public:
 
   /**
    * Adds a new migration element to the Migration's set.
-   * @note TODO: This method must be thread-safe 
+   * @note TODO: This method must be thread-safe
    * @param taskId The taskId which will be migrated.
    * @param peId The peId which will be migrated.
    */
   void setMigration(const Id &taskId, const Id &peId);
-  
+
   /**
    * Get the taskId of a migration by it's index.
    * @param index The index of the queried migration.
@@ -57,4 +55,3 @@ public:
   const Id peId(const IndexType &index) const;
 };
 
-#endif

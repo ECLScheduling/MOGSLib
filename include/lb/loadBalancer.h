@@ -1,5 +1,4 @@
-#ifndef __LOAD_BALANCER_H__
-#define __LOAD_BALANCER_H__
+#pragma once
 
 #include <lb/migrationElement.h>
 #include <memory>
@@ -19,7 +18,7 @@ protected:
   MigrationElement lbOutput;
 
 public:
-  
+
   /**
    * The main entrypoint for every load balancer.
    * @param input The LB's relevant input about the environment, architecture and tasks.
@@ -28,4 +27,3 @@ public:
   virtual const MigrationElement& work(const std::weak_ptr<const LBInput> input) const = 0;
 };
 
-#endif

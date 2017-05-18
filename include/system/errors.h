@@ -1,5 +1,4 @@
-#ifndef __ERRORS_H__
-#define __ERRORS_H__
+#pragma once
 
 #include <string>
 
@@ -12,4 +11,3 @@ namespace Error {
   const std::string INPUT_OUT_OF_BOUNDS = "Input data array tried to be accessed out of bounds.";
 }
 
-#endif
