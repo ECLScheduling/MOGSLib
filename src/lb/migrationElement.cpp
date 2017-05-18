@@ -1,7 +1,7 @@
 #include <lb/migrationElement.h>
 #include <system/errors.h>
 
-void MigrationElement::setMigration(const unsigned int &taskId, const unsigned int &peId) {
+void MigrationElement::setMigration(const MigrationElement::Id &taskId, const MigrationElement::Id &peId) {
   //TODO: if concurrent, lock
   const IndexType index = _taskId.size() + 1;
   //TODO: if concurrent, unlock
@@ -10,7 +10,7 @@ void MigrationElement::setMigration(const unsigned int &taskId, const unsigned i
   _peId[index] = peId;
 }
 
-const unsigned int MigrationElement::taskId(const MigrationElement::IndexType &index) const {
+const MigrationElement::Id MigrationElement::taskId(const MigrationElement::IndexType &index) const {
 
   if(index >= _taskId.size()) {
     throw Error::MIGRATION_OUT_OF_BOUNDS;
@@ -18,7 +18,7 @@ const unsigned int MigrationElement::taskId(const MigrationElement::IndexType &i
   return _taskId[index];
 }
 
-const unsigned int MigrationElement::peId(const MigrationElement::IndexType &index) const {
+const MigrationElement::Id MigrationElement::peId(const MigrationElement::IndexType &index) const {
 
   if(index >= _peId.size()) {
     throw Error::MIGRATION_OUT_OF_BOUNDS;
