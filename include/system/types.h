@@ -1,5 +1,4 @@
-#ifndef __TYPES_H__
-#define __TYPES_H__
+#pragma once
 
 // Load Balancer Output
 class MigrationElement;
@@ -7,4 +6,3 @@ class MigrationElement;
 // Load Balancer Input
 class BasicInput;
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef __NAIVE_BASIC_INPUT_H__
-#define __NAIVE_BASIC_INPUT_H__
+#pragma once
 
 #include <lb/input/basicInput.h>
 #include <memory>
@@ -19,12 +18,12 @@ protected:
    * The processing element count in the environment.
    */
   const unsigned int _peCount;
-  
+
   /**
    * The task count in the environment.
    */
   const unsigned int _taskCount;
-  
+
   /**
    * The array of task's load.
    */
@@ -49,7 +48,7 @@ public:
    * @return Get the ammount of processing elements in this input.
    */
   inline const unsigned int& getPECount() const { return _peCount; }
-  
+
   /**
    * @return Get the ammount of tasks in this input.
    */
@@ -68,4 +67,3 @@ public:
   inline const TaskId& getTaskId(const unsigned long &index) const;
 };
 
-#endif

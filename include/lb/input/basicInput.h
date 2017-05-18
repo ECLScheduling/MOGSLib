@@ -1,5 +1,4 @@
-#ifndef __BASIC_INPUT_H__
-#define __BASIC_INPUT_H__
+#pragma once
 
 #include <system/traits.h>
 
@@ -36,4 +35,3 @@ public:
 
 };
 
-#endif

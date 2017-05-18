@@ -1,5 +1,4 @@
-#ifndef __GREEDY_LB_H__
-#define __GREEDY_LB_H__
+#pragma once
 
 #include <lb/loadBalancer.h>
 
@@ -10,4 +9,3 @@ public:
   const MigrationElement& work(const std::weak_ptr<const BasicInput> input) const { return lbOutput; }
 };
 
-#endif
