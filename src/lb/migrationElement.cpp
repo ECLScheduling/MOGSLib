@@ -24,7 +24,7 @@ const MigrationElement::Id MigrationElement::getTaskPE(const MigrationElement::I
 
   auto PEOfTask = _taskToPe.find(id);
   if(PEOfTask == _taskToPe.end() )
-    throw Error::MIGRATION_OUT_OF_BOUNDS;
+    throw Error::MIGRATION_INVALID_TASK;
 
   return PEOfTask->second;
 }

@@ -15,9 +15,9 @@ struct Traits<BasicInput> {
   typedef uint_fast32_t Load;
 
   /**
-   * The type definition that will serve to identify tasks for the BasicInput class.
+   * The type definition that will serve to identify tasks and PEs for the BasicInput class.
    */
-  typedef uint_fast32_t TaskId;
+  typedef uint_fast32_t Id;
 };
 
 template<>
