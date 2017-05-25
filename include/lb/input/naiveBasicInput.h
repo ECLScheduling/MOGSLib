@@ -9,8 +9,8 @@
  */
 class NaiveBasicInput : public BasicInput {
 public:
-  typedef std::shared_ptr<std::vector<TaskId> > TaskIdSetPtr;
-  typedef std::shared_ptr<std::vector<Load> > TaskLoadSetPtr;
+  typedef &std::vector<TaskId> TaskIdSetPtr;
+  typedef &std::vector<Load> TaskLoadSetPtr;
 
 protected:
 

@@ -13,45 +13,36 @@ public:
   
 protected:
   /**
-   * The property array "taskId" of the migrations.
+   * A map of task's Ids to PE's ids.
    */
-  std::vector<Id> _taskId;
-  /**
-   * The property array "peId" (Processing Element Id) of the migrations.
-   */
-  std::vector<Id> _peId;
+  std::map<Id, Id> _taskToPe;
 
 public:
 
   /**
    * @return The number of migration elements.
    */
-  inline const Id count() const { return _taskId.size(); }
+  inline const IndexType count() const { return _taskToPe.size(); }
 
   /**
    * Adds a new migration element to the Migration's set.
-   * @note TODO: This method must be thread-safe
    * @param taskId The taskId which will be migrated.
    * @param peId The peId which will be migrated.
    */
-  void setMigration(const Id &taskId, const Id &peId);
+  void set(const Id &taskId, const Id &peId);
 
   /**
-   * Get the taskId of a migration by it's index.
-   * @param index The index of the queried migration.
-   * @throw MIGRATION_OUT_OF_BOUNDS if tried to access a migration beyond the list limits.
-   * @note This method is by design thread-unsafe when insertions are happening at the same time.
-   * @return The taskId of a migration.
+   * Get the taskIds that will need to be migrated.
+   * @return The taskIds of the tasks that needs migration.
    */
-  const Id taskId(const IndexType &index) const;
+  const std::vector<Id> mappedTasks() const;
 
   /**
-   * Get the peId of a migration by it's index.
-   * @param index The index of the queried migration.
-   * @throw MIGRATION_OUT_OF_BOUNDS if tried to access a migration beyond the list limits.
-   * @note This method is by design thread-unsafe when insertions are happening at the same time.
-   * @return The peId of a migration.  
+   * Get the peId of a task that will migrate.
+   * @param id The id of the task that will migrate.
+   * @throw MIGRATION_TASK_INEXISTENT if tried to access a migration that is not contained in the list.
+   * @return The target peId of a task migration. 
    */  
-  const Id peId(const IndexType &index) const;
+  const Id getTaskPE(const Id &id) const;
 };
 
