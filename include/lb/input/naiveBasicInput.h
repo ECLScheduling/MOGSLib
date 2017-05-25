@@ -29,6 +29,8 @@ public:
    */
   NaiveBasicInput(const std::set<Id> &peIds, const std::map<Id, Load> &tasks) : _PEs(peIds), _tasks(tasks) {}
 
+  virtual ~NaiveBasicInput() {}
+
   /**
    * @return All the PEs Ids.
    */
