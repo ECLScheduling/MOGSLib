@@ -9,7 +9,6 @@
  */
 template<typename LBInput>
 class LoadBalancer {
-
 protected:
 
   /**
@@ -24,6 +23,15 @@ public:
    * @param input The LB's relevant input about the environment, architecture and tasks.
    * @return The result task mapping given by the load balancer.
    */
-  virtual const MigrationElement& work(const std::weak_ptr<const LBInput> input) const = 0;
+  const MigrationElement& work(const LBInput &input) {
+    doWork(input);
+    return lbOutput;
+  }
+
+  /**
+   * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
+   * @param input The Load Balancer's input
+   */
+  virtual void doWork(const LBInput &input) {}
 };
 
