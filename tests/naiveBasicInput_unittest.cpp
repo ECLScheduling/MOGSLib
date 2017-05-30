@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include <lb/input/naiveBasicInput.h>
-#include <iostream>
 
 typedef NaiveBasicInput::Id Id;
 typedef NaiveBasicInput::Load Load;
+
 
 /**
  * This test fixture is for declaring the common structures between the NaiveBasicInput's test fixtures.
@@ -31,6 +31,7 @@ protected:
   }
 };
 
+
 /**
  * This test fixture is for testing the NaiveBasicInput when it is empty. This fixture is not meant to stress test the input class.
  */
@@ -43,6 +44,7 @@ protected:
   }
 
 };
+
 
 /**
  * This test fixture is for testing the NaiveBasicInput most simple features in the system. This fixture is not meant to stress test the input class.
@@ -71,7 +73,6 @@ protected:
 // Re-declaration of this static fixture variable so it can be seen by the compiler.
 const Load NonEmptyNaiveBasicInputTest::defaultTaskLoad;
 
-
 TEST_F(EmptyNaiveBasicInputTest, shouldReturnAnEmptySetOfTaskIds) {
 
   auto expected = 0;
@@ -92,6 +93,7 @@ TEST_F(EmptyNaiveBasicInputTest, shouldThrowExceptionWhenTryingToFetchATaskLoad)
 }
 
 TEST_F(NonEmptyNaiveBasicInputTest, shouldContain1PEWhenTheSetOfPEsHasSize1) {
+
   addPE();
   createInputObject();
 
@@ -99,6 +101,7 @@ TEST_F(NonEmptyNaiveBasicInputTest, shouldContain1PEWhenTheSetOfPEsHasSize1) {
   auto actual = input->getPEsIds().size();
 
   ASSERT_EQ(expected, actual) << "The input should contain " << expected << " PEs, but had " << actual << ".";
+
 }
 
 TEST_F(NonEmptyNaiveBasicInputTest, shouldContain1TaskIfTaskSetHasSize1) {
