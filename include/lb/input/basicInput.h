@@ -10,11 +10,12 @@ class BasicInput {
 public:
   typedef Traits<BasicInput>::Load Load;
   typedef Traits<BasicInput>::Id Id;
+  typedef Traits<BasicInput>::SetOfId SetOfId;
 
   /**
    * @return All the PEs Ids.
    */
-  virtual const std::set<Id> &getPEsIds() const = 0;
+  virtual const SetOfId &getPEsIds() const = 0;
 
   /**
    * Method to obtain a specific task's load.
@@ -27,7 +28,7 @@ public:
    * Get the task's set of ids.
    * @return Get all the task's ids.
    */
-  virtual const std::set<Id> getTasksIds() const = 0;
+  virtual const SetOfId getTasksIds() const = 0;
 
 };
 

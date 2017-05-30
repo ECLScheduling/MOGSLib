@@ -10,4 +10,3 @@ namespace Error {
 
   const std::string INVALID_INPUT_ACCESS = "Tried to access an input with an invalid identified.";
 }
-
