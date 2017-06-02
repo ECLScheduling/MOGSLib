@@ -32,5 +32,5 @@ struct Traits<BasicInput> : Traits<MigrationElement> {
   /**
    * Type definition of the structure used to represent the task set in the NaiveBasicInput.
    */
-  typedef std::map<Id, Load> TaskMap;
+  typedef std::map<Id, Load> LoadMap;
 };
