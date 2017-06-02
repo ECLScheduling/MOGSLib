@@ -32,3 +32,19 @@ public:
 
 };
 
+/**
+ * The abstract class that extends the basic input with an additional starting load information.
+ */
+class WithStartingLoad {
+  typedef BasicInput::Load Load;
+  typedef BasicInput::Id Id;
+
+public:
+
+  /**
+   * Method to get an initial PE Load.
+   * @param peId The id of the PE in the system.
+   * @return The Load of the PE.
+   */
+  virtual const Load& getPELoad(const Id &peId) const = 0;
+};
