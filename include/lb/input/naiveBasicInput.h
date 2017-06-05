@@ -1,7 +1,7 @@
 #pragma once
 
 #include <lb/input/basicInput.h>
-
+#include <system/errors.h>
 
 /**
  * A class that envelops the functionality of accessing a map of Task's id to their load value. 
@@ -57,7 +57,7 @@ public:
    * @param peIds A set of ids to identify each PE in the system.
    * @param tasks A map linking an id to a load, representing the tasks in the system.
    */
-  NaiveBasicInput(const SetOfId &peIds, const LoadMap &tasks) : _PEs(pesIds), BasicInputTaskContainer(tasks) {}
+  NaiveBasicInput(const LoadMap &tasks, const SetOfId &peIds) : BasicInputTaskContainer(tasks), _PEs(peIds) {}
 
   virtual ~NaiveBasicInput() {}
 

@@ -4,7 +4,6 @@
 typedef NaiveBasicInput::Id Id;
 typedef NaiveBasicInput::Load Load;
 
-
 /**
  * This test fixture is for declaring the common structures between the NaiveBasicInput's test fixtures.
  */
@@ -27,7 +26,7 @@ protected:
   }
 
   void createInputObject() {
-    input = new NaiveBasicInput(*peIds, *tasks);
+    input = new NaiveBasicInput(*tasks, *peIds);
   }
 };
 

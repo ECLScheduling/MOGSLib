@@ -8,7 +8,7 @@
 class GreedyLBTest : public ::testing::Test {
 protected: 
   typedef NaiveBasicInput::SetOfId SetOfId;
-  typedef NaiveBasicInput::TaskMap TaskMap;
+  typedef NaiveBasicInput::LoadMap LoadMap;
   typedef NaiveBasicInput::Load Load;
   typedef NaiveBasicInput::Id Id;
 
@@ -16,7 +16,7 @@ protected:
   NaiveBasicInput *basicInput;
   MigrationElement output;
 
-  TaskMap taskMap;
+  LoadMap taskMap;
   SetOfId peSet;
 
   virtual void SetUp() {
@@ -36,7 +36,7 @@ protected:
   }
 
   void createInput() {
-    basicInput = new NaiveBasicInput(peSet, taskMap);
+    basicInput = new NaiveBasicInput(taskMap, peSet);
   }
 
   void work() {
