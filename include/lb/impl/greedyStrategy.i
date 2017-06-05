@@ -2,8 +2,6 @@
 // Implementation of the GreedyStrategy methods.
 // #############################################
 
-#include <iostream>
-
 template<typename InputType>
 inline void GreedyStrategy<InputType, true>::createPEHeap(const InputType &input) {
   auto peIdSet = input.getPEsIds();
@@ -34,6 +32,7 @@ void GreedyStrategy<InputType, true>::doWork(const InputType &input) {
     return;
 
   // Main greedy strategy loop.
+
   while(!tasks.empty()) {
     const LoadBearer task = tasks.top();
     const LoadBearer PE = PEs.top();
