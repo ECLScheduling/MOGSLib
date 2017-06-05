@@ -1,10 +1,9 @@
-#include <lb/input/naiveBasicInput.h>
+#include <lb/input/naiveBasicInputInitialLoad.h>
+#include <lb/impl/greedyStrategy.h>
 
 /**
- * This main is temporary and only usable while no test libraries are added to the project. DO NOT ADD any relevant code here.
- * TODO: add a test library to make things the right way :D
+ * This main is temporary and only usable to probe for compilation errors as the third-party makefile only compiles the files which are dependencies of the main file.
  */
 int main() {
-  //TODO: test the new nativeBasicInput API
   return 0;
 }
