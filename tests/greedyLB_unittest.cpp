@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <lb/impl/greedyLB.h>
+#include <lb/impl/greedyStrategy.h>
 #include <lb/input/naiveBasicInput.h>
 
 /**
@@ -12,7 +12,7 @@ protected:
   typedef NaiveBasicInput::Load Load;
   typedef NaiveBasicInput::Id Id;
 
-  GreedyLB<NaiveBasicInput> loadBalancer;
+  GreedyStrategy<NaiveBasicInput> loadBalancer;
   NaiveBasicInput *basicInput;
   MigrationElement output;
 
