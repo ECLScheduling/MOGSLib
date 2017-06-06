@@ -23,8 +23,8 @@ public:
    * @param input The LB's relevant input about the environment, architecture and tasks.
    * @return The result task mapping given by the load balancer.
    */
-  const MigrationElement& work(const LBInput &input) {
-    doWork(input);
+  const MigrationElement& mapTasks(const LBInput &input) {
+    doTaskMapping(input);
     return lbOutput;
   }
 
@@ -32,6 +32,6 @@ public:
    * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
    * @param input The Load Balancer's input
    */
-  virtual void doWork(const LBInput &input) {}
+  virtual void doTaskMapping(const LBInput &input) {}
 };
 

@@ -9,8 +9,8 @@ const BasicInput::SetOfId NaiveBasicInputInitialLoad::getAllKeysFromLoadMap(cons
   return retVal;
 }
 
-const BasicInput::Load &NaiveBasicInputInitialLoad::getPELoad(const Id &peId) const {
-  auto mapIt = _PEs.find(peId);
+const BasicInput::Load &NaiveBasicInputInitialLoad::getPELoad(const Id &PEId) const {
+  auto mapIt = _PEs.find(PEId);
 
   if(mapIt == _PEs.end()) {
     throw Error::INVALID_INPUT_ACCESS;

@@ -37,7 +37,7 @@ public:
    * @param peId The id of the PE in the system.
    * @return The Load of the PE.
    */
-  const Load& getPELoad(const Id &peId) const;
+  const Load& getPELoad(const Id &PEId) const;
 
 protected:
   

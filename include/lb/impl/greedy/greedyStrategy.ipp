@@ -21,7 +21,7 @@ inline void GreedyStrategy<InputType, true>::createTaskHeap(const InputType &inp
 }
 
 template<typename InputType>
-void GreedyStrategy<InputType, true>::doWork(const InputType &input) {
+void GreedyStrategy<InputType, true>::doTaskMapping(const InputType &input) {
 
   // Create the heap data structures used by the strategy
   createPEHeap(input);
@@ -43,19 +43,5 @@ void GreedyStrategy<InputType, true>::doWork(const InputType &input) {
     PEs.push(LoadBearer(PE.id, PE.load + task.load));
 
     this->lbOutput.set(task.id, PE.id);
-  }
-}
-
-// #############################################
-// Implementation of the GreedyStrategyInitialLoad methods.
-// #############################################
-
-template<typename InputType>
-void GreedyInitialLoadStrategy<InputType, true>::createPEHeap(const InputType &input) {
-  auto peIdSet = input.getPEsIds();
-
-  this->PEs = MinHeap();
-  for(auto it = peIdSet.begin(); it != peIdSet.end(); ++it) {
-    this->PEs.push(LoadBearer(*it, input.getPELoad(*it)));
   }
 }
