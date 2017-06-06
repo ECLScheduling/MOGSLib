@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <lb/impl/greedyStrategy.h>
+#include <lb/impl/greedy/greedyStrategyInitialLoad.h>
 #include <lb/input/naiveBasicInputInitialLoad.h>
 
 // ###########################################
@@ -21,7 +21,7 @@ protected:
   MigrationElement output;
 
   LoadMap taskMap;
-  SetOfId peSet;
+  SetOfId PESet;
 
   virtual void SetUp() {
   }
@@ -36,15 +36,15 @@ protected:
   }
 
   void addPE(const Id &id) {
-    peSet.insert(id);
+    PESet.insert(id);
   }
 
   void createInput() {
-    basicInput = new NaiveBasicInput(taskMap, peSet);
+    basicInput = new NaiveBasicInput(taskMap, PESet);
   }
 
   void work() {
-    output = loadBalancer.work(*basicInput);  
+    output = loadBalancer.mapTasks(*basicInput);  
   }
 };
 
@@ -147,7 +147,7 @@ protected:
   MigrationElement output;
 
   LoadMap tasks;
-  LoadMap pes;
+  LoadMap PEs;
 
   virtual void SetUp() {
   }
@@ -162,15 +162,15 @@ protected:
   }
 
   void addPE(const Id &id, const Load &load) {
-    pes[id] = load;
+    PEs[id] = load;
   }
 
   void createInput() {
-    input = new NaiveBasicInputInitialLoad(tasks, pes);
+    input = new NaiveBasicInputInitialLoad(tasks, PEs);
   }
 
   void work() {
-    output = loadBalancer.work(*input);  
+    output = loadBalancer.mapTasks(*input);  
   }
 
 };

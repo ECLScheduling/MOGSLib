@@ -15,14 +15,14 @@ protected:
   /**
    * A map of task's Ids to PE's ids.
    */
-  std::map<Id, Id> _taskToPe;
+  std::map<Id, Id> _taskToPE;
 
 public:
 
   /**
    * @return The number of migration elements.
    */
-  inline const IndexType count() const { return _taskToPe.size(); }
+  inline const IndexType count() const { return _taskToPE.size(); }
 
   /**
    * Adds a new migration element to the Migration's set.
