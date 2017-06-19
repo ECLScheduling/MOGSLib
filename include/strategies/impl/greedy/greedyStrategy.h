@@ -1,7 +1,7 @@
 #pragma once
 
-#include <lb/loadBalancer.h>
-#include <lb/input/basicInput.h>
+#include <strategies/loadBalancer.h>
+#include <strategies/input/basicInput.h>
 #include <queue>
 
 

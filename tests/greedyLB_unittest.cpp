@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <lb/impl/greedy/greedyStrategyInitialLoad.h>
-#include <lb/input/naiveBasicInputInitialLoad.h>
+#include <strategies/impl/greedy/greedyStrategyInitialLoad.h>
+#include <strategies/input/naiveBasicInputInitialLoad.h>
 
 // ###########################################
 // Tests using the GreedyStrategyTest Fixture.

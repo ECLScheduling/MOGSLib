@@ -1,6 +1,6 @@
 #pragma once
 
-#include <lb/impl/greedy/greedyStrategy.h>
+#include "greedyStrategy.h"
 
 // ###########################################
 // GreedyStrategyInitialLoad concept definition.

@@ -1,10 +1,7 @@
-#include <lb/input/naiveBasicInput.h>
+#include <strategies/input/basicInputTaskContainer.h>
+#include <system/errors.h>
 
-const NaiveBasicInput::SetOfId &NaiveBasicInput::getPEsIds() const {
-  return _PEs;
-}
-
-const BasicInputTaskContainer::Load& BasicInputTaskContainer::getTaskLoad(const NaiveBasicInput::Id &taskId) const {
+const BasicInputTaskContainer::Load& BasicInputTaskContainer::getTaskLoad(const BasicInputTaskContainer::Id &taskId) const {
   auto mapIt = _tasks.find(taskId);
 
   if(mapIt == _tasks.end()) {
@@ -16,7 +13,7 @@ const BasicInputTaskContainer::Load& BasicInputTaskContainer::getTaskLoad(const 
 
 //TODO: If this method is called multiple times, it should be buffered or saved to avoid calculating the same set over and over.
 const BasicInputTaskContainer::SetOfId BasicInputTaskContainer::getTasksIds() const {
-  NaiveBasicInput::SetOfId taskIdSet;
+  BasicInputTaskContainer::SetOfId taskIdSet;
 
   for(auto const& element : _tasks)
     taskIdSet.insert(element.first);

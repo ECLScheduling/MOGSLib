@@ -36,7 +36,7 @@ public:
   }
 
   /**
-   * A comparator for vertices that compares two vertices by their weight.
+   * A comparator that evaluates two vertices by their weight.
    */
   const bool operator <(const EdgelessVertex &v) const {
     return _weight < v.weight();
@@ -75,7 +75,7 @@ public:
   /**
    * @return The last saved weight value for the graph.
    */
-  inline const Weight& weight() {
+  inline const Weight weight() const {
     return weightBuffer;
   }
 
@@ -106,6 +106,13 @@ public:
    */
   inline const unsigned int verticesSize() const {
     return _vertices.size();
+  }
+
+  /**
+   * A comparator that evaluate two graphs by their weight.
+   */
+  const bool operator <(const EdgelessGraph &g) const {
+    return weightBuffer < g.weight();
   }
 
 };

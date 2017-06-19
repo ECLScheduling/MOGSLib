@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <lb/impl/penalizedGraph/penalizedGraphAlgorithm.h>
-#include <lb/impl/penalizedGraph/edgelessGraph.h>
+#include <strategies/impl/penalizedGraph/penalizedGraphAlgorithm.h>
+#include <structures/edgelessGraph.h>
 #include <memory>
 
 typedef EdgelessGraph::Weight Weight;

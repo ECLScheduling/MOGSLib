@@ -1,6 +1,6 @@
 #pragma once
 
-#include <lb/input/naiveBasicInput.h>
+#include "naiveBasicInput.h"
 
 /**
  * A concrete BasicInput class that also offers the starting load capability information.

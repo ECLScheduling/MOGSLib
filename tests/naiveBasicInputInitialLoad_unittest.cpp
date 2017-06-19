@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <lb/input/naiveBasicInputInitialLoad.h>
+#include <strategies/input/naiveBasicInputInitialLoad.h>
 
 typedef NaiveBasicInputInitialLoad::Id Id;
 typedef NaiveBasicInputInitialLoad::Load Load;

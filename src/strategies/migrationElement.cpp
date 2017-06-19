@@ -1,4 +1,4 @@
-#include <lb/migrationElement.h>
+#include <strategies/migrationElement.h>
 #include <system/errors.h>
 #include <iostream>
 

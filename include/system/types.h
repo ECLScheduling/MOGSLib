@@ -4,7 +4,7 @@
 class MigrationElement;
 
 // Load Balancer Input
-class BasicInput;
+#include <strategies/input/_inputTypes.h>
 
 // Load Balancer Data structures
-class EdgelessGraph;
+#include <structures/_structureTypes.h>

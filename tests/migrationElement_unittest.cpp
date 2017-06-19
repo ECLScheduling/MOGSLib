@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <lb/migrationElement.h>
+#include <strategies/migrationElement.h>
 
 class MigrationElementTest : public ::testing::Test {
 protected: 

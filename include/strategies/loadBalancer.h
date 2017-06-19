@@ -1,6 +1,6 @@
 #pragma once
 
-#include <lb/migrationElement.h>
+#include "migrationElement.h"
 #include <memory>
 #include <system/traits.h>
 

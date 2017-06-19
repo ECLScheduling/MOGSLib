@@ -1,4 +1,4 @@
-#include <lb/input/naiveBasicInputInitialLoad.h>
+#include <strategies/input/naiveBasicInputInitialLoad.h>
 
 const BasicInput::SetOfId NaiveBasicInputInitialLoad::getAllKeysFromLoadMap(const LoadMap &loadMap) const {
   BasicInput::SetOfId retVal = BasicInput::SetOfId();
