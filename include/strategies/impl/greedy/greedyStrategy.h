@@ -1,6 +1,6 @@
 #pragma once
 
-#include <strategies/loadBalancer.h>
+#include <strategies/abstractStrategy.h>
 #include <strategies/input/basicInput.h>
 #include <queue>
 
@@ -25,7 +25,7 @@ struct GreedyStrategyConcept {
  * Template class used to generate a static type-error when the GreedyStrategy tries to be used with a class that is not child of it's input requires.
  */
 template<typename InputType, bool = GreedyStrategyConcept<InputType>::Conforms >
-class GreedyStrategy : public LoadBalancer<InputType> {
+class GreedyStrategy : public AbstractStrategy<InputType> {
   static_assert(GreedyStrategyConcept<InputType>::Conforms, "The GreedyStrategy 'InputType' must inherit from the baseclass 'BasicInput'.");
 };
 
@@ -33,7 +33,7 @@ class GreedyStrategy : public LoadBalancer<InputType> {
  * Class that implements a greedy trategy to load balancing using the most basic form of input.
  */
 template<typename InputType>
-class GreedyStrategy<InputType, true> : public LoadBalancer<InputType> {
+class GreedyStrategy<InputType, true> : public AbstractStrategy<InputType> {
 public:
   typedef BasicInput::Id Id;
   typedef BasicInput::Load Load;

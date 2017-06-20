@@ -9,7 +9,7 @@
 class EdgelessVertex {
 public:
 
-  typedef Traits<EdgelessGraph>::Weight Weight;
+  typedef Traits<EdgelessVertex>::Weight Weight;
 
 protected:
 

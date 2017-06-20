@@ -3,11 +3,11 @@
 #include "penalizedGraphAlgorithm.h"
 #include <system/types>
 
-#include <../greedy/greedyAlgorithm.h>
-#include <strategy/loadBalancer.h>
+#include <strategy/abstractStrategy.h>
+#include <strategy/impl/greedy/greedyAlgorithm.h>
 
 template<typename Graph = EdgelessGraph, typename Vertex = EdgelessVertex, typename Weight = EdgelessGraph::Weight, typename InputType = NaiveBasicInput>
-class GreedyPenalizedGraphStrategy : public LoadBalancer<InputType> {
+class GreedyPenalizedGraphStrategy : public AbstractStrategy<InputType> {
 
 public:
   typedef GreedyLoadBalancerAlgorithm<Vertex, Graph>  GreedyAlgorithm;

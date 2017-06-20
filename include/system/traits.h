@@ -4,43 +4,96 @@
 #include <cstdint>
 #include <map>
 #include <set>
+#include <queue>
+
+//#########################
+// Global Traits
+//#########################
 
 template<typename T>
-struct Traits {};
-
-template<>
-struct Traits<MigrationElement> {
+struct Traits {
   
   /**
-   * The type definition that will serve to identify tasks and PEs of the system for the MigrationElement class.
+   * The type definition that will serve to identify tasks and PEs of the system inside the framework.
    */
   typedef uint_fast32_t Id;
 
   /**
-   * The type definition that will serve to quantify a task's load value for the BasicInput class.
+   * The type definition that will serve to quantify a task's load value for the framework.
    */
   typedef uint_fast32_t Load;
 };
 
+//#########################
+// Input Traits
+//#########################
+
 template<>
-struct Traits<BasicInput> : Traits<MigrationElement> {
+struct Traits<BasicInput> : Traits<void> {
 
   /**
-   * Type definition of the structure used to represent the set of processing elements in the NaiveBasicInput.
+   * Type definition of the structure used to represent the set of processing elements in the BasicInput.
    */
   typedef std::set<Id> SetOfId;
 
   /**
-   * Type definition of the structure used to represent the task set in the NaiveBasicInput.
+   * Type definition of the structure used to represent the task set in the BasicInput.
    */
   typedef std::map<Id, Load> LoadMap;
 };
 
+//#########################
+// Structure Traits
+//#########################
+
 template<>
-struct Traits<EdgelessGraph> : Traits<MigrationElement> {
+struct Traits<EdgelessVertex> : Traits<void> {
 
   /**
-   * Type definition of the weight of a vertex and graph for this tructure.
+   * Type definition of the weight of a vertex and graph for this structure.
    */
-  typedef uint_fast32_t Weight;
+  typedef Load Weight;
+};
+
+
+//#########################
+// Algorithms default Traits
+//#########################
+
+template<typename Task, typename PE>
+struct GreedyStrategyAlgorithmTraits : Traits<void> {
+  /**
+   * Internal Helper struct to be used as the max-heap comparator.
+   */
+  struct MaxHeapComparator {
+    inline bool operator ()(const Task &a, const Task &b) const {
+      return a < b;
+    }
+  };
+
+  /**
+   * Internal Helper struct to be used as the min-heap comparator.
+   */
+  struct MinHeapComparator {
+    inline bool operator ()(const PE &a, const PE &b) const {
+      return a > b;
+    }
+  };
+
+  /**
+   * Type used as a max heap for the greedy algorithm.
+   */
+  typedef std::priority_queue<Task, std::vector<Task>, MaxHeapComparator > MaxHeap;
+  
+  /**
+   * Type used as a min heap for the greedy algorithm.
+   */
+  typedef std::priority_queue<PE, std::vector<PE>, MinHeapComparator > MinHeap;
+};
+
+struct PenalizedGraphAlgorithmTraits {
+
+  typedef EdgelessGraph Graph;
+  typedef EdgelessVertex Vertex;
+  typedef typename Traits<Vertex>::Weight Weight;
 };

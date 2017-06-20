@@ -1,6 +1,8 @@
 #pragma once
 
-//TODO: Make a proper concept to the penalizedGraphAlgorithm to output easily-readable errors. Altough, the errors are not that ugly right now.
+#include "penalizedGraphConcepts.h"
+#include <structures/edgelessGraph.h>
+#include <system/traits.h>
 
 /**
  * The class that defines the penalized graph related algorithms with loose data definitions.
@@ -8,8 +10,10 @@
  * @type Vertex A type that has a weight funciton.
  * @type Weight The weight type that will be held by both graphs and vertices.
  */
-template<typename Graph, typename Vertex, typename Weight>
+template<typename Graph = PenalizedGraphAlgorithmTraits::Graph, typename Vertex = PenalizedGraphAlgorithmTraits::Vertex, typename Weight = PenalizedGraphAlgorithmTraits::Weight>
 class PenalizedGraphAlgorithm {
+  static_assert(PenalizedGraphAlgorithmConcept<Graph, Vertex, Weight>::conforms(), "");
+
 public:
 
   typedef const Weight (*PenalityFunction)(const unsigned int size);
