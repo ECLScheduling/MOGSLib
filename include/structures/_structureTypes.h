@@ -6,4 +6,5 @@
 
 class EdgelessVertex;
 
+template<typename VertexTraits>
 class EdgelessGraph;

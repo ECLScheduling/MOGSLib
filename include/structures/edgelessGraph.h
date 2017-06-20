@@ -10,6 +10,12 @@ class EdgelessVertex {
 public:
 
   typedef Traits<EdgelessVertex>::Weight Weight;
+  typedef Traits<EdgelessVertex>::Id Id;
+
+  /**
+   * The identifier of the vertex.
+   */
+  Id id;
 
 protected:
 
@@ -20,13 +26,17 @@ protected:
 
 public:
 
+  /**
+   * Constructor used for allocating vectors.
+   * @details This constructor should not be used for other purposes as it doesn't initializes weight or id correctly.
+   */
   EdgelessVertex() {}
 
   /**
    * A constructor to initialize the weight.
    * @param weight A weight value to the vertex.
    */
-  EdgelessVertex(const Weight &weight) : _weight(weight) {}
+  EdgelessVertex(const Id &anId, const Weight &weight) : id(anId), _weight(weight) {}
 
   /**
    * @return The weight of the vertex.
@@ -46,13 +56,17 @@ public:
 
 /**
  * A simple implementation of an graph without edges, which is a graph compound by a set of EdgelessVertex.
+ * @param VertexTraits A trait that will point the Graph to where it can resolve it's type definitions.
  */
+template<typename VertexTraits = EdgelessGraphTraits>
 class EdgelessGraph {
 
 public:
 
-  typedef EdgelessVertex::Weight Weight;
-  typedef std::vector<EdgelessVertex> VerticesArray;
+  typedef typename VertexTraits::Vertex Vertex;
+  typedef typename VertexTraits::Weight Weight;
+  typedef typename VertexTraits::Id Id;
+  typedef typename std::vector<Vertex> VerticesArray;
 
 protected:
 
@@ -68,8 +82,25 @@ protected:
 
 public:
 
+  /**
+   * The identifier of the Graph.
+   */
+  Id id;
+
+  /**
+   * Constructor used for allocating vectors.
+   * @details This constructor should not be used for other purposes as it doesn't initializes weight and id correctly.
+   */
   EdgelessGraph() {
-    weightBuffer = 0;
+    weightBuffer = VertexTraits::zeroRef;
+  }
+
+  /**
+   * Constructor that initializes the id and the current weight buffer to zero a zero reference in the traits<Vertex>.
+   * @param anId The identifier of the graph.
+   */
+  EdgelessGraph(const Id &anId) : id(anId) {
+    weightBuffer = VertexTraits::zeroRef;
   }
 
   /**

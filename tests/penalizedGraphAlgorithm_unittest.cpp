@@ -11,9 +11,9 @@
  */
 class PenalizedGraphAlgorithmTests : public ::testing::Test {
 protected: 
-  typedef TestTraits<PenalizedGraphAlgorithmTests>::Weight Weight;
-  typedef TestTraits<PenalizedGraphAlgorithmTests>::Vertex Vertex;
   typedef TestTraits<PenalizedGraphAlgorithmTests>::Graph Graph;
+  typedef Graph::Vertex Vertex;
+  typedef Graph::Weight Weight;
   typedef TestTraits<PenalizedGraphAlgorithmTests>::PGAlgorithm  PGAlgorithm;
   typedef TestTraits<PenalizedGraphAlgorithmTests>::PenalityFunction PenalityFunction;
 
@@ -51,6 +51,9 @@ protected:
     return 0;
   }
 
+  Vertex createVertex(const Weight &w) {
+    return Vertex(0, w);
+  }
 };
 
 TEST_F(PenalizedGraphAlgorithmTests, sumOfEmptyVerticesSetShouldBe0) {
@@ -68,8 +71,8 @@ TEST_F(PenalizedGraphAlgorithmTests, sumOfOneVertexShouldBeItsVertexWeight) {
 
   createWithNoPenality();
 
-  vertices = new EdgelessVertex[1];
-  vertices[0] = expected;
+  vertices = new Vertex[1];
+  vertices[0] = createVertex(expected);
   actual = algorithm->sumOfVertexWeight(vertices, 1);
 
   EXPECT_EQ(expected, actual) << "Algorithm should have returned " << expected << " for vertice set sum.";
@@ -84,9 +87,9 @@ TEST_F(PenalizedGraphAlgorithmTests, sumOfNVertexShouldBeCorrect) {
 
   createWithNoPenality();
 
-  vertices = new EdgelessVertex[verticeCount];
+  vertices = new Vertex[verticeCount];
   for(auto i = 0; i < verticeCount; ++i)
-    vertices[i] = expectedSum/verticeCount;
+    vertices[i] = createVertex(expectedSum/verticeCount);
 
   actual = algorithm->sumOfVertexWeight(vertices, verticeCount);
 
@@ -109,7 +112,7 @@ TEST_F(PenalizedGraphAlgorithmTests, shouldAccountPenalityFunctionEvenOnUnitaryG
   auto actual = 0;
   auto vertexWeight = 10;
 
-  graph.addVertex(vertexWeight);
+  graph.addVertex(createVertex(vertexWeight));
 
   createWithNoPenality();
   expected = vertexWeight + noPenality(1);
@@ -134,7 +137,7 @@ TEST_F(PenalizedGraphAlgorithmTests, shouldAccountPenalityFunctionOnGraphsWithNV
   auto vertexWeightSum = 0;
 
   for(auto i = 0; i < verticesCount; ++i) {
-    graph.addVertex(i);
+    graph.addVertex(createVertex(i));
     vertexWeightSum += i;
   }
   
@@ -162,9 +165,9 @@ TEST_F(PenalizedGraphAlgorithmTests, unionOfTwoGraphsHasCombinedOnNoPenaltyFunct
   auto verticesBSum = 40; // Sum/Count Divisible number for the sake of automatic testing
 
   for(auto i = 0; i < verticesACount; ++i)
-    graph.addVertex(verticesASum/verticesACount);
+    graph.addVertex(createVertex(verticesASum/verticesACount));
   for(auto i = 0; i < verticesBCount; ++i)
-    graphB.addVertex(verticesBSum/verticesBCount);
+    graphB.addVertex(createVertex(verticesBSum/verticesBCount));
 
   createWithNoPenality();
   auto expected = verticesASum + verticesBSum;
@@ -178,16 +181,16 @@ TEST_F(PenalizedGraphAlgorithmTests, unionOfTwoGraphsAppliesPenalityFunctionCorr
   auto verticesASum = 20; // Sum/Count Divisible number for the sake of automatic testing
   auto verticesBSum = 40; // Sum/Count Divisible number for the sake of automatic testing
 
-  EdgelessGraph unifiedGraph;
+  Graph unifiedGraph;
 
   for(auto i = 0; i < verticesACount; ++i) {
-    graph.addVertex(verticesASum/verticesACount);
-    unifiedGraph.addVertex(verticesASum/verticesACount);
+    graph.addVertex(Vertex(0, verticesASum/verticesACount));
+    unifiedGraph.addVertex(createVertex(verticesASum/verticesACount));
   }
 
   for(auto i = 0; i < verticesBCount; ++i) {
-    graphB.addVertex(verticesBSum/verticesBCount);
-    unifiedGraph.addVertex(verticesBSum/verticesBCount);
+    graphB.addVertex(Vertex(0, verticesBSum/verticesBCount));
+    unifiedGraph.addVertex(createVertex(verticesBSum/verticesBCount));
   }
 
   createWithLinearPenality();
@@ -205,13 +208,13 @@ TEST_F(PenalizedGraphAlgorithmTests, iterativeRemovalOfVertexWeightCalculation) 
   auto verticesCount = 10;
   auto lastVerticeWeight = verticesCount-1;
 
-  EdgelessGraph postRemovalGraph;
+  Graph postRemovalGraph;
 
   for(auto i = 0; i < verticesCount; ++i) {
-    graph.addVertex(i);
+    graph.addVertex(createVertex(i));
   }
   for(auto i = 0; i < verticesCount-1; ++i) {
-    postRemovalGraph.addVertex(i);
+    postRemovalGraph.addVertex(createVertex(i));
   }
 
   createWithNoPenality();
@@ -240,13 +243,13 @@ TEST_F(PenalizedGraphAlgorithmTests, iterativeAdditionOfVertexWeightCalculation)
   auto verticesCount = 10;
   auto lastVerticeWeight = verticesCount;
 
-  EdgelessGraph postAdditionGraph;
+  Graph postAdditionGraph;
 
   for(auto i = 0; i < verticesCount; ++i) {
-    graph.addVertex(i);
+    graph.addVertex(createVertex(i));
   }
   for(auto i = 0; i < verticesCount+1; ++i) {
-    postAdditionGraph.addVertex(i);
+    postAdditionGraph.addVertex(createVertex(i));
   }
 
   createWithNoPenality();

@@ -7,14 +7,14 @@
 /**
  * The class that defines the penalized graph related algorithms with loose data definitions.
  * @type Graph A type that contains a set of vertices and knows its size.
- * @type Vertex A type that has a weight funciton.
- * @type Weight The weight type that will be held by both graphs and vertices.
+ * @details The Graph type must define a 'Vertex' and 'Weight' type.
  */
-template<typename Graph = PenalizedGraphAlgorithmTraits::Graph, typename Vertex = PenalizedGraphAlgorithmTraits::Vertex, typename Weight = PenalizedGraphAlgorithmTraits::Weight>
+template<typename Graph = PenalizedGraphAlgorithmTraits::Graph>
 class PenalizedGraphAlgorithm {
-  static_assert(PenalizedGraphAlgorithmConcept<Graph, Vertex, Weight>::conforms(), "");
-
 public:
+
+  typedef typename Graph::Vertex Vertex;
+  typedef typename Graph::Weight Weight;
 
   typedef const Weight (*PenalityFunction)(const unsigned int size);
   typedef const Vertex * const VerticesGroup;
@@ -34,7 +34,7 @@ public:
    * @param zero A reference to zero value in the Weight type.
    * @param penality The penality function which will be used to calculate the total weight of graphs.
    */
-  PenalizedGraphAlgorithm(const Weight &zero, const PenalityFunction &penality) : zeroRef(zero), penalityFunction(penality) {}
+  PenalizedGraphAlgorithm(const Weight &zero, const PenalityFunction &penality) : zeroRef(zero), penalityFunction(penality) { static_assert(PenalizedGraphAlgorithmConcept<Graph, Vertex, Weight>::conforms(), ""); }
 
   /**
    * Function to sum the vertex weigth.

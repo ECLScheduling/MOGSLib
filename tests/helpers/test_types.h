@@ -4,6 +4,8 @@
 
 class GreedyAlgorithmTest;
 
+class EdgelessGraphTests;
+
 class PenalizedGraphAlgorithmTests;
 
 namespace GreedyAlgorithmHelper {

@@ -53,6 +53,15 @@ struct Traits<EdgelessVertex> : Traits<void> {
    * Type definition of the weight of a vertex and graph for this structure.
    */
   typedef Load Weight;
+  const static Weight zeroRef = 0;
+};
+
+struct EdgelessGraphTraits : Traits<EdgelessVertex> {
+
+  /**
+   * The type of the vertex used by the EdgelessGraph when loaded with this trait.
+   */
+  typedef EdgelessVertex Vertex;
 };
 
 
@@ -93,7 +102,9 @@ struct GreedyStrategyAlgorithmTraits : Traits<void> {
 
 struct PenalizedGraphAlgorithmTraits {
 
-  typedef EdgelessGraph Graph;
-  typedef EdgelessVertex Vertex;
-  typedef typename Traits<Vertex>::Weight Weight;
+  /**
+   * The default Graph type for the PenalizedGraphAlgorithm, which depends on the Vertex type.
+   */
+  typedef EdgelessGraph<EdgelessGraphTraits> Graph;
+
 };

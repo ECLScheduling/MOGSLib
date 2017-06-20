@@ -4,7 +4,7 @@
 
 #include "helpers/test_traits.h"
 
-typedef TestTraits<PenalizedGraphAlgorithmTests>::Weight Weight;
+typedef EdgelessVertex::Weight Weight;
 
 //########################################
 // Fixture for the Edgeless Vertex Test.
@@ -25,11 +25,11 @@ protected:
   }
 
   void createVertexAWithWeight(const Weight &weight) {
-    vertexA = std::make_unique<EdgelessVertex>(weight);
+    vertexA = std::make_unique<EdgelessVertex>(0, weight);
   }
 
   void createVertexBWithWeight(const Weight &weight) {
-    vertexB = std::make_unique<EdgelessVertex>(weight);
+    vertexB = std::make_unique<EdgelessVertex>(0, weight);
   }
 
 };
@@ -76,13 +76,22 @@ TEST_F(EdgelessVertexTests, notLessThanOperatorTest) {
 class EdgelessGraphTests : public ::testing::Test {
 protected: 
   
-  EdgelessGraph graph;
+  typedef TestTraits<EdgelessGraphTests>::Graph Graph;
+  typedef Graph::Vertex Vertex;
+  typedef Graph::Weight Weight;
+
+  Graph graph;
 
   virtual void SetUp() {
   }
 
   virtual void TearDown() {
   }
+
+  Vertex createVertex(const Weight &w) {
+    return Vertex(0, w);
+  }
+
 };
 
 TEST_F(EdgelessGraphTests, has0WeightWhenCreated) {
@@ -96,11 +105,11 @@ TEST_F(EdgelessGraphTests, has0WeightWhenNewVertexIsAdded) {
   auto expected = 0;
   auto nonZeroWeight = 3;
 
-  graph.addVertex(EdgelessVertex(nonZeroWeight));
+  graph.addVertex(createVertex(nonZeroWeight));
 
   auto actual = graph.weight();
 
-  EXPECT_EQ(expected, graph.weight()) << "Graph should have " << expected << " weight even after adding a vertex, but was " << actual << ".";
+  EXPECT_EQ(expected, actual) << "Graph should have " << expected << " weight even after adding a vertex, but was " << actual << ".";
 }
 
 TEST_F(EdgelessGraphTests, hasAnyWeightThatIsAssignedToItViaSetFuntion) {
@@ -125,7 +134,7 @@ TEST_F(EdgelessGraphTests, hasOneVertexAfterOneVertexIsAdded) {
   auto expected = 1;
   auto anyWeight = 9;
 
-  graph.addVertex(EdgelessVertex(anyWeight));
+  graph.addVertex(createVertex(anyWeight));
 
   auto actual = graph.verticesSize();
 
@@ -137,7 +146,7 @@ TEST_F(EdgelessGraphTests, hasNVerticesAfterNVerticesAreAdded) {
   auto anyWeight = 9;
 
   for(auto i = 0; i < expected; ++i)
-    graph.addVertex(EdgelessVertex(anyWeight));
+    graph.addVertex(createVertex(anyWeight));
 
   auto actual = graph.verticesSize();
 
@@ -148,9 +157,9 @@ TEST_F(EdgelessGraphTests, hasTheVerticesAccessibleAsAnArray) {
   auto verticesCount = 4;
 
   for(auto i = 0; i < verticesCount; ++i)
-    graph.addVertex(EdgelessVertex(i));
+    graph.addVertex(createVertex(i));
 
-  const EdgelessVertex * const vertices = graph.vertices();
+  const Vertex * const vertices = graph.vertices();
 
   for(auto i = 0; i < verticesCount; ++i)
     EXPECT_EQ(i, vertices[i].weight());  
