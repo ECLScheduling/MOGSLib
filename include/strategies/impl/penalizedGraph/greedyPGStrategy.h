@@ -2,40 +2,67 @@
 
 #include "penalizedGraphAlgorithm.h"
 #include <system/traits.h>
-#include <memory>
 
-#include <strategy/input/naiveBasicInput.h>
+#include <strategies/input/naiveBasicInput.h>
 
-#include <strategy/abstractStrategy.h>
-#include <strategy/impl/greedy/greedyAlgorithm.h>
+#include <strategies/abstractStrategy.h>
+#include <strategies/impl/greedy/greedyAlgorithm.h>
+
+#include <iostream>
 
 class GreedyPenalizedGraphStrategy : public AbstractStrategy<NaiveBasicInput> {
 
-protected:
+public:
   typedef PenalizedGraphAlgorithm<> PGAlgorithm;
   typedef PenalizedGraphAlgorithmTraits::Graph Graph;
   typedef Graph::Vertex Vertex;
   typedef NaiveBasicInput::Id Id;
 
+
+  /**
+   * The penalized graph algorithm that will be used in the strategy.
+   */
+  PGAlgorithm penalizedGraphAlgorithm;
+
+  /**
+   * Auxiliary PE structure to wrap the graph, adding the mapTask functionallity needed by GreedyAlgorithm.
+   */
   struct PE {
     Graph graph;
     Id id;
+    PGAlgorithm * pgAlgorithm;
 
-    PE(const Id &anId) : id(anId) {
+    PE(const Id &anId, PGAlgorithm *pgAlgorithmRef) : id(anId), pgAlgorithm(pgAlgorithmRef) {
       graph = Graph(id);
     }
 
     void mapTask(const Vertex &task) {
       graph.addVertex(task);
-      graph.setWeight(PGAlgorithm::weightIncrementalGainAVertex(graph, task));
+      graph.setWeight(pgAlgorithm->weightIncrementalGainAVertex(graph, task.weight()));
+    }
+
+    /**
+     * Proxy function to get the vertices of the graph, which are the tasks of this PE wrapper structure.
+     */
+    inline Vertex * tasks() {
+      return graph.vertices();
+    }
+
+    /**
+     * Proxy function to get the vertices count of the graph, which are the tasks count of this PE wrapper structure.
+     */
+    inline const int taskCount() {
+      return graph.verticesSize();
+    }
+
+    const bool operator>(const PE &o) const {
+      return graph > o.graph;
     }
   };
-
-public:
   
-  typedef GreedyAlgorithm<Vertex,PE> GreedyAlgorithm;
-  typedef GreedyAlgorithm::MaxHeapStructure MaxHeap;
-  typedef GreedyAlgorithm::MinHeapStructure MinHeap;
+  typedef GreedyStrategyAlgorithm<Vertex,PE> GreedyAlgorithm;
+  typedef GreedyAlgorithm::MaxHeap MaxHeap;
+  typedef GreedyAlgorithm::MinHeap MinHeap;
 
   /**
    * The greedy algorithm that will be used in the strategy.
@@ -43,16 +70,9 @@ public:
   GreedyAlgorithm greedyAlgorithm;
 
   /**
-   * The penalized graph algorithm that will be used in the strategy.
+   * Method to create this strategy with a said penality function
    */
-  std::unique_ptr<PGAlgorithm> penalizedGraphAlgorithm;
-
-  /**
-   * Method to set a penality function to this strategy.
-   */
-  void setPenalityFunction(const PGAlgorithm::PenalityFunction &penalityFunction) {
-    penalizedGraphAlgorithm = std::make_unique<PGAlgorithm>(PGAlgorithm(PenalizedGraphAlgorithmTraits::zeroRef, penalityFunction));
-  }
+  GreedyPenalizedGraphStrategy(const PGAlgorithm::PenalityFunction &penalityFunction) : penalizedGraphAlgorithm(PenalizedGraphAlgorithmTraits::zeroRef, penalityFunction) {}
 
   /**
    * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
@@ -60,11 +80,17 @@ public:
    */
   virtual void doTaskMapping(const NaiveBasicInput &input) {
     MaxHeap tasks;
-    MixHeap PEs;
+    MinHeap PEs;
 
-    //TODO: construct tasks and PEs.
+    for(auto id : input.getPEsIds()) {
+      PEs.push(PE(id, &penalizedGraphAlgorithm));
+    }
 
-    algorithm.map(tasks, PEs);
+    for(auto taskId : input.getTasksIds()) {
+      tasks.push(Vertex(taskId, input.getTaskLoad(taskId)));
+    }
+
+    greedyAlgorithm.map(tasks, PEs);
     populateOutput(PEs);
   }
 
@@ -77,11 +103,13 @@ protected:
   void populateOutput(MinHeap &PEs) {
     while(!PEs.empty()) {
       auto _PE = PEs.top();
+      auto tasks = _PE.tasks();
 
-      for(auto task : PE.tasks()) {
-        lbOutput.set(task.id, PE.id);
+      for(auto i = 0; i < _PE.taskCount(); ++i) {
+        lbOutput.set(tasks[i].id, _PE.id);
       }
 
+      std::cout << "PE " << _PE.id << " load: " << _PE.graph.weight() << ". Task count: " << _PE.taskCount() << std::endl;
       PEs.pop();
     }
   }

@@ -58,7 +58,7 @@ public:
  * A simple implementation of an graph without edges, which is a graph compound by a set of EdgelessVertex.
  * @param VertexTraits A trait that will point the Graph to where it can resolve it's type definitions.
  */
-template<typename VertexTraits = EdgelessGraphTraits>
+template<typename VertexTraits = EdgelessGraphDefaultTraits>
 class EdgelessGraph {
 
 public:
@@ -128,7 +128,7 @@ public:
   /**
    * @return Get the standard C array that contains the vertices.
    */
-  inline EdgelessVertex * vertices() {
+  inline Vertex * vertices() {
     return &_vertices[0];
   }
 
@@ -142,8 +142,8 @@ public:
   /**
    * A comparator that evaluate two graphs by their weight.
    */
-  const bool operator <(const EdgelessGraph &g) const {
-    return weightBuffer < g.weight();
+  const bool operator >(const EdgelessGraph<VertexTraits> &g) const {
+    return weightBuffer > g.weight();
   }
 
 };
