@@ -8,8 +8,9 @@
 #include <strategies/abstractStrategy.h>
 #include <strategies/impl/greedy/greedyAlgorithm.h>
 
-#include <iostream>
-
+/**
+ * A strategy that uses the greedy algorithm to distribute the load and the penalized graph algorithms to calculate the load.
+ */
 class GreedyPenalizedGraphStrategy : public AbstractStrategy<NaiveBasicInput> {
 
 public:
@@ -28,14 +29,30 @@ public:
    * Auxiliary PE structure to wrap the graph, adding the mapTask functionallity needed by GreedyAlgorithm.
    */
   struct PE {
+
+    /**
+     * The wrapped graph structure.
+     */
     Graph graph;
+
+    /**
+     * The PE id, which is the same as the graph id.
+     * @note This cannot be a pointer as the greedy uses id value, not reference.
+     */
     Id id;
+
+    /**
+     * The reference to the PenalizedGraphAlgorithm instance used to calculate the weight of the PE.
+     */
     PGAlgorithm * pgAlgorithm;
 
     PE(const Id &anId, PGAlgorithm *pgAlgorithmRef) : id(anId), pgAlgorithm(pgAlgorithmRef) {
       graph = Graph(id);
     }
 
+    /**
+     * A function that is called on the GeedyStrategy when the algorithm decides where a task will be located.
+     */
     void mapTask(const Vertex &task) {
       graph.addVertex(task);
       graph.setWeight(pgAlgorithm->weightIncrementalGainAVertex(graph, task.weight()));
@@ -55,9 +72,13 @@ public:
       return graph.verticesSize();
     }
 
+    /**
+     * A forwarded greater than comparator.
+     */
     const bool operator>(const PE &o) const {
       return graph > o.graph;
     }
+    
   };
   
   typedef GreedyStrategyAlgorithm<Vertex,PE> GreedyAlgorithm;
@@ -73,6 +94,8 @@ public:
    * Method to create this strategy with a said penality function
    */
   GreedyPenalizedGraphStrategy(const PGAlgorithm::PenalityFunction &penalityFunction) : penalizedGraphAlgorithm(PenalizedGraphAlgorithmTraits::zeroRef, penalityFunction) {}
+
+  virtual ~GreedyPenalizedGraphStrategy() {}
 
   /**
    * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
@@ -109,7 +132,6 @@ protected:
         lbOutput.set(tasks[i].id, _PE.id);
       }
 
-      std::cout << "PE " << _PE.id << " load: " << _PE.graph.weight() << ". Task count: " << _PE.taskCount() << std::endl;
       PEs.pop();
     }
   }

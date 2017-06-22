@@ -81,6 +81,8 @@ public:
    */
   MaxHeap tasks;
 
+  virtual ~GreedyStrategy() {}
+
   /**
    * This function populates the PEs heap with the ids of the processors and their load is set to 0.
    * @param input The input reference which was passed to the GreedyStrategy.
