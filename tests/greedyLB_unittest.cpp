@@ -36,7 +36,7 @@ protected:
   }
 
   void addPE(const Id &id) {
-    PESet.insert(id);
+    PESet.push_back(id);
   }
 
   void createInput() {

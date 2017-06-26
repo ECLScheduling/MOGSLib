@@ -1,12 +1,12 @@
 #pragma once
 
 #include <iostream>
-#include <strategies/impl/penalizedGraph/greedyPGStrategy.h>
+#include <strategies/impl/penalizedGraph/greedyParallelPGStrategy.h>
 #include <strategies/input/naiveBasicInput.h>
 
 typedef Traits<void>::Load Weight;
 
-namespace GreedyPGModule {
+namespace GreedyPGPModule {
 
 const Weight squarePenality(unsigned int size) {
   return size * size;
@@ -15,9 +15,9 @@ const Weight squarePenality(unsigned int size) {
 }
 
 /**
- * This struct is used by the StrategyAnalyzer to analyze the GreedyPenalizedGraphStrategy with the NaiveBasicOutput as input.
+ * This struct is used by the StrategyAnalyzer to analyze the GreedyParallelPGStrategy with the NaiveBasicOutput as input.
  */
-struct GreedyPGStrategyPerfModule {
+struct GreedyParallelPGStrategyPerfModule {
 
   typedef Traits<void>::Load Weight;
   typedef Traits<BasicInput>::SetOfId SetOfId;
@@ -40,7 +40,7 @@ struct GreedyPGStrategyPerfModule {
     return new NaiveBasicInput(tasks, PEs);
   }
 
-  GreedyPenalizedGraphStrategy* createStrategy(int argc, char *argv[]) {
-    return new GreedyPenalizedGraphStrategy(GreedyPGModule::squarePenality);
+  GreedyParallelPGStrategy* createStrategy(int argc, char *argv[]) {
+    return new GreedyParallelPGStrategy(GreedyPGPModule::squarePenality);
   }
 };

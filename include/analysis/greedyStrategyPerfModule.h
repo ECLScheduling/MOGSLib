@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <strategies/impl/greedy/greedyStrategy.h>
 #include <strategies/input/naiveBasicInput.h>
@@ -21,7 +23,7 @@ struct GreedyStrategyPerfModule {
     }
 
     for(auto i = 0; i < atoi(argv[1]); ++i)
-      PEs.insert(i);
+      PEs.push_back(i);
     for(int i = 0; i < atoi(argv[2]); ++i)
       tasks[i] = i*2;
 

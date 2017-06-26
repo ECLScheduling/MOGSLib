@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include <strategies/input/naiveBasicInput.h>
+#include <system/traits.h>
 
 typedef NaiveBasicInput::Id Id;
 typedef NaiveBasicInput::Load Load;
+typedef Traits<BasicInput>::SetOfId SetOfId;
 
 /**
  * This test fixture is for declaring the common structures between the NaiveBasicInput's test fixtures.
@@ -11,11 +13,11 @@ class BasicFixtureForNaiveInputTests : public ::testing::Test {
 protected: 
   
   NaiveBasicInput *input;
-  std::set<Id> *peIds;
+  SetOfId *peIds;
   std::map<Id, Load> *tasks;
 
   virtual void SetUp() {
-    peIds = new std::set<Id>();
+    peIds = new SetOfId();
     tasks = new std::map<Id, Load>();
   }
 
@@ -65,7 +67,7 @@ protected:
   }
 
   void addPE() {
-    peIds->insert(peId++);
+    peIds->push_back(peId++);
   }
 };
 

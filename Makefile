@@ -38,7 +38,7 @@ DEPDIR :=.deps
 MAINFILES :=src/perf.cpp
 BINARIES  :=$(BINDIR)/execute_me
 # Compiler & linker flags
-CXXFLAGS :=-std=c++14 -Wall
+CXXFLAGS :=-std=c++14 -Wall -fopenmp -O3
 LDFLAGS  :=
 LDLIBS   :=
 INCLUDE  :=-I$(INCDIR)

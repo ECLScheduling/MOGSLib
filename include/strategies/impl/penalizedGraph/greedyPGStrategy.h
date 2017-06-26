@@ -44,9 +44,9 @@ public:
     /**
      * The reference to the PenalizedGraphAlgorithm instance used to calculate the weight of the PE.
      */
-    PGAlgorithm * pgAlgorithm;
+    const PGAlgorithm * pgAlgorithm;
 
-    PE(const Id &anId, PGAlgorithm *pgAlgorithmRef) : id(anId), pgAlgorithm(pgAlgorithmRef) {
+    PE(const Id &anId, const PGAlgorithm *pgAlgorithmRef) : id(anId), pgAlgorithm(pgAlgorithmRef) {
       graph = Graph(id);
     }
 
@@ -86,11 +86,6 @@ public:
   typedef GreedyAlgorithm::MinHeap MinHeap;
 
   /**
-   * The greedy algorithm that will be used in the strategy.
-   */
-  GreedyAlgorithm greedyAlgorithm;
-
-  /**
    * Method to create this strategy with a said penality function
    */
   GreedyPenalizedGraphStrategy(const PGAlgorithm::PenalityFunction &penalityFunction) : penalizedGraphAlgorithm(PenalizedGraphAlgorithmTraits::zeroRef, penalityFunction) {}
@@ -105,25 +100,40 @@ public:
     MaxHeap tasks;
     MinHeap PEs;
 
-    for(auto id : input.getPEsIds()) {
-      PEs.push(PE(id, &penalizedGraphAlgorithm));
-    }
-
-    for(auto taskId : input.getTasksIds()) {
-      tasks.push(Vertex(taskId, input.getTaskLoad(taskId)));
-    }
-
-    greedyAlgorithm.map(tasks, PEs);
+    populatePEHeap(input.getPEsIds(), &PEs);
+    //TODO: populateTaskHeap
+    executeGreedyStrategy(&tasks, &PEs);
     populateOutput(PEs);
   }
 
 protected:
 
   /**
+   * The implementation of the strategy, which is executing the greedy strategy with the mapped graph and container objects.
+   * @param taskHeap The pointer to the MaxHeap of tasks.
+   * @param PEHeap The pointer to the MinHeap of PEs.
+   */
+  virtual void executeGreedyStrategy(MaxHeap *taskHeap, MinHeap *PEHeap) {
+    GreedyAlgorithm greedyAlgorithm;
+
+    greedyAlgorithm.map(*taskHeap, *PEHeap);
+  }
+/*
+  virtual void populateTaskHeap(const SetOfId taskIds, MaxHeap *taskHeap) {
+    for(auto taskId : taskIds)
+      taskHeap->push(Vertex(taskId, input.getTaskLoad(taskId)));
+  }*/
+
+  virtual void populatePEHeap(const SetOfId PEIds, MinHeap *PEHeap) const {
+    for(auto id : PEIds)
+      PEHeap->push(PE(id, &penalizedGraphAlgorithm));
+  }
+
+  /**
    * This method is called to populate the output variable lbOutput.
    * @param PEs The heap of PEs modified to contain the tasks by the greedy algorithm.
    */
-  void populateOutput(MinHeap &PEs) {
+  virtual void populateOutput(MinHeap &PEs) {
     while(!PEs.empty()) {
       auto _PE = PEs.top();
       auto tasks = _PE.tasks();

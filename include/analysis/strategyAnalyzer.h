@@ -1,6 +1,11 @@
+#pragma once
+
 #include <strategies/output/migrationElement.h>
 #include <system/static.h>
 #include <utility>
+#include <chrono>
+#include <ctime>
+#include <iostream>
 
 /**
  * Class that wraps commom performance analytics for strategy analysss.
@@ -69,8 +74,12 @@ public:
     allocatedResources = true;
 
     //Start of the Task Mapping Analysis.
+    std::chrono::system_clock::time_point before = std::chrono::system_clock::now();
     MigrationElement output = strategy->mapTasks(*input);
+    std::chrono::system_clock::time_point after = std::chrono::system_clock::now();
     //End of the Task Mapping Analysis.
+
+    std::cout << "Strategy mapping time: " << std::chrono::duration_cast<std::chrono::microseconds>(after - before).count() << "us." << std::endl;
   }
 
 };

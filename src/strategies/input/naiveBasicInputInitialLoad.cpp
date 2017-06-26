@@ -4,7 +4,7 @@ const BasicInput::SetOfId NaiveBasicInputInitialLoad::getAllKeysFromLoadMap(cons
   BasicInput::SetOfId retVal = BasicInput::SetOfId();
 
   for(auto const& element : loadMap)
-    retVal.insert(element.first);
+    retVal.push_back(element.first);
 
   return retVal;
 }

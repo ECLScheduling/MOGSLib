@@ -16,7 +16,7 @@ const BasicInputTaskContainer::SetOfId BasicInputTaskContainer::getTasksIds() co
   BasicInputTaskContainer::SetOfId taskIdSet;
 
   for(auto const& element : _tasks)
-    taskIdSet.insert(element.first);
+    taskIdSet.push_back(element.first);
 
   return taskIdSet;
 }
