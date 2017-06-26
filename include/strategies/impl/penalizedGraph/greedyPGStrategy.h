@@ -100,7 +100,7 @@ public:
     MaxHeap tasks;
     MinHeap PEs;
 
-    populatePEHeap(input.getPEsIds(), &PEs);
+    //populatePEHeap(input.getPEsIds(), &PEs);
     //TODO: populateTaskHeap
     executeGreedyStrategy(&tasks, &PEs);
     populateOutput(PEs);
@@ -124,10 +124,10 @@ protected:
       taskHeap->push(Vertex(taskId, input.getTaskLoad(taskId)));
   }*/
 
-  virtual void populatePEHeap(const SetOfId PEIds, MinHeap *PEHeap) const {
+  /*virtual void populatePEHeap(const SetOfId PEIds, MinHeap *PEHeap) const {
     for(auto id : PEIds)
       PEHeap->push(PE(id, &penalizedGraphAlgorithm));
-  }
+  }*/
 
   /**
    * This method is called to populate the output variable lbOutput.

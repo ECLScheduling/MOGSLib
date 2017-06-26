@@ -29,19 +29,26 @@ struct Traits {
 //#########################
 
 template<>
+struct Traits<LoadBearer> : Traits<void> {};
+
+template<>
 struct Traits<BasicInput> : Traits<void> {
+
+  /**
+   * Basic input's default representation of a Task.
+   */
+  typedef LoadBearer Task;
+
+  /**
+   * Basic input's default representation of a set of tasks.
+   */
+  typedef std::vector<Task> SetOfTasks;
 
   /**
    * Type definition of the structure used to represent the set of processing elements in the BasicInput.
    */
   typedef std::vector<Id> SetOfId;
-
-  /**
-   * Type definition of the structure used to represent the task set in the BasicInput.
-   */
-  typedef std::map<Id, Load> LoadMap;
-
-  typedef Task;
+  
 };
 
 //#########################

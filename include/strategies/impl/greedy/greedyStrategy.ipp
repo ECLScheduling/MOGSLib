@@ -4,7 +4,7 @@
 
 template<typename InputType>
 inline void GreedyStrategy<InputType, true>::createPEHeap(const InputType &input) {
-  auto peIdSet = input.getPEsIds();
+  auto peIdSet = input.getPEs();
 
   PEs = MinHeap();
   for(auto it = peIdSet.begin(); it != peIdSet.end(); ++it)
@@ -13,11 +13,10 @@ inline void GreedyStrategy<InputType, true>::createPEHeap(const InputType &input
 
 template<typename InputType>
 inline void GreedyStrategy<InputType, true>::createTaskHeap(const InputType &input) {
-  auto taskIdSet = input.getTasksIds();
-
   tasks = MaxHeap();
-  for(auto it = taskIdSet.begin(); it != taskIdSet.end(); ++it)
-    tasks.push(LoadBearer(*it, input.getTaskLoad(*it)));
+
+  for(auto task : input.getTasks())
+    tasks.push(task);
 }
 
 template<typename InputType>
@@ -35,12 +34,14 @@ void GreedyStrategy<InputType, true>::doTaskMapping(const InputType &input) {
 
   while(!tasks.empty()) {
     const LoadBearer task = tasks.top();
-    const LoadBearer PE = PEs.top();
+    LoadBearer PE = PEs.top();
 
     tasks.pop();
     PEs.pop();
 
-    PEs.push(LoadBearer(PE.id, PE.load + task.load));
+    PE.load += task.load;
+
+    PEs.push(PE);
 
     this->lbOutput.set(task.id, PE.id);
   }

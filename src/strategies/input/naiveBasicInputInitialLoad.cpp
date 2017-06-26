@@ -19,6 +19,6 @@ const BasicInput::Load &NaiveBasicInputInitialLoad::getPELoad(const Id &PEId) co
   return mapIt->second;
 }
 
-const BasicInput::SetOfId &NaiveBasicInputInitialLoad::getPEsIds() const {
+const BasicInput::SetOfId &NaiveBasicInputInitialLoad::getPEs() const {
   return _PEsIds;
 }

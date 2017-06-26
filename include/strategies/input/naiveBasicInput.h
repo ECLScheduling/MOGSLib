@@ -21,14 +21,14 @@ public:
    * @param peIds A set of ids to identify each PE in the system.
    * @param tasks A map linking an id to a load, representing the tasks in the system.
    */
-  NaiveBasicInput(const LoadMap &tasks, const SetOfId &PEIds) : BasicInputTaskContainer(tasks), _PEs(PEIds) {}
+  NaiveBasicInput(const SetOfTasks &tasks, const SetOfId &PEIds) : BasicInputTaskContainer(tasks), _PEs(PEIds) {}
 
   virtual ~NaiveBasicInput() {}
 
   /**
    * @return All the PEs Ids.
    */
-  const SetOfId &getPEsIds() const {
+  const SetOfId &getPEs() const {
     return _PEs;
   }
   

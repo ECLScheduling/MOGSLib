@@ -23,14 +23,14 @@ public:
   /**
    * Constructor for the class that initializes all data. 
    */
-  NaiveBasicInputInitialLoad(const LoadMap &tasks, const LoadMap &PEs) : BasicInputTaskContainer(tasks), _PEs(PEs), _PEsIds(getAllKeysFromLoadMap(PEs)) {}
+  NaiveBasicInputInitialLoad(const SetOfId &tasks, const LoadMap &PEs) : BasicInputTaskContainer(tasks), _PEs(PEs), _PEsIds(getAllKeysFromLoadMap(PEs)) {}
 
   virtual ~NaiveBasicInputInitialLoad() {}
 
   /**
    * @return All the PEs Ids.
    */
-  const SetOfId &getPEsIds() const;
+  const SetOfId &getPEs() const;
 
   /**
    * Method to get an initial PE Load.

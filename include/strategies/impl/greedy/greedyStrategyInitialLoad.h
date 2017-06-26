@@ -30,7 +30,6 @@ template<typename InputType>
 class GreedyInitialLoadStrategy<InputType, true> : public GreedyStrategy<InputType, true> {
   typedef GreedyStrategy<InputType, true> BaseStrategy;
   typedef typename BaseStrategy::MinHeap MinHeap;
-  typedef typename BaseStrategy::LoadBearer LoadBearer;
 
   /**
    * This function populates the PEs heap with the ids of the processors and their load is set according to the input object's getPELoad method.

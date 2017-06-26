@@ -9,3 +9,5 @@ class BasicInput;
 class NaiveBasicInput;
 
 class NaiveBasicInputInitialLoad;
+
+class LoadBearer;

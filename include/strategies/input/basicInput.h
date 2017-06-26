@@ -1,6 +1,5 @@
 #pragma once
 
-#include <system/traits.h>
 #include <set>
 
 /**
@@ -10,25 +9,19 @@ class BasicInput {
 public:
   typedef Traits<BasicInput>::Load Load;
   typedef Traits<BasicInput>::Id Id;
+  typedef Traits<BasicInput>::Task Task;
+  typedef Traits<BasicInput>::SetOfTasks SetOfTasks;
   typedef Traits<BasicInput>::SetOfId SetOfId;
 
   /**
    * @return All the PEs Ids.
    */
-  virtual const SetOfId &getPEsIds() const = 0;
+  virtual const SetOfId &getPEs() const = 0;
 
   /**
-   * Method to obtain a specific task's load.
-   * @param taskId The task's id.
-   * @return The task's load.
+   * @return Get the set of tasks.
    */
-  virtual const Load& getTaskLoad(const Id &taskId) const = 0;
-
-  /**
-   * Get the task's set of ids.
-   * @return Get all the task's ids.
-   */
-  virtual const SetOfId getTasksIds() const = 0;
+  virtual const SetOfTasks getTasks() const = 0;
 
 };
 

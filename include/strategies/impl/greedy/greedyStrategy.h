@@ -2,6 +2,7 @@
 
 #include <strategies/abstractStrategy.h>
 #include <strategies/input/basicInput.h>
+#include <strategies/input/loadBearer.h>
 #include <queue>
 
 
@@ -37,18 +38,6 @@ class GreedyStrategy<InputType, true> : public AbstractStrategy<InputType> {
 public:
   typedef BasicInput::Id Id;
   typedef BasicInput::Load Load;
-
-  /**
-   * Internal Helper instruction to decribe both PEs and Tasks by their ids and current load.
-   * @variable id The id of the task or PE.
-   * @variable load The load of the task or PE.
-   */
-  struct LoadBearer {
-    Id id;
-    Load load;
-
-    LoadBearer(const Id &anId, const Load &aLoad) : id(anId), load(aLoad) {}
-  };
 
   /**
    * Internal Helper struct to be used as the max-heap comparator.
