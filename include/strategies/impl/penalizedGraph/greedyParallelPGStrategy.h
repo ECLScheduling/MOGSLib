@@ -22,7 +22,7 @@ protected:
 
   /**
    * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
-   * @param input The Load Balancer's input
+   * @param input The Strategy's input
    */
   virtual void doTaskMapping(const NaiveBasicInput &input) {
     #pragma omp parallel

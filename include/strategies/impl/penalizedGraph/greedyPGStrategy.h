@@ -3,7 +3,7 @@
 #include "penalizedGraphAlgorithm.h"
 #include <system/traits.h>
 
-#include <strategies/input/naiveBasicInput.h>
+#include <strategies/input/minimalParallelInput.h>
 
 #include <strategies/abstractStrategy.h>
 #include <strategies/impl/greedy/greedyAlgorithm.h>
@@ -11,7 +11,7 @@
 /**
  * A strategy that uses the greedy algorithm to distribute the load and the penalized graph algorithms to calculate the load.
  */
-class GreedyPenalizedGraphStrategy : public AbstractStrategy<NaiveBasicInput> {
+class GreedyPenalizedGraphStrategy : public AbstractStrategy<MinimalParallelInput> {
 
 public:
   typedef PenalizedGraphAlgorithm<> PGAlgorithm;

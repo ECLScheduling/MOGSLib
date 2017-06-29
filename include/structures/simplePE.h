@@ -6,8 +6,8 @@ template<typename TaskType>
 class SimplePE {
 public:
   typedef TaskType Task;
-  typedef Task::Id Id;
-  typedef Task::Load Load;
+  typedef typename Task::Id Id;
+  typedef typename Task::Load Load;
 
   /**
    * The PE's id.
@@ -24,7 +24,7 @@ protected:
   /**
    * The PE's load, which is safer to be protected since it must be calculated and set.
    */
-  Load load;
+  Load _load;
 
 public:
 
@@ -51,7 +51,7 @@ public:
    * A comparator that compares a simple task with other solely by the load value.
    */
   const bool operator>(const SimplePE &other) const {
-    return load > other.load;
+    return _load > other._load;
   }
 
   /**
@@ -60,14 +60,14 @@ public:
    * @param aLoad A load value to the PE.
    */
   void setLoad(Load aLoad) {
-    load = aLoad;
+    _load = aLoad;
   }
 
   /**
    * @return The load of this PE.
    */
   const Load &load() {
-    return load;
+    return _load;
   }
 
   /**
@@ -78,4 +78,4 @@ public:
     tasks.push_back(task);
   }
 
-}
+};

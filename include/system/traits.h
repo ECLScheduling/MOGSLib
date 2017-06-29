@@ -43,8 +43,7 @@ struct Traits<BasicInput> : Traits<void> {
   
 };
 
-template<>
-struct Traits<IMinimalParallelInput> : Traits<void> {
+struct IMinimalParallelInputTraits : Traits<void> {
 
   /**
    * Type definition of the structure used to represent a Task.

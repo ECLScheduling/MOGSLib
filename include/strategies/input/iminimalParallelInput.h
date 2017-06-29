@@ -6,7 +6,7 @@
 /**
  * The abstract class which intends to be the simplest possible input to a parallel strategy, carrying only the PEs ids and each task's load and id.
  */
-template<typename TaskType = Traits<IMinimalParallelInput>::Task, typename PEType = Traits<IMinimalParallelInput>::PE>
+template<typename TaskType = IMinimalParallelInputTraits::Task, typename PEType = IMinimalParallelInputTraits::PE>
 class IMinimalParallelInput {
 public:
   typedef TaskType Task;
@@ -15,7 +15,7 @@ public:
   /**
    * @return A pointer to an array of PEs.
    */
-  virtual const PE *getPEs() const = 0;
+  virtual PE * const getPEs() = 0;
 
   /**
    * @return The ammount of PEs in this input.
@@ -25,7 +25,7 @@ public:
   /**
    * @return A pointer to an array of tasks.
    */
-  virtual const Task *getTasks() const = 0;
+  virtual Task * const getTasks() = 0;
 
   /**
    * @return The ammount of Tasks in this input.
@@ -33,4 +33,4 @@ public:
   virtual const unsigned int taskCount() = 0;
 };
 
-typedef IMinimalParallelInput<> : IDefaultMinimalParallelInput;
+typedef IMinimalParallelInput<> IDefaultMinimalParallelInput;

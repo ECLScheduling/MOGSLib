@@ -6,6 +6,7 @@
 
 class BasicInput;
 
+template<typename TaskType, typename PEType>
 class IMinimalParallelInput;
 
 class NaiveBasicInput;
