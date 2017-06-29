@@ -40,8 +40,7 @@ struct Traits<BasicInput> : Traits<void> {
    * Type definition of the structure used to represent the task set in the BasicInput.
    */
   typedef std::map<Id, Load> LoadMap;
-
-  typedef Task;
+  
 };
 
 //#########################

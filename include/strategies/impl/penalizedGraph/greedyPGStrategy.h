@@ -100,8 +100,9 @@ public:
     MaxHeap tasks;
     MinHeap PEs;
 
-    populatePEHeap(input.getPEsIds(), &PEs);
-    //TODO: populateTaskHeap
+    populatePEHeap(input, &PEs);
+    populateTaskHeap(input, &tasks);
+
     executeGreedyStrategy(&tasks, &PEs);
     populateOutput(PEs);
   }
@@ -118,13 +119,17 @@ protected:
 
     greedyAlgorithm.map(*taskHeap, *PEHeap);
   }
-/*
-  virtual void populateTaskHeap(const SetOfId taskIds, MaxHeap *taskHeap) {
+
+  virtual void populateTaskHeap(const NaiveBasicInput &input, MaxHeap *taskHeap) {
+    auto taskIds = input.getTasksIds();
+
     for(auto taskId : taskIds)
       taskHeap->push(Vertex(taskId, input.getTaskLoad(taskId)));
-  }*/
+  }
 
-  virtual void populatePEHeap(const SetOfId PEIds, MinHeap *PEHeap) const {
+  virtual void populatePEHeap(const NaiveBasicInput &input, MinHeap *PEHeap) const {
+    auto PEIds = input.getPEsIds();
+
     for(auto id : PEIds)
       PEHeap->push(PE(id, &penalizedGraphAlgorithm));
   }

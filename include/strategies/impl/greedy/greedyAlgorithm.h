@@ -19,7 +19,7 @@ struct GreedyStrategyAlgorithm {
   typedef MaxHeapTemplate MaxHeap;
   typedef MinHeapTemplate MinHeap;
 
-  // This line is present in this class to present clear compile-time errors to developers and users.
+  // This line is present in this class to present clear compile-time errors to developers and strategy users.
   static_assert(GreedyStrategyAlgorithmConcept<Task, PE, MaxHeap, MinHeap>::conforms(), "");
 
   /**
