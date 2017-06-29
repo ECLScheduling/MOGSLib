@@ -6,6 +6,8 @@
 
 class BasicInput;
 
+class IMinimalParallelInput;
+
 class NaiveBasicInput;
 
 class NaiveBasicInputInitialLoad;

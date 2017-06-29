@@ -4,7 +4,7 @@
 #include <set>
 
 /**
- * The abstract class which intends to be the simplest possible input to a load balancer, carrying only the PEs ids and each task's load and id.
+ * The abstract class which intends to be the simplest possible input to a strategy, carrying only the PEs ids and each task's load and id.
  */
 class BasicInput {
 public:

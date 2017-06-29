@@ -8,3 +8,9 @@ class EdgelessVertex;
 
 template<typename VertexTraits>
 class EdgelessGraph;
+
+template<typename IdType, typename LoadType>
+class SimpleTask;
+
+template<typename TaskType>
+class SimplePE;

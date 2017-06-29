@@ -43,6 +43,21 @@ struct Traits<BasicInput> : Traits<void> {
   
 };
 
+template<>
+struct Traits<IMinimalParallelInput> : Traits<void> {
+
+  /**
+   * Type definition of the structure used to represent a Task.
+   */
+  typedef SimpleTask<Id, Load> Task;
+
+  /**
+   * Type definition of the structure used to represent a PE (Processing Element).
+   */
+  typedef SimplePE<Task> PE;
+  
+};
+
 //#########################
 // Structure Traits
 //#########################
