@@ -16,8 +16,8 @@ class MinimalParallelInput : public IDefaultMinimalParallelInput {
 
 protected:
 
-  PE* const _PEs;
-  Task* const _tasks;
+  PE* _PEs;
+  Task* _tasks;
 
   const unsigned int _PECount;
   const unsigned int _taskCount;
@@ -31,7 +31,7 @@ public:
    * @param PECount The number of elements in PEs.
    * @param taskCount The number of elements in taskCount
    */
-  MinimalParallelInput(PE * const PEs, Task * const tasks, const unsigned int &PECount, const unsigned int &taskCount) : _PEs(PEs), _tasks(tasks), _PECount(PECount), _taskCount(taskCount) {}
+  MinimalParallelInput(PE * PEs, Task * tasks, const unsigned int &PECount, const unsigned int &taskCount) : _PEs(PEs), _tasks(tasks), _PECount(PECount), _taskCount(taskCount) {}
 
   /**
    * Empty deconstructor for warning suppressions.
@@ -41,28 +41,28 @@ public:
   /**
    * @return A pointer to an array of PEs.
    */
-  PE * const getPEs() {
+  PE * getPEs() const {
     return _PEs;
   }
 
   /**
    * @return The ammount of PEs in this input.
    */
-  const unsigned int PECount() {
+  const unsigned int PECount() const {
     return _PECount;
   }
 
   /**
    * @return A pointer to an array of tasks.
    */
-  Task * const getTasks() {
+  Task * getTasks() const {
     return _tasks;
   }
 
   /**
    * @return The ammount of Tasks in this input.
    */
-  const unsigned int taskCount() {
+  const unsigned int taskCount() const {
     return _taskCount;
   }
 

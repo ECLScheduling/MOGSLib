@@ -42,26 +42,14 @@ public:
    * @param size The size of the vertices array.
    * @return The total sum of the vertice weights.
    */
-  const Weight sumOfVertexWeight(VerticesGroup vertices, const unsigned int &size) const {
-    Weight weight = zeroRef;
-    
-    for(unsigned int i = 0; i < size; ++i) {
-      weight += vertices[i].weight();
-    }
-    
-    return weight;
-  }
+  const Weight sumOfVertexWeight(VerticesGroup vertices, const unsigned int &size) const;
 
   /**
    * Function to calculate the total weight of a graph, which is an entity with a set of vertices.
    * @param graph The graph to have it's weight calculed.
    * @return The total weight of the graph accounting the penality function.
    */
-  const Weight totalWeightGraph(Graph &graph) const {
-    const unsigned int size = graph.verticesSize();
-
-    return sumOfVertexWeight(graph.vertices(), size) + penalityFunction(size);
-  }
+  const Weight totalWeightGraph(Graph &graph) const;
 
   /**
    * Function to calculate the total weight of a graph resulting of an union of two graphs.
@@ -69,15 +57,7 @@ public:
    * @param b The second graph in the union.
    * @return The weight of the graph union.
    */
-  const Weight weightUnion(Graph &a, Graph &b) const {
-    const unsigned int sizeA = a.verticesSize();
-    const unsigned int sizeB = b.verticesSize();
-
-    const Weight sum = totalWeightGraph(a) + totalWeightGraph(b);
-    const Weight penality = penalityFunction(sizeA + sizeB) - penalityFunction(sizeA) - penalityFunction(sizeB);
-    
-    return sum + penality; 
-  }
+  const Weight weightUnion(Graph &a, Graph &b) const;
 
   /**
    * Calculate the next weight value for a graph when it loses a vertex. This function must be called before the actual removal due to vertices' array size involved.
@@ -85,13 +65,7 @@ public:
    * @param vertexWeight The weight of the lost vertex.
    * @return the weight of the graph after it loses a vertex with the informed weight.
    */
-  const Weight weightIncrementalLoseAVertex(Graph graph, const Weight &vertexWeight) const {
-     Weight weight;
-
-     weight = graph.weight() - vertexWeight - penalityFunction(graph.verticesSize()) + penalityFunction(graph.verticesSize()-1);
-     
-     return weight;
-  }
+  const Weight weightIncrementalLoseAVertex(Graph graph, const Weight &vertexWeight) const;
 
   /**
    * Calculate the next weight value for a graph when it gains a vertex. This function must be called before the actual removal due to vertices' array size involved.
@@ -99,12 +73,8 @@ public:
    * @param vertexWeight The weight of the gained vertex.
    * @return the weight of the graph after it gains a vertex with the informed weight.
    */
-  const Weight weightIncrementalGainAVertex(Graph graph, const Weight &vertexWeight) const {
-    Weight weight;
-
-    weight = graph.weight() + vertexWeight - penalityFunction(graph.verticesSize()) + penalityFunction(graph.verticesSize()+1);
-     
-    return weight;
-  }
+  const Weight weightIncrementalGainAVertex(Graph graph, const Weight &vertexWeight) const;
 
 };
+
+#include "penalizedGraphAlgorithm.ipp"

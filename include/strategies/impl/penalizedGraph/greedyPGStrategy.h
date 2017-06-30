@@ -8,12 +8,16 @@
 #include <strategies/abstractStrategy.h>
 #include <strategies/impl/greedy/greedyAlgorithm.h>
 
+#include <iostream>
+
 /**
  * A strategy that uses the greedy algorithm to distribute the load and the penalized graph algorithms to calculate the load.
  */
 class GreedyPenalizedGraphStrategy : public AbstractStrategy<MinimalParallelInput> {
 
 public:
+  typedef MinimalParallelInput Input;
+
   typedef PenalizedGraphAlgorithm<> PGAlgorithm;
   typedef PenalizedGraphAlgorithmTraits::Graph Graph;
   typedef Graph::Vertex Vertex;
@@ -96,7 +100,7 @@ public:
    * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
    * @param input The Load Balancer's input
    */
-  virtual void doTaskMapping(const NaiveBasicInput &input) {
+  virtual void doTaskMapping(const Input &input) {
     MaxHeap tasks;
     MinHeap PEs;
 
@@ -120,18 +124,19 @@ protected:
     greedyAlgorithm.map(*taskHeap, *PEHeap);
   }
 
-  virtual void populateTaskHeap(const NaiveBasicInput &input, MaxHeap *taskHeap) {
-    auto taskIds = input.getTasksIds();
+  virtual void populateTaskHeap(const Input &input, MaxHeap *taskHeap) {
+    auto tasks = input.getTasks();
 
-    for(auto taskId : taskIds)
-      taskHeap->push(Vertex(taskId, input.getTaskLoad(taskId)));
+    for(unsigned int i = 0; i < input.taskCount(); ++i)
+      taskHeap->push(Vertex(tasks[i].id, tasks[i].load));
   }
 
-  virtual void populatePEHeap(const NaiveBasicInput &input, MinHeap *PEHeap) const {
-    auto PEIds = input.getPEsIds();
+  virtual void populatePEHeap(const Input &input, MinHeap *PEHeap) const {
+    auto _PE = input.getPEs();
 
-    for(auto id : PEIds)
-      PEHeap->push(PE(id, &penalizedGraphAlgorithm));
+    for(unsigned int i = 0; i < input.PECount(); ++i) {
+      PEHeap->push(PE(_PE[i].id, &penalizedGraphAlgorithm));
+    }
   }
 
   /**

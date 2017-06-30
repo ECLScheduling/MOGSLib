@@ -79,7 +79,7 @@ public:
     std::chrono::system_clock::time_point after = std::chrono::system_clock::now();
     //End of the Task Mapping Analysis.
 
-    std::cout << "Strategy mapping time: " << std::chrono::duration_cast<std::chrono::microseconds>(after - before).count() << "us." << std::endl;
+    std::cout << "Strategy mapping time: " << (std::chrono::duration_cast<std::chrono::microseconds>(after - before).count())/1000 << "ms." << std::endl;
   }
 
 };

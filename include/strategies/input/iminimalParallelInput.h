@@ -15,22 +15,22 @@ public:
   /**
    * @return A pointer to an array of PEs.
    */
-  virtual PE * const getPEs() = 0;
+  virtual PE * getPEs() const = 0;
 
   /**
    * @return The ammount of PEs in this input.
    */
-  virtual const unsigned int PECount() = 0;
+  virtual const unsigned int PECount() const = 0;
 
   /**
    * @return A pointer to an array of tasks.
    */
-  virtual Task * const getTasks() = 0;
+  virtual Task * getTasks() const = 0;
 
   /**
    * @return The ammount of Tasks in this input.
    */
-  virtual const unsigned int taskCount() = 0;
+  virtual const unsigned int taskCount() const = 0;
 };
 
 typedef IMinimalParallelInput<> IDefaultMinimalParallelInput;
