@@ -7,7 +7,7 @@
 #include <iostream>
 
 class ParallelShard {
-public:
+protected:
   unsigned int _PESize;
 
 public:
@@ -45,6 +45,18 @@ public:
       mappedPEs[_PE.id].setLoad(_PE.graph.weight()); //TODO: Da de fazer melhor
     }
   }
+
+  void unionOfTasks(const ParallelShard &other) {
+    for(unsigned int i = 0; i < _PESize; ++i) {
+      auto otherPE = other.mappedPEs[i];
+      auto thisPE = mappedPEs[i];
+
+      for(auto task : otherPE.tasks) { //TODO: Tem algum erro aqui...
+        thisPE.mapTask(task);
+        std::cout << "PE " << i << " got task with weight " << task->load << std::endl;
+      }
+    }
+  }
   
 };
 
@@ -69,11 +81,11 @@ protected:
    * @param input The Strategy's input
    */
   virtual void doTaskMapping(const MinimalParallelInput &input) {
-    unsigned int shardCount = input.taskCount() / (input.PECount()*8);
+    unsigned int shardCount = input.taskCount() / (input.PECount()*4);
     unsigned int shardSize = input.taskCount() / shardCount;
 
     ParallelShard shards[shardCount](input.PECount());
-    std::cout << "Shards: " << shardCount << " shardSize: " << shardSize << " total: " << shardCount * shardSize << std::endl; 
+    std::cout << "Shards: " << shardCount << " shardSize: " << shardSize << " total: " << shardCount * shardSize << std::endl; //TODO: Tirar isso.
 
     #pragma omp parallel for schedule(static)
     for(unsigned int i = 0; i < shardCount; ++i) {
@@ -89,6 +101,25 @@ protected:
       shards[i].populateOutput(input.getTasks());
     }
 
+    unsigned int reductionShardCount = shardCount;
+
+    while(reductionShardCount > 0) { // TODO: Só funciona se nro de threads é divisivel por 2.
+      reductionShardCount /= 2;
+
+      #pragma omp parallel for schedule(static)
+      for(unsigned int i = 0; i < reductionShardCount; ++i) {
+        shards[i].unionOfTasks(shards[i+reductionShardCount]);
+      }
+    };
+
+    for(unsigned int i = 0; i < input.PECount(); ++i) {
+      auto tasks = shards[0].mappedPEs[i].tasks;
+      Weight sum = 0;
+      for(auto task : tasks) {
+        sum += task->load;
+      }
+      std::cout << "PE " << i << " with load sum: " << sum << " and size: " << tasks.size() << std::endl;
+    }
     populateOutput(shards[0].PEHeap);
   }
 
