@@ -1,57 +1,47 @@
 #pragma once
 
-#include <iostream>
 #include <strategies/impl/penalizedGraph/greedyParallelPGStrategy.h>
 #include <strategies/input/minimalParallelInput.h>
 
-typedef Traits<void>::Load Weight;
-
-namespace GreedyPGPModule {
-
-const Weight squarePenality(unsigned int size) {
-  return size * size;
-}
-
-}
-
 /**
- * This struct is used by the StrategyAnalyzer to analyze the GreedyParallelPGStrategy with the NaiveBasicOutput as input.
+ * The struct to be used by the StrategyAnalyzer to analyze the GreedyParallelPGStrategy with the MinimalParallelInput class as input.
  */
 struct GreedyParallelPGStrategyPerfModule {
 
   typedef IMinimalParallelInputTraits::Task Task;
   typedef IMinimalParallelInputTraits::PE PE;
 
-  MinimalParallelInput* createInput(int argc, char *argv[]) {
-    Task *tasks;
-    PE *PEs;
-    unsigned int taskCount;
-    unsigned int PECount;
+  /**
+   * Creates the simulated input which the strategy analyzer will bind to the strategy.
+   * @param argc The same argument count that is passed to the program.
+   * @param argv The same argument values that are passed to the program.
+   */
+  MinimalParallelInput* createInput(int argc, char *argv[]);
 
-    if(argc < 2) {
-      std::cout << "Correct execution of program: ./" << argv[0] << " {PE count} {Task Count}" << std::endl;
-      exit(0);
-    }
+  /**
+   * Creates the simulated strategy which the strategy analyzer will simulate.
+   * @param argc The same argument count that is passed to the program.
+   * @param argv The same argument values that are passed to the program.
+   */
+  GreedyParallelPGStrategy* createStrategy(int argc, char *argv[]);
 
-    PECount = atoi(argv[1]);
-    taskCount = atoi(argv[2]);
-    
-    PEs = new PE[PECount];
-    tasks = new Task[taskCount];
+private:
 
-    for(unsigned int i = 0; i < PECount; ++i) {
-      PEs[i] = PE(i);
-    }
+  /**
+   * Populates the task array for the simulated input with random and uniform distributed load values and sequential Ids.
+   * @param tasksRef A reference to the already allocated array of tasks.
+   * @param taskCount The number of tasks to be generated.
+   * @param meanLoad The peak value of the normal distribution.
+   * @param stdvLoad The standard deviation of the normal distribution.
+   * @param seed A random seed that will be fed to a random engine, making it possible to reproduce the same distribution.
+   */
+  void populateTaskArray(Task *tasksRef, unsigned int taskCount, int meanLoad, int stdvLoad, int seed);
 
-    for(unsigned int i = 0; i < taskCount; ++i) {
-      tasks[i] = Task(i, i*2);
-    }
-
-    return new MinimalParallelInput(PEs, tasks, PECount, taskCount);
-  }
-
-  GreedyParallelPGStrategy* createStrategy(int argc, char *argv[]) {
-    return new GreedyParallelPGStrategy(GreedyPGPModule::squarePenality);
-  }
+  /**
+   * Populates the array of PEs for the simulated input with sequential id values.
+   * @param PEsRef A reference to the already allocated array of PEs.
+   * @param PECount The number of PEs to be generated.
+   */
+  void populatePEArray(PE *PEsRef, unsigned int PECount);
 
 };

@@ -8,8 +8,6 @@
 #include <strategies/abstractStrategy.h>
 #include <strategies/impl/greedy/greedyAlgorithm.h>
 
-#include <iostream>
-
 /**
  * A strategy that uses the greedy algorithm to distribute the load and the penalized graph algorithms to calculate the load.
  */
@@ -21,7 +19,7 @@ public:
   typedef PenalizedGraphAlgorithm<> PGAlgorithm;
   typedef PenalizedGraphAlgorithmTraits::Graph Graph;
   typedef Graph::Vertex Vertex;
-  typedef NaiveBasicInput::Id Id;
+  typedef Traits<void>::Id Id;
 
 
   /**

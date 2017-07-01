@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <strategies/impl/penalizedGraph/greedyPGStrategy.h>
-#include <strategies/input/naiveBasicInput.h>
+#include <strategies/input/minimalParallelInput.h>
 
 typedef Traits<void>::Load Weight;
 
@@ -19,25 +19,35 @@ const Weight squarePenality(unsigned int size) {
  */
 struct GreedyPGStrategyPerfModule {
 
-  typedef Traits<void>::Load Weight;
-  typedef Traits<BasicInput>::SetOfId SetOfId;
-  typedef Traits<BasicInput>::LoadMap LoadMap;
+  typedef IMinimalParallelInputTraits::Task Task;
+  typedef IMinimalParallelInputTraits::PE PE;
 
-  NaiveBasicInput* createInput(int argc, char *argv[]) {
-    SetOfId PEs;
-    LoadMap tasks;
+  MinimalParallelInput* createInput(int argc, char *argv[]) {
+    Task *tasks;
+    PE *PEs;
+    unsigned int taskCount;
+    unsigned int PECount;
 
     if(argc < 2) {
       std::cout << "Correct execution of program: ./" << argv[0] << " {PE count} {Task Count}" << std::endl;
       exit(0);
     }
 
-    for(auto i = 0; i < atoi(argv[1]); ++i)
-      PEs.push_back(i);
-    for(int i = 0; i < atoi(argv[2]); ++i)
-        tasks[i] = i*2;
+    PECount = atoi(argv[1]);
+    taskCount = atoi(argv[2]);
+    
+    PEs = new PE[PECount];
+    tasks = new Task[taskCount];
 
-    return new NaiveBasicInput(tasks, PEs);
+    for(unsigned int i = 0; i < PECount; ++i) {
+      PEs[i] = PE(i);
+    }
+
+    for(unsigned int i = 0; i < taskCount; ++i) {
+      tasks[i] = Task(i, i*2);
+    }
+
+    return new MinimalParallelInput(PEs, tasks, PECount, taskCount);
   }
 
   GreedyPenalizedGraphStrategy* createStrategy(int argc, char *argv[]) {
