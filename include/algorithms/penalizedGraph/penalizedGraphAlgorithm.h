@@ -1,7 +1,9 @@
 #pragma once
 
-#include "penalizedGraphConcepts.h"
+#include "concepts/penalizedGraphConcepts.h"
+
 #include <structures/edgelessGraph.h>
+
 #include <system/traits.h>
 
 /**
@@ -34,7 +36,7 @@ public:
    * @param zero A reference to zero value in the Weight type.
    * @param penality The penality function which will be used to calculate the total weight of graphs.
    */
-  PenalizedGraphAlgorithm(const Weight &zero, const PenalityFunction &penality) : zeroRef(zero), penalityFunction(penality) { static_assert(PenalizedGraphAlgorithmConcept<Graph, Vertex, Weight>::conforms(), ""); }
+  PenalizedGraphAlgorithm(const Weight &zero, const PenalityFunction &penality) : zeroRef(zero), penalityFunction(penality) { static_assert(PenalizedGraphConcepts::AlgorithmConcept<Graph, Vertex>::conforms(), ""); }
 
   /**
    * Function to sum the vertex weigth.

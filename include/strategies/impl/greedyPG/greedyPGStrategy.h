@@ -1,6 +1,6 @@
 #pragma once
 
-#include "penalizedGraphAlgorithm.h"
+#include <algorithms/penalizedGraph/penalizedGraphAlgorithm.h>
 #include <system/traits.h>
 
 #include <strategies/input/minimalParallelInput.h>

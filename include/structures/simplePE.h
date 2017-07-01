@@ -78,4 +78,11 @@ public:
     tasks.push_back(task);
   }
 
+  /**
+   * @returns A primitive pointer to the array of tasks.
+   */
+  Task* getTasks() {
+    return &tasks[0];
+  }
+
 };

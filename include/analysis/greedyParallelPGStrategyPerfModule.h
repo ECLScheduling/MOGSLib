@@ -1,6 +1,6 @@
 #pragma once
 
-#include <strategies/impl/penalizedGraph/greedyParallelPGStrategy.h>
+#include <strategies/impl/greedyParallelPG/greedyParallelPGStrategy.h>
 #include <strategies/input/minimalParallelInput.h>
 
 /**

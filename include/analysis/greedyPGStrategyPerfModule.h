@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <strategies/impl/penalizedGraph/greedyPGStrategy.h>
+#include <strategies/impl/greedyPG/greedyPGStrategy.h>
 #include <strategies/input/minimalParallelInput.h>
 
 typedef Traits<void>::Load Weight;
