@@ -6,7 +6,7 @@
 
 #include <omp.h>
 
-#include <iostream> //TODO: Tirar esse include
+//#include <iostream> //TODO: Tirar esse include
 
 /**
  * This stategy employs the Greedy and Penalized Graph strategy in a parallel fashion.
@@ -38,7 +38,7 @@ protected:
     unsigned int shardSize = input.taskCount() / shardCount;
 
     ParallelShardGPPG<MinimalParallelInput, GreedyPenalizedGraphStrategy::MinHeap, GreedyPenalizedGraphStrategy::MaxHeap> shards[shardCount](input.PECount());
-    std::cout << "Shards: " << shardCount << " shardSize: " << shardSize << " total: " << shardCount * shardSize << std::endl; //TODO: Tirar isso.
+    //std::cout << "Shards: " << shardCount << " shardSize: " << shardSize << " total: " << shardCount * shardSize << std::endl; //TODO: Tirar isso.
 
     #pragma omp parallel for schedule(static)
     for(unsigned int i = 0; i < shardCount; ++i) {
@@ -65,13 +65,13 @@ protected:
       }
     };
     
-    for(unsigned int i = 0; i < input.PECount(); ++i) {
-      auto aPE = &shards[0].mappedPEs[i];
-      std::cout << "PE "<< aPE->id << ": " << aPE->load() << std::endl;
-      for(auto task : aPE->tasks) {
-        std::cout << "\tTask " << task->id << ": " << task->load << std::endl;
-      }
-    }
+    // for(unsigned int i = 0; i < input.PECount(); ++i) {
+    //   auto aPE = &shards[0].mappedPEs[i];
+    //   std::cout << "PE "<< aPE->id << ": " << aPE->load() << std::endl;
+    //   for(auto task : aPE->tasks) {
+    //     std::cout << "\tTask " << task->id << ": " << task->load << std::endl;
+    //   }
+    // }
 
     populateOutput(shards[0].PEHeap);
   }

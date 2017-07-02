@@ -55,17 +55,17 @@ public:
   void populateOutput(Task *taskRef) {
 
     for(unsigned int i = 0; i < _PESize; ++i) {
-      auto _PE = PEHeap.top();
-      auto tasks = _PE.tasks();
+      PE* _PE = PEHeap.top().basePE;
+      auto tasks = _PE->tasks;
 
       PEHeap.pop();
-      mappedPEs[_PE.id].id = _PE.id; //NOTE: Funciona prq os PEs são criados assim, em sequência.
+      mappedPEs[_PE->id].id = _PE->id; //NOTE: Funciona prq os PEs são criados assim, em sequência.
       
-      for(int j = 0; j < _PE.taskCount(); ++j) {
-        mappedPEs[_PE.id].mapTask(&taskRef[tasks[j].id]); //NOTE: Funciona prq as tasks foram criadas assim, em sequencia.
+      for(auto task : tasks) {
+        mappedPEs[_PE->id].mapTask(task); //NOTE: Funciona prq as tasks foram criadas assim, em sequencia.
       }
 
-      mappedPEs[_PE.id].setLoad(_PE.graph.weight()); //TODO: Da de fazer melhor
+      mappedPEs[_PE->id].setLoad(_PE->load());
     }
   }
 

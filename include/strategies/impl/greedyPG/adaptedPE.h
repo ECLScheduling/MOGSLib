@@ -14,7 +14,7 @@ public:
   /**
    * The base PE that this class wraps.
    */
-  BasePEType *basePERef;
+  BasePEType *basePE;
 
   /**
    * A PenalizedGraphAlgorithm instance pointer.
@@ -24,18 +24,36 @@ public:
   /**
    * An unsafe constructor which does not initializes all the internal state.
    */
-  AdaptedPE(){}
+  AdaptedPE(){
+    allocatedPE = false;
+  }
+
+  virtual ~AdaptedPE() {
+    if(allocatedPE)
+      delete basePE;
+  }
+
+  /**
+   * Set a base PE to this wrapper class. This class will be responsible for the memory cleaning.
+   * @param ptrPE A pointer to a PE instance.
+   */
+  void setBasePE(BasePEType *ptrPE) {
+    basePE = ptrPE;
+  }
 
   /**
    * A method that will wrap the original PE mapTask. This method also updates the load of the wrapped PE, assuming that the PE won't be changed anywhere else.
    */
   void mapTask(Task *task) {
-    basePERef->setLoad(penalizedGraphAlgorithm->weightIncrementalGainAVertex(basePERef->load(), basePERef->taskCount(), task->load));
-    basePERef->mapTask(task);
+    basePE->setLoad(penalizedGraphAlgorithm->weightIncrementalGainAVertex(basePE->load(), basePE->taskCount(), task->load));
+    basePE->mapTask(task);
   }
 
   const bool operator>(AdaptedPE<BasePEType, PGAlgorithm> other) {
-    return *basePERef > *(other.basePERef);
+    return *basePE > *(other.basePE);
   }
 
+protected:
+
+  bool allocatedPE;
 };

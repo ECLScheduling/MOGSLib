@@ -90,12 +90,8 @@ struct GreedyStrategyAlgorithmTraits : Traits<void> {
    * Internal Helper struct to be used as the min-heap comparator.
    */
   struct MinHeapComparator {
-    inline bool operator ()(const PE *a, const PE *b) const {
-      return *a > *b;
-    }
-
-    inline bool operator ()(PE *a, PE *b) const {
-      return *a > *b;
+    inline bool operator ()(PE a, PE b) const {
+      return a > b;
     }
   };
 
@@ -107,5 +103,5 @@ struct GreedyStrategyAlgorithmTraits : Traits<void> {
   /**
    * Type used as a min heap for the greedy algorithm.
    */
-  typedef std::priority_queue<PE, std::vector<PE*>, MinHeapComparator > MinHeap;
+  typedef std::priority_queue<PE, std::vector<PE>, MinHeapComparator > MinHeap;
 };

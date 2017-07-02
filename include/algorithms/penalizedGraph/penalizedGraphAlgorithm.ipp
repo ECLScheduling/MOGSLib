@@ -2,6 +2,8 @@
 // Implementation of the PenalizedGraphAlgorithm template methods.
 // #############################################
 
+#include <cassert>
+
 template<typename Weight>
 const Weight PenalizedGraphAlgorithm<Weight>::totalWeightGraph(const Weight &vWeightSum, const unsigned int &vSize) const {
   return vWeightSum + penalityFunction(vSize);
@@ -17,10 +19,16 @@ const Weight PenalizedGraphAlgorithm<Weight>::weightUnion(const Weight &vSumA, c
 
 template<typename Weight>
 const Weight PenalizedGraphAlgorithm<Weight>::weightIncrementalLoseAVertex(const Weight &curWeight, const unsigned int &vSize, const Weight &vWeight) const {   
+  assert(vSize > 0);
+
   return curWeight - vWeight - penalityFunction(vSize) + penalityFunction(vSize-1);
 }
 
 template<typename Weight>
 const Weight PenalizedGraphAlgorithm<Weight>::weightIncrementalGainAVertex(const Weight &curWeight, const unsigned int &vSize, const Weight &vWeight) const {
-  return curWeight - vWeight - penalityFunction(vSize) + penalityFunction(vSize+1);
+  if(vSize == 0) {
+    return totalWeightGraph(vWeight, 1);
+  }
+
+  return curWeight + vWeight - penalityFunction(vSize) + penalityFunction(vSize+1);
 }

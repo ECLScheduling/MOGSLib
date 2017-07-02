@@ -6,4 +6,4 @@
 
 #include "greedyPGStrategyPerfModule.h"
 
-//#include "greedyParallelPGStrategyPerfModule.h"
+#include "greedyParallelPGStrategyPerfModule.h"

@@ -41,7 +41,7 @@ struct GreedyStrategyAlgorithm {
       tasks.pop();
       PEs.pop();
 
-      _PE->mapTask(task);
+      _PE.mapTask(task);
       PEs.push(_PE);
     }
   }
