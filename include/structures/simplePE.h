@@ -32,13 +32,16 @@ public:
    * An unsafe constructor, but may be used to create static arrays.
    * @details It does not initialize the internal state.
    */
-  SimplePE() {}
+  SimplePE() {
+    _load = 0;
+  }
 
   /**
    * A safe constructor that initializes the internal state.
    * @param anId The task's id.
    */
   SimplePE(const Id &anId) {
+    _load = 0;
     id = anId;
   }
 
@@ -79,10 +82,10 @@ public:
   }
 
   /**
-   * @returns A primitive pointer to the array of tasks.
+   * @return The quantity of tasks mapped to this PE.
    */
-  Task* getTasks() {
-    return &tasks[0];
+  const unsigned int taskCount() const {
+    return tasks.size();
   }
 
 };

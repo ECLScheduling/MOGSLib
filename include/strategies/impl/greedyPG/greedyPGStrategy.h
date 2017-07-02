@@ -1,12 +1,14 @@
 #pragma once
 
 #include <algorithms/penalizedGraph/penalizedGraphAlgorithm.h>
+#include <algorithms/greedy/greedyAlgorithm.h>
+
 #include <system/traits.h>
 
 #include <strategies/input/minimalParallelInput.h>
-
 #include <strategies/abstractStrategy.h>
-#include <strategies/impl/greedy/greedyAlgorithm.h>
+
+#include "adaptedPE.h"
 
 /**
  * A strategy that uses the greedy algorithm to distribute the load and the penalized graph algorithms to calculate the load.
@@ -14,88 +16,35 @@
 class GreedyPenalizedGraphStrategy : public AbstractStrategy<MinimalParallelInput> {
 
 public:
-  typedef MinimalParallelInput Input;
-
   typedef PenalizedGraphAlgorithm<> PGAlgorithm;
-  typedef PenalizedGraphAlgorithmTraits::Graph Graph;
-  typedef Graph::Vertex Vertex;
-  typedef Traits<void>::Id Id;
 
+  typedef MinimalParallelInput Input;
+  typedef typename Input::Task Task;
+  typedef AdaptedPE<typename Input::PE, PGAlgorithm> PE;
+  typedef Task::Id Id;
 
   /**
    * The penalized graph algorithm that will be used in the strategy.
    */
   PGAlgorithm penalizedGraphAlgorithm;
-
-  /**
-   * Auxiliary PE structure to wrap the graph, adding the mapTask functionallity needed by GreedyAlgorithm.
-   */
-  struct PE {
-
-    /**
-     * The wrapped graph structure.
-     */
-    Graph graph;
-
-    /**
-     * The PE id, which is the same as the graph id.
-     * @note This cannot be a pointer as the greedy uses id value, not reference.
-     */
-    Id id;
-
-    /**
-     * The reference to the PenalizedGraphAlgorithm instance used to calculate the weight of the PE.
-     */
-    const PGAlgorithm * pgAlgorithm;
-
-    PE(const Id &anId, const PGAlgorithm *pgAlgorithmRef) : id(anId), pgAlgorithm(pgAlgorithmRef) {
-      graph = Graph(id);
-    }
-
-    /**
-     * A function that is called on the GeedyStrategy when the algorithm decides where a task will be located.
-     */
-    void mapTask(const Vertex &task) {
-      graph.addVertex(task);
-      graph.setWeight(pgAlgorithm->weightIncrementalGainAVertex(graph, task.weight()));
-    }
-
-    /**
-     * Proxy function to get the vertices of the graph, which are the tasks of this PE wrapper structure.
-     */
-    inline Vertex * tasks() {
-      return graph.vertices();
-    }
-
-    /**
-     * Proxy function to get the vertices count of the graph, which are the tasks count of this PE wrapper structure.
-     */
-    inline const int taskCount() {
-      return graph.verticesSize();
-    }
-
-    /**
-     * A forwarded greater than comparator.
-     */
-    const bool operator>(const PE &o) const {
-      return graph > o.graph;
-    }
-    
-  };
   
-  typedef GreedyStrategyAlgorithm<Vertex,PE> GreedyAlgorithm;
+  typedef GreedyStrategyAlgorithm<Task, PE> GreedyAlgorithm;
   typedef GreedyAlgorithm::MaxHeap MaxHeap;
   typedef GreedyAlgorithm::MinHeap MinHeap;
 
   /**
    * Method to create this strategy with a said penality function
    */
-  GreedyPenalizedGraphStrategy(const PGAlgorithm::PenalityFunction &penalityFunction) : penalizedGraphAlgorithm(PenalizedGraphAlgorithmTraits::zeroRef, penalityFunction) {}
+  GreedyPenalizedGraphStrategy(const PGAlgorithm::PenalityFunction &penalityFunction) : penalizedGraphAlgorithm(Traits<void>::zeroRef, penalityFunction) {
+    curSizePEs = 0;
+  }
 
-  virtual ~GreedyPenalizedGraphStrategy() {}
+  virtual ~GreedyPenalizedGraphStrategy() {
+    deleteAdaptedPEPointers();
+  }
 
   /**
-   * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
+   * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the strategyOutput variable.
    * @param input The Load Balancer's input
    */
   virtual void doTaskMapping(const Input &input) {
@@ -112,6 +61,26 @@ public:
 protected:
 
   /**
+   * A pointer to an array of wrapper objects to the PE's data.
+   */
+  PE *adaptedPEs;
+
+  /**
+   * The size of the adaptedPEs array.
+   */
+  unsigned int curSizePEs;
+
+  /**
+   * Internal method to release the memory used to allocate the wrapper objects that contain the base PE data.
+   */
+  void deleteAdaptedPEPointers() {
+    if(curSizePEs != 0){
+      delete [] adaptedPEs;
+    }
+    curSizePEs = 0;
+  }
+
+  /**
    * The implementation of the strategy, which is executing the greedy strategy with the mapped graph and container objects.
    * @param taskHeap The pointer to the MaxHeap of tasks.
    * @param PEHeap The pointer to the MinHeap of PEs.
@@ -122,18 +91,31 @@ protected:
     greedyAlgorithm.map(*taskHeap, *PEHeap);
   }
 
+  /**
+   * Adds all the tasks to the task heap so they can be used on the greedy algorithm.
+   */
   virtual void populateTaskHeap(const Input &input, MaxHeap *taskHeap) {
     auto tasks = input.getTasks();
 
     for(unsigned int i = 0; i < input.taskCount(); ++i)
-      taskHeap->push(Vertex(tasks[i].id, tasks[i].load));
+      taskHeap->push(&tasks[i]);
   }
 
-  virtual void populatePEHeap(const Input &input, MinHeap *PEHeap) const {
+  /**
+   * Adds all the PEs in the heap for using it on greedy algorithm.
+   */
+  virtual void populatePEHeap(const Input &input, MinHeap *PEHeap) {
     auto _PE = input.getPEs();
 
-    for(unsigned int i = 0; i < input.PECount(); ++i) {
-      PEHeap->push(PE(_PE[i].id, &penalizedGraphAlgorithm));
+    deleteAdaptedPEPointers();
+    curSizePEs = input.PECount();
+    adaptedPEs = new PE[curSizePEs];
+
+    for(unsigned int i = 0; i < curSizePEs; ++i) {
+      adaptedPEs[i].basePERef = &_PE[i];
+      adaptedPEs[i].penalizedGraphAlgorithm = &penalizedGraphAlgorithm;
+    
+      PEHeap->push(&adaptedPEs[i]);
     }
   }
 
@@ -144,10 +126,10 @@ protected:
   virtual void populateOutput(MinHeap &PEs) {
     while(!PEs.empty()) {
       auto _PE = PEs.top();
-      auto tasks = _PE.tasks();
+      auto tasks = _PE->basePERef->tasks;
 
-      for(auto i = 0; i < _PE.taskCount(); ++i) {
-        lbOutput.set(tasks[i].id, _PE.id);
+      for(unsigned int i = 0; i < _PE->basePERef->taskCount(); ++i) {
+        strategyOutput.set(tasks[i]->id, _PE->basePERef->id);
       }
 
       PEs.pop();

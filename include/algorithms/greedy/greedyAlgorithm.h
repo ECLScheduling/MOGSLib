@@ -1,6 +1,6 @@
 #pragma once
 
-#include "greedyConcepts.h"
+#include "concepts/greedyConcepts.h"
 
 #include <system/traits.h>
 
@@ -35,13 +35,13 @@ struct GreedyStrategyAlgorithm {
 
     // Main greedy strategy loop.
     while(!tasks.empty()) {
-      const Task task = tasks.top();
-      PE _PE = PEs.top();
+      auto task = tasks.top();
+      auto _PE = PEs.top();
 
       tasks.pop();
       PEs.pop();
 
-      _PE.mapTask(task);
+      _PE->mapTask(task);
       PEs.push(_PE);
     }
   }

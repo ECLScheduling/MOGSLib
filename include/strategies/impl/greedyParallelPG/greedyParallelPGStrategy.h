@@ -38,7 +38,7 @@ protected:
     unsigned int shardSize = input.taskCount() / shardCount;
 
     ParallelShardGPPG<MinimalParallelInput, GreedyPenalizedGraphStrategy::MinHeap, GreedyPenalizedGraphStrategy::MaxHeap> shards[shardCount](input.PECount());
-    //std::cout << "Shards: " << shardCount << " shardSize: " << shardSize << " total: " << shardCount * shardSize << std::endl; //TODO: Tirar isso.
+    std::cout << "Shards: " << shardCount << " shardSize: " << shardSize << " total: " << shardCount * shardSize << std::endl; //TODO: Tirar isso.
 
     #pragma omp parallel for schedule(static)
     for(unsigned int i = 0; i < shardCount; ++i) {

@@ -22,6 +22,11 @@ struct Traits {
    * The type definition that will serve to quantify a task's load value for the framework.
    */
   typedef uint_fast32_t Load;
+
+  /**
+   * Reference to the zero value of the Load type.
+   */
+  const static Load zeroRef = 0;
 };
 
 //#########################
@@ -61,25 +66,6 @@ struct IMinimalParallelInputTraits : Traits<void> {
 // Structure Traits
 //#########################
 
-template<>
-struct Traits<EdgelessVertex> : Traits<void> {
-
-  /**
-   * Type definition of the weight of a vertex and graph for this structure.
-   */
-  typedef Load Weight;
-  
-  const static Weight zeroRef = 0;
-};
-
-struct EdgelessGraphDefaultTraits : Traits<EdgelessVertex> {
-
-  /**
-   * The type of the vertex used by the EdgelessGraph when loaded with this trait.
-   */
-  typedef EdgelessVertex Vertex;
-};
-
 
 //#########################
 // Algorithms default Traits
@@ -91,8 +77,12 @@ struct GreedyStrategyAlgorithmTraits : Traits<void> {
    * Internal Helper struct to be used as the max-heap comparator.
    */
   struct MaxHeapComparator {
-    inline bool operator ()(const Task &a, const Task &b) const {
-      return a < b;
+    inline bool operator ()(const Task *a, const Task *b) const {
+      return !(*a > *b);
+    }
+
+    inline bool operator ()(Task *a, Task *b) const {
+      return !(*a > *b);
     }
   };
 
@@ -100,31 +90,22 @@ struct GreedyStrategyAlgorithmTraits : Traits<void> {
    * Internal Helper struct to be used as the min-heap comparator.
    */
   struct MinHeapComparator {
-    inline bool operator ()(const PE &a, const PE &b) const {
-      return a > b;
+    inline bool operator ()(const PE *a, const PE *b) const {
+      return *a > *b;
+    }
+
+    inline bool operator ()(PE *a, PE *b) const {
+      return *a > *b;
     }
   };
 
   /**
    * Type used as a max heap for the greedy algorithm.
    */
-  typedef std::priority_queue<Task, std::vector<Task>, MaxHeapComparator > MaxHeap;
+  typedef std::priority_queue<Task, std::vector<Task*>, MaxHeapComparator > MaxHeap;
   
   /**
    * Type used as a min heap for the greedy algorithm.
    */
-  typedef std::priority_queue<PE, std::vector<PE>, MinHeapComparator > MinHeap;
-};
-
-struct PenalizedGraphAlgorithmTraits {
-
-  /**
-   * The default Graph type for the PenalizedGraphAlgorithm, which depends on the Vertex type.
-   */
-  typedef EdgelessGraph<EdgelessGraphDefaultTraits> Graph;
-
-  enum {
-    zeroRef = EdgelessGraphDefaultTraits::zeroRef
-  };
-  
+  typedef std::priority_queue<PE, std::vector<PE*>, MinHeapComparator > MinHeap;
 };

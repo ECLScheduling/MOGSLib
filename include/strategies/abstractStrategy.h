@@ -14,7 +14,7 @@ protected:
   /**
    * The MigrationElement object that every strategy needs to output a result.
    */
-  MigrationElement lbOutput;
+  MigrationElement strategyOutput;
 
 public:
 
@@ -25,7 +25,7 @@ public:
    */
   const MigrationElement& mapTasks(const LBInput &input) {
     doTaskMapping(input);
-    return lbOutput;
+    return strategyOutput;
   }
 
   /**

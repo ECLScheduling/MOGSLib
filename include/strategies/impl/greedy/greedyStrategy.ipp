@@ -42,6 +42,6 @@ void GreedyStrategy<InputType, true>::doTaskMapping(const InputType &input) {
 
     PEs.push(LoadBearer(PE.id, PE.load + task.load));
 
-    this->lbOutput.set(task.id, PE.id);
+    this->strategyOutput.set(task.id, PE.id);
   }
 }
