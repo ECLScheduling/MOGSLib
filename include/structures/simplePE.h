@@ -51,7 +51,14 @@ public:
   ~SimplePE() {}
 
   /**
-   * A comparator that compares a simple task with other solely by the load value.
+   * A less than comparator that compares a simple task with other solely by the load value.
+   */
+  const bool operator<(const SimplePE &other) const {
+    return _load < other._load;
+  }
+
+  /**
+   * A greater than comparator that compares a simple task with other solely by the load value.
    */
   const bool operator>(const SimplePE &other) const {
     return _load > other._load;

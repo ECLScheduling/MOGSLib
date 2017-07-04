@@ -16,6 +16,7 @@ public:
 
   typedef typename InputType::PE PE;
   typedef typename InputType::Task Task;
+  typedef typename Task::Load Load;
 
   /**
    * An array of PEs. This is a local variable.
@@ -33,18 +34,28 @@ public:
   MinHeap PEHeap;
 
   /**
-   * A constructor that allocates but does not initialize the local view of the PEs.
+   * An unsafe constructor that doesn't initialize the internal state. This constructor is needed due to the nature of this object which will be created by new [].
    */
-  ParallelShardGPPG(unsigned int PESize) {
-    _PESize = PESize;
-    mappedPEs = new PE[_PESize];
+  ParallelShardGPPG() {
+    allocatedPE = false;
   }
 
   /**
    * A deconstructor that destroys the local view of the PEs.
    */
   virtual ~ParallelShardGPPG() {
-    delete[] mappedPEs;
+    destroyAllocatedPE();
+  }
+
+  /**
+   * Allocated the array of local PEs used in this shard.
+   * @details This method needs to be called before any operation on this class. 
+   * @param PECount The total ammount of PEs the input to the strategy has.
+   */
+  void setPECount(unsigned int PECount) {
+    destroyAllocatedPE();
+    _PESize = PECount;
+    mappedPEs = new PE[_PESize];
   }
 
   /**
@@ -55,17 +66,20 @@ public:
   void populateOutput(Task *taskRef) {
 
     for(unsigned int i = 0; i < _PESize; ++i) {
+      Load loadSum = 0;
       PE* _PE = PEHeap.top().basePE;
       auto tasks = _PE->tasks;
 
       PEHeap.pop();
-      mappedPEs[_PE->id].id = _PE->id; //NOTE: Funciona prq os PEs são criados assim, em sequência.
+      mappedPEs[_PE->id].id = _PE->id;
       
       for(auto task : tasks) {
-        mappedPEs[_PE->id].mapTask(task); //NOTE: Funciona prq as tasks foram criadas assim, em sequencia.
+        mappedPEs[_PE->id].mapTask(task);
+        loadSum += task->load;
       }
 
-      mappedPEs[_PE->id].setLoad(_PE->load());
+      // Load is set to the sum of the loads to pre-calculate the final weight of the graph, which is not visible to this container object.
+      mappedPEs[_PE->id].setLoad(loadSum);
     }
   }
 
@@ -82,8 +96,22 @@ public:
       for(auto task : otherPE->tasks) {
         thisPE->mapTask(task);
       }
+      
+      thisPE->setLoad(thisPE->load() + otherPE->load());
+    }
+  }
+  
+  protected:
 
-      thisPE->setLoad(thisPE->load() + otherPE->load()); //TODO: Ainda teria que fazer o calculo da penalidade
+    bool allocatedPE;
+
+  /**
+   * Destroy the local data of the PEs.
+   */
+  void destroyAllocatedPE() {
+    if(allocatedPE) {
+      delete[] mappedPEs;
+      allocatedPE = false;
     }
   }
   

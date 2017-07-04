@@ -26,6 +26,14 @@ public:
   SimpleTask() {}
 
   /**
+   * An copy constructor, useful for making copies of an object.
+   */
+  SimpleTask(const SimpleTask<IdType, LoadType> &copy) {
+    id = copy.id;
+    load = copy.load;
+  }
+
+  /**
    * A safe constructor that initializes the internal state.
    * @param anId The task's id.
    * @param aLoad The task's load.
@@ -36,7 +44,14 @@ public:
   }
 
   /**
-   * A comparator that compares a simple task with other solely by the load value.
+   * A less comparator that compares a simple task with other solely by the load value.
+   */
+  const bool operator<(const SimpleTask &other) const {
+    return load < other.load;
+  }
+
+  /**
+   * A greater than comparator that compares a simple task with other solely by the load value.
    */
   const bool operator>(const SimpleTask &other) const {
     return load > other.load;

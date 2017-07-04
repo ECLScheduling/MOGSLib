@@ -52,7 +52,14 @@ public:
     populateTaskHeap(input, &tasks);
 
     executeGreedyStrategy(&tasks, &PEs);
-    populateOutput(PEs);
+    
+    while(!PEs.empty()) {
+      auto _PE = PEs.top().basePE;
+      auto tasks = _PE->tasks;
+
+      strategyOutput.set(_PE);
+      PEs.pop();
+    }
   }
 
 protected:
@@ -90,23 +97,6 @@ protected:
       adaptedPE.penalizedGraphAlgorithm = &penalizedGraphAlgorithm;
     
       PEHeap->push(adaptedPE);
-    }
-  }
-
-  /**
-   * This method is called to populate the output variable lbOutput.
-   * @param PEs The heap of PEs modified to contain the tasks by the greedy algorithm.
-   */
-  virtual void populateOutput(MinHeap &PEs) {
-    while(!PEs.empty()) {
-      auto _PE = PEs.top().basePE;
-      auto tasks = _PE->tasks;
-
-      for(unsigned int i = 0; i < _PE->taskCount(); ++i) {
-        strategyOutput.set(tasks[i]->id, _PE->id);
-      }
-
-      PEs.pop();
     }
   }
 

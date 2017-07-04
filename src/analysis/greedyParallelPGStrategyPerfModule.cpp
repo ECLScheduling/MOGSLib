@@ -20,8 +20,8 @@ MinimalParallelInput* GreedyParallelPGStrategyPerfModule::createInput(int argc, 
   unsigned int PECount;
   unsigned int taskCount;
 
-  if(argc < 6) {
-    std::cout << "Correct execution of program: ./" << argv[0] << " {PE count} {Task Count} {Task Load Mean} {Task Load Std variation} {Random Seed}" << std::endl;
+  if(argc < 7) {
+    std::cout << "Correct execution of program: ./" << argv[0] << " {PE count} {Task Count} {Task Load Mean} {Task Load Std variation} {Random Seed} {Parallel Factor}" << std::endl;
     exit(0);
   }
 
@@ -37,7 +37,7 @@ MinimalParallelInput* GreedyParallelPGStrategyPerfModule::createInput(int argc, 
 }
 
 GreedyParallelPGStrategy* GreedyParallelPGStrategyPerfModule::createStrategy(int argc, char *argv[]) {
-  return new GreedyParallelPGStrategy(GreedyPGPModule::penalityFunction);
+  return new GreedyParallelPGStrategy(GreedyPGPModule::penalityFunction, atoi(argv[6]));
 }
 
 void GreedyParallelPGStrategyPerfModule::populateTaskArray(GreedyParallelPGStrategyPerfModule::Task *tasksRef, unsigned int taskCount, int meanLoad, int stdvLoad, int seed) {

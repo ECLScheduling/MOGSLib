@@ -33,21 +33,6 @@ struct Traits {
 // Input Traits
 //#########################
 
-template<>
-struct Traits<BasicInput> : Traits<void> {
-
-  /**
-   * Type definition of the structure used to represent the set of processing elements in the BasicInput.
-   */
-  typedef std::vector<Id> SetOfId;
-
-  /**
-   * Type definition of the structure used to represent the task set in the BasicInput.
-   */
-  typedef std::map<Id, Load> LoadMap;
-  
-};
-
 struct IMinimalParallelInputTraits : Traits<void> {
 
   /**
@@ -78,11 +63,11 @@ struct GreedyStrategyAlgorithmTraits : Traits<void> {
    */
   struct MaxHeapComparator {
     inline bool operator ()(const Task *a, const Task *b) const {
-      return !(*a > *b);
+      return *a < *b;
     }
 
     inline bool operator ()(Task *a, Task *b) const {
-      return !(*a > *b);
+      return *a < *b;
     }
   };
 

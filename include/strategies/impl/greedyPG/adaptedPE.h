@@ -49,6 +49,9 @@ public:
     basePE->mapTask(task);
   }
 
+  /**
+   * A greater than operator that pipes to the basePE.
+   */
   const bool operator>(AdaptedPE<BasePEType, PGAlgorithm> other) {
     return *basePE > *(other.basePE);
   }
