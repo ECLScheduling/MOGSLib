@@ -1,5 +1,7 @@
 #pragma once
 
+#include "migrationElementDescriptionAnalyzer.h"
+
 #include <strategies/output/migrationElement.h>
 #include <system/static.h>
 #include <utility>
@@ -77,11 +79,23 @@ public:
     std::chrono::system_clock::time_point before = std::chrono::system_clock::now();
     MigrationElement output = strategy->mapTasks(*input);
     std::chrono::system_clock::time_point after = std::chrono::system_clock::now();
+
+    auto descriptiveAnalysis = MigrationElementDescriptionAnalyzer::analyze(&output);
     //End of the Task Mapping Analysis.
 
+    std::cout << "############### Time Analysis ###################" << std::endl;
     std::cout << "Strategy mapping time: " << (std::chrono::duration_cast<std::chrono::milliseconds>(after - before).count()) << "ms." << std::endl;
 
+    std::cout << std::endl << "############### Descriptive Analysis ############" << std::endl;
+    std::cout << "PE mean load: " << descriptiveAnalysis.mean << std::endl;
+    std::cout << "PE load standard deviation: " << descriptiveAnalysis.standardDeviation << std::endl;
+
+    std::cout << "Min loaded PE: " << descriptiveAnalysis.min << std::endl;
+    std::cout << "Max loaded PE: " << descriptiveAnalysis.max << std::endl;
     
+    std::cout << "PE Q1 load: " << descriptiveAnalysis.q1 << std::endl;
+    std::cout << "PE median load: " << descriptiveAnalysis.median << std::endl;
+    std::cout << "PE Q3 load: " << descriptiveAnalysis.q3 << std::endl;
   }
 
 };

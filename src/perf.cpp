@@ -1,7 +1,8 @@
 #include <analysis/_all_modules.h>
 
 #ifndef ModuleName
-#define ModuleName GreedyParallelPGStrategyPerfModule
+#define ModuleName GreedyPGStrategyPerfModule
+//#define ModuleName GreedyParallelPGStrategyPerfModule
 #endif
 
 int main(int argc, char *argv[]) {

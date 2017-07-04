@@ -2,6 +2,9 @@
 
 #include <system/traits.h>
 
+#include <structures/simplePE.h> //TODO: This include must be uneeded in future versions.
+#include <structures/simpleTask.h> //TODO: This include must be uneeded in future versions.
+
 /**
  * This class serve as a form of output to the strategies in this library.
  */

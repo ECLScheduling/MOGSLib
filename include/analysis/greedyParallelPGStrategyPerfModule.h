@@ -28,14 +28,24 @@ struct GreedyParallelPGStrategyPerfModule {
 private:
 
   /**
-   * Populates the task array for the simulated input with random and uniform distributed load values and sequential Ids.
+   * Populates the task array for the simulated input with random and normal distributed load values and sequential Ids.
    * @param tasksRef A reference to the already allocated array of tasks.
    * @param taskCount The number of tasks to be generated.
    * @param meanLoad The peak value of the normal distribution.
    * @param stdvLoad The standard deviation of the normal distribution.
    * @param seed A random seed that will be fed to a random engine, making it possible to reproduce the same distribution.
    */
-  void populateTaskArray(Task *tasksRef, unsigned int taskCount, int meanLoad, int stdvLoad, int seed);
+  void populateTaskArrayNormalDist(Task *tasksRef, unsigned int taskCount, int meanLoad, int stdvLoad, int seed);
+
+  /**
+   * Populates the task array for the simulated input with random and uniform distributed load values and sequential Ids.
+   * @param tasksRef A reference to the already allocated array of tasks.
+   * @param taskCount The number of tasks to be generated.
+   * @param min The lesser value of the distribution.
+   * @param max The greater value of the distribution.
+   * @param seed A random seed that will be fed to a random engine, making it possible to reproduce the same distribution.
+   */
+  void populateTaskArrayUniformDist(Task *tasksRef, unsigned int taskCount, int min, int max, int seed);
 
   /**
    * Populates the array of PEs for the simulated input with sequential id values.
