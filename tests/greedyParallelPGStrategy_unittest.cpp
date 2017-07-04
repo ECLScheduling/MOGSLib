@@ -1,122 +1,25 @@
 #include <strategies/impl/greedyParallelPG/greedyParallelPGStrategy.h>
-#include <gtest/gtest.h>
 
-#include <iostream>
-#include <queue>
+#include "common/greedyPGStrategyTestFixture.h"
 
 // ###########################################
 // Tests using the GreedyParallelPGStrategyTestNoPenality Fixture.
 // ###########################################
 
-typedef Traits<void>::Load Load;
-
-const Load noPenalityFunction(unsigned int size) {
-  return 0;
-}
-
-const Load linearPenalityFunction(unsigned int size) {
-  return size;
-}
-
-const Load squarePenalityFunction(unsigned int size) {
-  return size*size;
-}
-
 /**
  * Fixture for testing the GreedyParallelPGStrategy strategy.
  */
-class GreedyParallelPGStrategyTestNoPenality : public ::testing::Test {
+class GreedyParallelPGStrategyTest : public GreedyPGStrategyFixture<GreedyParallelPGStrategy> {
 public:
-  typedef MinimalParallelInput Input;
-  typedef Input::PE PE;
-  typedef Input::Task Task;
-
-  struct TaskPtrComparator {
-
-    const bool operator()(Task *a, Task *b) {
-      return *a < *b;
-    }
-  };
-
-  GreedyParallelPGStrategy *strategy;
-  
-  unsigned int PECount, taskCount;
   unsigned int parallelFactor = 2;
-  const Load (*penalityFunction)(unsigned int);
-
-  PE *PEs;
-  Task *tasks;
-  MinimalParallelInput *input;
-
-  void SetUp() {
-    penalityFunction = noPenalityFunction;
-  }
 
   void createStrategy() {
     strategy = new GreedyParallelPGStrategy(penalityFunction, parallelFactor);
   }
 
-  void TearDown() {
-    delete strategy;
-    delete input;
-  }
-
-  void createInput() {
-    createPEs(PECount);
-    input = new Input(PEs, tasks, PECount, taskCount);
-  }
-
-  const MigrationElement &mapTasks() {
-    return strategy->mapTasks(*input);  
-  }
-
-  void createPEs(unsigned int N) {
-    if(N == 0) {
-      return;
-    }
-
-    PEs = new PE[N];
-    for(unsigned int i = 0; i < N; ++i)
-      PEs[i] = PE(i);
-  }
-
-  void createTasksWithIncrementalLoad() {
-    tasks = new Task[taskCount];
-
-    for(unsigned int i = 0; i < taskCount; ++i) {
-      tasks[i] = Task(i, i);
-    }
-  }
-
-  void createTasksWithDecrementingLoad() {
-    tasks = new Task[taskCount];
-
-    for(unsigned int i = 0; i < taskCount; ++i) {
-      tasks[i] = Task(i, taskCount-i);
-    }
-  }
-
-
-  void compareOutput(std::vector< std::vector<Load> > &expectedLoads, const std::vector<PE*> &mappedPEs) {
-    for(unsigned int i = 0; i < PECount; ++i) {
-      std::priority_queue<Task*, std::vector<Task*>, TaskPtrComparator> taskQueue;
-
-      ASSERT_EQ(expectedLoads[i].size(), mappedPEs[i]->taskCount()) << "Failed at the " << i << " PE.";
-
-      for(unsigned int j = 0; j < mappedPEs[i]->taskCount(); ++j) {
-        taskQueue.push(mappedPEs[i]->tasks[j]);
-      }
-      for(unsigned int j = 0; j < mappedPEs[i]->taskCount(); ++j) {
-        auto task = taskQueue.top();
-        taskQueue.pop();
-        ASSERT_EQ(expectedLoads[i][j], task->load) << "Failed at the " << i << " PE on the " << j << "th task of the total " << mappedPEs[i]->taskCount() << ".";
-      }
-   }
- }
-
 };
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, emptyTest) {
+TEST_F(GreedyParallelPGStrategyTest, emptyTest) {
   PECount = 0;
   taskCount = 0;
   
@@ -128,7 +31,7 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, emptyTest) {
   EXPECT_EQ(0, output.mappedPEs.size());
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, noTasks) {
+TEST_F(GreedyParallelPGStrategyTest, noTasks) {
   PECount = 1;
   taskCount = 0;
 
@@ -140,7 +43,7 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, noTasks) {
   EXPECT_EQ(0, output.mappedPEs.size());
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, realTestParallelFactor2) {
+TEST_F(GreedyParallelPGStrategyTest, realTestParallelFactor2) {
   PECount = 2;
   taskCount = 16;
 
@@ -149,18 +52,16 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, realTestParallelFactor2) {
   createInput();
 
   // Tasks: 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
-  // Shards with PF = 2: [0,1,2,3] + [4,5,6,7] + [8,9,10,11] + [12,13,14,15]
-  // After local Greedy PEs: (0[3,0] , 1[2,1]) + (0[7,4] , 1[6,5]) + (0[11,8] , 1[10,9]) + (0[15,12], 1[14,13])
-  // After reduction: 0 [0,3,4,7,8,11,12,15] + 1 [1,2,5,6,9,10,13,14]
-  std::vector<Load> expectedP0 = { 15, 12, 11, 8, 7, 4, 3, 0};
-  std::vector<Load> expectedP1 = { 14, 13, 10, 9, 6, 5, 2, 1};
+  // After Greedy: 0 [15,12,10,9,7,4,2,1] + 1 [14,13,11,8,6,5,3]
+  std::vector<Load> expectedP0 = { 15, 12, 10, 9, 7, 4, 2, 1};
+  std::vector<Load> expectedP1 = { 14, 13, 11, 8, 6, 5, 3, 0};
 
   std::vector< std::vector<Load> > expectedLoads = {expectedP0, expectedP1}; 
 
   compareOutput(expectedLoads, mapTasks().mappedPEs);
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, realTestParallelFactor4) {
+TEST_F(GreedyParallelPGStrategyTest, realTestParallelFactor4) {
   PECount = 2;
   taskCount = 16;
   parallelFactor = 4;
@@ -181,7 +82,7 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, realTestParallelFactor4) {
   compareOutput(expectedLoads, mapTasks().mappedPEs);
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, realTestPECount4) {
+TEST_F(GreedyParallelPGStrategyTest, realTestPECount4) {
   PECount = 4;
   taskCount = 16;
   parallelFactor = 2;
@@ -204,7 +105,7 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, realTestPECount4) {
   compareOutput(expectedLoads, mapTasks().mappedPEs);
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, worksWithOddNumberOfTasks) {
+TEST_F(GreedyParallelPGStrategyTest, worksWithOddNumberOfTasks) {
   PECount = 2;
   taskCount = 15;
   parallelFactor = 2;
@@ -225,7 +126,7 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, worksWithOddNumberOfTasks) {
   compareOutput(expectedLoads, mapTasks().mappedPEs);
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, worksWithOddNumberOfShards) {
+TEST_F(GreedyParallelPGStrategyTest, worksWithOddNumberOfShards) {
   PECount = 2;
   taskCount = 18; // Reducted to 3 then to 1 (in the reduction step).
   parallelFactor = 2;
@@ -246,7 +147,7 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, worksWithOddNumberOfShards) {
   compareOutput(expectedLoads, mapTasks().mappedPEs);
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, worksWithMultipleReductedOddNumberOfShards) {
+TEST_F(GreedyParallelPGStrategyTest, worksWithMultipleReductedOddNumberOfShards) {
   PECount = 2;
   taskCount = 27; // Reducted to 7 then to 3 then to 1 (in the reduction step).
   parallelFactor = 1;
@@ -266,7 +167,7 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, worksWithMultipleReductedOddNumbe
   compareOutput(expectedLoads, mapTasks().mappedPEs);
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, sortsTheInputBeforeMapping) {
+TEST_F(GreedyParallelPGStrategyTest, sortsTheInputBeforeMapping) {
   PECount = 2;
   taskCount = 8;
   parallelFactor = 2;
@@ -287,7 +188,7 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, sortsTheInputBeforeMapping) {
   compareOutput(expectedLoads, mapTasks().mappedPEs);
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, worksWithAPenalityFunction) {
+TEST_F(GreedyParallelPGStrategyTest, worksWithAPenalityFunction) {
   PECount = 2;
   taskCount = 8;
   parallelFactor = 2;
@@ -322,7 +223,7 @@ TEST_F(GreedyParallelPGStrategyTestNoPenality, worksWithAPenalityFunction) {
   ASSERT_EQ(expectedP1Load, mappings[1]->load());
 }
 
-TEST_F(GreedyParallelPGStrategyTestNoPenality, worksWithASquarePenalityFunction) {
+TEST_F(GreedyParallelPGStrategyTest, worksWithASquarePenalityFunction) {
   PECount = 2;
   taskCount = 16;
   parallelFactor = 2;

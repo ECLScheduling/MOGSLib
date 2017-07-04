@@ -48,6 +48,10 @@ public:
     MaxHeap tasks;
     MinHeap PEs;
 
+    if(input.PECount() == 0 || input.taskCount() == 0) {
+      return;
+    }
+
     populatePEHeap(input, &PEs);
     populateTaskHeap(input, &tasks);
 
