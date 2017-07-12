@@ -1,10 +1,10 @@
 #pragma once
 
-// Load Balancer Output
-class MigrationElement;
+// Stretegy Output Classes
+#include <strategies/output/_outputTypes.h>
 
-// Load Balancer Input
-class BasicInput;
+// strategy Input Classes
+#include <strategies/input/_inputTypes.h>
 
-// Load Balancer Data structures
-class EdgelessGraph;
+// strategy Data structures
+#include <structures/_structureTypes.h>
