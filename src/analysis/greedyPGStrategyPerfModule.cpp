@@ -8,7 +8,7 @@ namespace GreedyPGModule {
 typedef Traits<void>::Load Weight;
 
 const Weight penalityFunction(unsigned int size) {
-  return size * size;
+  return 0;
 }
 
 }

@@ -87,6 +87,9 @@ public:
     std::cout << "Strategy mapping time: " << (std::chrono::duration_cast<std::chrono::milliseconds>(after - before).count()) << "ms." << std::endl;
 
     std::cout << std::endl << "############### Descriptive Analysis ############" << std::endl;
+
+    std::cout << std::endl << "Load imbalance: " << descriptiveAnalysis.max/descriptiveAnalysis.mean << std::endl;
+
     std::cout << "PE mean load: " << descriptiveAnalysis.mean << std::endl;
     std::cout << "PE load standard deviation: " << descriptiveAnalysis.standardDeviation << std::endl;
 

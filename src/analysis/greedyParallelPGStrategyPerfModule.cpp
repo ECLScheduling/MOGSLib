@@ -10,7 +10,7 @@ namespace GreedyPGPModule {
    * The penality function used in the performance module below.
    */
   const Weight penalityFunction(unsigned int size) {
-    return 0;//size * size;
+    return 0;
   }
 }
 
