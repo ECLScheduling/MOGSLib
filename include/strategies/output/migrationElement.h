@@ -11,7 +11,7 @@
 class MigrationElement {
 public:
   typedef Traits<MigrationElement>::Id Id;
-  typedef IMinimalParallelInputTraits::PE PE;
+  typedef DefaultInputTraits::PE PE;
   typedef std::vector<Id>::size_type IndexType;
   
 public:

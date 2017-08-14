@@ -6,7 +6,7 @@
 /**
  * The abstract class which intends to be the simplest possible input to a parallel strategy, carrying only the PEs ids and each task's load and id.
  */
-template<typename TaskType = IMinimalParallelInputTraits::Task, typename PEType = IMinimalParallelInputTraits::PE>
+template<typename TaskType = DefaultInputTraits::Task, typename PEType = DefaultInputTraits::PE>
 class IMinimalParallelInput {
 public:
   typedef TaskType Task;

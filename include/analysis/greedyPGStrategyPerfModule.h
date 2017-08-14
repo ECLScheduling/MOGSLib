@@ -7,8 +7,8 @@
  * This struct is used by the StrategyAnalyzer to analyze the GreedyPenalizedGraphStrategy with the NaiveBasicOutput as input.
  */
 struct GreedyPGStrategyPerfModule {
-  typedef IMinimalParallelInputTraits::Task Task;
-  typedef IMinimalParallelInputTraits::PE PE;
+  typedef DefaultInputTraits::Task Task;
+  typedef DefaultInputTraits::PE PE;
 
   /**
    * Creates the simulated input which the strategy analyzer will bind to the strategy.
