@@ -9,3 +9,13 @@ class SimpleTask;
 
 template<typename TaskType>
 class SimplePE;
+
+template<typename IndexType, typename ValueType>
+class Matrix1D;
+
+namespace EagerMap {
+
+  class TopologyData;
+  class TaskGroup;
+  class CommunicationMatrix;
+}

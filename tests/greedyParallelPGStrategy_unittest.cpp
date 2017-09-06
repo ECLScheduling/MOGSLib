@@ -259,13 +259,6 @@ TEST_F(GreedyParallelPGStrategyTest, worksWithASquarePenalityFunction) {
 
   auto mappings = mapTasks().mappedPEs;
 
-  // for(auto pes : mappings) {
-  //   std::cout << "PE" << pes->id << std::endl;
-  //   for(auto task : pes->tasks) {
-  //     std::cout << "\tTask " << task->id << ": " << task->load << std::endl;
-  //   }
-  // }
-
   compareOutput(expectedLoads, mappings);
 
   ASSERT_EQ(expectedP0Load, mappings[0]->load());

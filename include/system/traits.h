@@ -27,13 +27,18 @@ struct Traits {
    * Reference to the zero value of the Load type.
    */
   const static Load zeroRef = 0;
+
+  /**
+   * A tag to check wether the struct must be debugged.
+   */
+  const static bool debug = false;
 };
 
 //#########################
 // Input Traits
 //#########################
 
-struct IMinimalParallelInputTraits : Traits<void> {
+struct DefaultInputTraits : Traits<void> {
 
   /**
    * Type definition of the structure used to represent a Task.
@@ -89,4 +94,30 @@ struct GreedyStrategyAlgorithmTraits : Traits<void> {
    * Type used as a min heap for the greedy algorithm.
    */
   typedef std::priority_queue<PE, std::vector<PE>, MinHeapComparator > MinHeap;
+};
+
+
+//#########################################
+// Strategy Specific Traits
+//#########################################
+
+
+struct EagerMapTraits : Traits<void>{
+  
+  /**
+   * A definition for the unsigned int used to count elements and serve as indices.
+   */
+  typedef uint_fast32_t UInt;
+
+  /**
+   * The data type that represents the communication value of the EagerMap's communication matrix.
+   */
+  typedef uint_fast32_t CommValue;
+
+  /**
+   * The data type that represents the communication matrix that is used by the EagerMap strategy.
+   */
+  typedef EagerMap::CommunicationMatrix CommunicationMatrix; 
+
+  typedef EagerMap::TaskGroup TaskGroup;
 };
