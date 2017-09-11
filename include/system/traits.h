@@ -14,14 +14,19 @@ template<typename T>
 struct Traits {
   
   /**
+   * The type definition that will serve as an unsigned int inside the library.
+   */
+  typedef uint_fast32_t UInt;
+  
+  /**
    * The type definition that will serve to identify tasks and PEs of the system inside the framework.
    */
-  typedef uint_fast32_t Id;
+  typedef UInt Id;
 
   /**
    * The type definition that will serve to quantify a task's load value for the framework.
    */
-  typedef uint_fast32_t Load;
+  typedef UInt Load;
 
   /**
    * Reference to the zero value of the Load type.
@@ -103,16 +108,11 @@ struct GreedyStrategyAlgorithmTraits : Traits<void> {
 
 
 struct EagerMapTraits : Traits<void>{
-  
-  /**
-   * A definition for the unsigned int used to count elements and serve as indices.
-   */
-  typedef uint_fast32_t UInt;
 
   /**
    * The data type that represents the communication value of the EagerMap's communication matrix.
    */
-  typedef uint_fast32_t CommValue;
+  typedef UInt CommValue;
 
   /**
    * The data type that represents the communication matrix that is used by the EagerMap strategy.
