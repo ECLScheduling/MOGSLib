@@ -13,3 +13,15 @@ class TemplateName \
 public: \
     enum { value = std::is_same<decltype(test<T>(0)), Positive>::value }; \
 };
+
+namespace static_functions {
+
+constexpr bool const_string_equal( char const* lhs, char const* rhs )
+{
+    while (*lhs || *rhs)
+        if (*lhs++ != *rhs++)
+            return false;
+    return true;
+}
+
+}
