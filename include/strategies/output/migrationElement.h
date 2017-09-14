@@ -1,30 +1,46 @@
 #pragma once
 
-#include <system/traits.h>
-
-#include <structures/simplePE.h> //TODO: This include must be uneeded in future versions.
-#include <structures/simpleTask.h> //TODO: This include must be uneeded in future versions.
+#include <vector>
+#include <map>
 
 /**
  * This class serve as a form of output to the strategies in this library.
  */
+template <typename Id>
 class MigrationElement {
 public:
-  typedef Traits<MigrationElement>::Id Id;
-  typedef DefaultInputTraits::PE PE;
-  typedef std::vector<Id>::size_type IndexType;
-  
-public:
-  /**
-   * A vector of PEs with their loads adjusted.
-   */
-  std::vector<PE*> mappedPEs;
 
   /**
-   * Sets an PE as an output mapping.
+   * A map of PE ids to a collection of Task ids.
    */
-  void set(PE *aPE) {
-    mappedPEs.push_back(aPE);
+  std::map<Id, std::vector<Id> > map;
+
+  /**
+   * Sets a task to a PE.
+   * @param peId The id of the PE.
+   * @param taskId The id of the task that will be mapped to the PE.
+   */
+  void set(Id peId, Id taskId) {
+    auto it = map.find(peId);
+
+    if(it != map.end())
+      it->second.push_back(taskId);
+    else
+      map[peId] = std::vector<Id> {taskId};
+  }
+
+  /**
+   * Sets multiple tasks to a PE.
+   * @param peId The id of the PE.
+   * @param tasks The vector of tasks to be mapped to the peId.
+   */
+  void setMultiple(Id peId, std::vector<Id> &tasks) {
+    auto it = map.find(peId);
+
+    if(it != map.end())
+      it->second.insert(it->second.end(), tasks.begin(), tasks.end());
+    else
+      map[peId] = tasks;
   }
 
 };

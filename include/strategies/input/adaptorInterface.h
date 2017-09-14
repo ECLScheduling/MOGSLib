@@ -29,33 +29,33 @@ public:
 	 * @param index The index of the PE.
 	 * @return The load of the index-th PE present in this input.
 	 */
-	virtual const Load PEload(const UInt &index) = 0;
+	virtual const Load PELoad(const UInt &index) const = 0;
 
 	/**
 	 * @param index The index of the PE.
 	 * @return The id of the PE.
 	 */
-	virtual const Id PEId(const UInt &index) = 0;
+	virtual const Id PEId(const UInt &index) const = 0;
 
 	/**
 	 * @return The ammount of PEs in the library's input.
 	 */
-	virtual const UInt PECount() = 0;
+	virtual const UInt PECount() const = 0;
 
 	/**
 	 * @param index The index of the task.
 	 * @return The load of the index-th task present in this input.
 	 */
-	virtual const Load taskLoad(const UInt &index) = 0;
+	virtual const Load taskLoad(const UInt &index) const = 0;
 
 	/**
 	 * @param index The index of the task.
 	 * @return The id of the task.
 	 */
-	virtual const Id taskId(const UInt &index) = 0;
+	virtual const Id taskId(const UInt &index) const = 0;
 	
 	/**
 	 * @return The ammount of tasks in the library's input.
 	 */
-	virtual const UInt taskCount() = 0;
+	virtual const UInt taskCount() const = 0;
 };

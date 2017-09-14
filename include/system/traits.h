@@ -66,39 +66,39 @@ struct DefaultInputTraits : Traits<void> {
 // Algorithms default Traits
 //#########################
 
-template<typename Task, typename PE>
+template<typename Task, typename PE, typename TaskMaxHeapComparator, typename PEMinHeapComparator>
 struct GreedyStrategyAlgorithmTraits : Traits<void> {
   /**
    * Internal Helper struct to be used as the max-heap comparator.
    */
-  struct MaxHeapComparator {
-    inline bool operator ()(const Task *a, const Task *b) const {
-      return *a < *b;
-    }
+  // struct MaxHeapComparator {
+  //   inline bool operator ()(const Task &a, const Task &b) const {
+  //     return a < b;
+  //   }
 
-    inline bool operator ()(Task *a, Task *b) const {
-      return *a < *b;
-    }
-  };
+  //   inline bool operator ()(Task &a, Task &b) const {
+  //     return a < b;
+  //   }
+  // };
+
+  // /**
+  //  * Internal Helper struct to be used as the min-heap comparator.
+  //  */
+  // struct MinHeapComparator {
+  //   inline bool operator ()(PE a, PE b) const {
+  //     return a > b;
+  //   }
+  // };
 
   /**
-   * Internal Helper struct to be used as the min-heap comparator.
+   * Default type used as a max heap for the greedy algorithm.
    */
-  struct MinHeapComparator {
-    inline bool operator ()(PE a, PE b) const {
-      return a > b;
-    }
-  };
-
-  /**
-   * Type used as a max heap for the greedy algorithm.
-   */
-  typedef std::priority_queue<Task, std::vector<Task*>, MaxHeapComparator > MaxHeap;
+  using MaxHeap = std::vector<Task*>;
   
   /**
-   * Type used as a min heap for the greedy algorithm.
+   * Default used as a min heap for the greedy algorithm.
    */
-  typedef std::priority_queue<PE, std::vector<PE>, MinHeapComparator > MinHeap;
+  using MinHeap = std::vector<PE*>;
 };
 
 
