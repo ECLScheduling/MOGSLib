@@ -2,7 +2,7 @@
 #include <algorithm>
 
 template<typename InputAdaptor>
-void GreedyStrategy<InputAdaptor>::doTaskMapping(const InputAdaptor &input) {
+void GreedyStrategy<InputAdaptor>::doTaskMapping(InputAdaptor &input) {
   MaxHeap taskHeap;
   MinHeap PEHeap;
   GreedyAlgorithm algorithm;
@@ -32,7 +32,7 @@ void GreedyStrategy<InputAdaptor>::doTaskMapping(const InputAdaptor &input) {
 }
 
 template<typename InputAdaptor>
-void GreedyStrategy<InputAdaptor>::constructTaskHeap(MaxHeap &maxHeap, Task * const tasks, const UInt &nTasks, const InputAdaptor &input) {
+void GreedyStrategy<InputAdaptor>::constructTaskHeap(MaxHeap &maxHeap, Task * const tasks, const UInt &nTasks, InputAdaptor &input) {
 
   for(UInt i = 0; i < nTasks; ++i) {
     maxHeap.push_back(tasks+i);
@@ -43,7 +43,7 @@ void GreedyStrategy<InputAdaptor>::constructTaskHeap(MaxHeap &maxHeap, Task * co
 }
 
 template<typename InputAdaptor>
-void GreedyStrategy<InputAdaptor>::constructPEHeap(MinHeap &minHeap, PE * const PEs, const UInt &nPEs, const InputAdaptor &input) {
+void GreedyStrategy<InputAdaptor>::constructPEHeap(MinHeap &minHeap, PE * const PEs, const UInt &nPEs, InputAdaptor &input) {
   
   for(UInt i = 0; i < nPEs; ++i) {
     minHeap.push_back(PEs+i);

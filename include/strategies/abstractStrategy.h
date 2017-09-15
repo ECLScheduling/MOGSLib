@@ -20,7 +20,7 @@ protected:
    * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
    * @param input The strategy's input
    */
-  virtual void doTaskMapping(const InputAdaptor &input) {}
+  virtual void doTaskMapping(InputAdaptor &input) {}
 
   /**
    * The MigrationElement object that every strategy needs to output a result.
@@ -34,7 +34,7 @@ public:
    * @param input The strategy's relevant input about the environment, architecture and tasks.
    * @return The result task mapping given by the strategy.
    */
-  const Output& mapTasks(const InputAdaptor &input) {
+  const Output& mapTasks(InputAdaptor &input) {
     doTaskMapping(input);
     return strategyOutput;
   }

@@ -1,0 +1,9 @@
+module LibProxyLB {
+
+extern module CentralLB;
+initnode void lbinit(void);
+group [migratable] LibProxyLB : CentralLB {
+  entry void LibProxyLB(const CkLBOptions &);  
+};
+
+};

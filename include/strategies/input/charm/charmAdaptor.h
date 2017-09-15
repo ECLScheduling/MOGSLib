@@ -16,7 +16,7 @@
  * This class is the implementation of the AdaptorInterface to be linked in the Charm environment.
  * @details This class presents basic translation from Charm++ datatypes to generic input for load balancing strategies.
  */
-class CharmAdaptor : AdaptorInterface<CharmTypes> {
+class CharmAdaptor : public AdaptorInterface<CharmTypes> {
 public:
 
   using LDStats = BaseLB::LDStats;
@@ -105,7 +105,7 @@ public:
    * @param index The index of the PE.
    * @return The load of the index-th PE present in this input.
    */
-  inline const Load PEload(const UInt &index) {
+  inline const Load PELoad(const UInt &index) {
     return _PEVector[index].getTotalLoad();
   }
 

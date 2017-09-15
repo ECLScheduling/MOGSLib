@@ -52,17 +52,17 @@ protected:
    * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
    * @param input The strategy's input
    */
-  void doTaskMapping(const InputAdaptor &input);
+  void doTaskMapping(InputAdaptor &input);
 
   /**
    * Construct the task heap to be used in the task mapping.
    */
-  void constructTaskHeap(MaxHeap &maxHeap, Task * const tasks, const UInt &nTasks, const InputAdaptor &input);
+  void constructTaskHeap(MaxHeap &maxHeap, Task * const tasks, const UInt &nTasks, InputAdaptor &input);
 
   /**
    * Construct the PE heap to be used in the task mapping.
    */
-  void constructPEHeap(MinHeap &minHeap, PE * const PEs, const UInt &nPEs, const InputAdaptor &input);
+  void constructPEHeap(MinHeap &minHeap, PE * const PEs, const UInt &nPEs, InputAdaptor &input);
 
 };
 
