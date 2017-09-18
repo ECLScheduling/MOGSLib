@@ -110,6 +110,15 @@ public:
   }
 
   /**
+   * Sets a new value for the PE load.
+   * @param index The index of the PE.
+   * @param newLoad The value of the new load value for the PE.
+   */
+  inline void setPELoad(const UInt &index, const Load &newLoad) {
+    _PEVector[index].totalLoad() = newLoad;
+  }
+
+  /**
    * @param index The index of the PE.
    * @return The id of the PE.
   */
@@ -130,6 +139,15 @@ public:
    */
   inline const Load taskLoad(const UInt &index) {
     return _taskVector[index].getVertexLoad();
+  }
+
+  /**
+   * Set a new value for the load assigned to the task.
+   * @param index The index of the task.
+   * @param newLoad The value of the new load value for the task
+   */
+  void setTaskLoad(const UInt &index, const Load &newLoad) {
+    _taskVector[index].setCompLoad(newLoad);
   }
 
   /**

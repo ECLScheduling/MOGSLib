@@ -1,34 +1,49 @@
 #pragma once
 
-#include "concepts/greedyConcepts.h"
-
 #include <system/traits.h>
+
+/**
+ * The default definition of the GreedyAlgorithm callback class.
+ * @type Task The type definition of the task that a greedy algorithm uses.
+ * @type PE the type definition of the PE that a greedy algorithm uses.
+ */
+template<typename Task, typename PE>
+class GreedyAlgorithmCallback {
+public:
+  
+  /**
+   * This method is called everytime the greedy algorithm maps a task to a PE.
+   * @details Inside this method the load of the task must be adjusted to match it's addition to the PE's mapped tasks.
+   * @param task The task that has been mapped.
+   * @param toPE The PE that has received the task.
+   */
+  virtual void algorithmMapped(const Task &task, const PE &toPE) = 0;
+};
 
 /**
  * The struct that defines the generic greedy load balancer algorithm with compile-time defined data structures and types.
  * @type Task A type that serve as a task abstraction to the algorithm. This type must be a pointer.
  * @type PE A type that serve as a PE abtraction to the algorithm. This type must be a pointer
- * @type TaskMaxHeapComparator A type that has an operator() method for comparing a task to form a max heap.
- * @type PEMinHeapComparator A type that has an operator() method for comparing a PE to form a min heap.
+ * @type CallbackType A type that has the method algorithmMapped, that will be called everytime a task is mapped to a PE in the algorithm.
  */
-template<typename Task, typename PE, typename TaskMaxHeapComparator, typename PEMinHeapComparator>
+template<typename Task, typename PE, typename Callback>
 struct GreedyStrategyAlgorithm {
   
-  using MaxHeap = typename GreedyStrategyAlgorithmTraits<Task, PE, TaskMaxHeapComparator, PEMinHeapComparator>::MaxHeap;
-  using MinHeap = typename GreedyStrategyAlgorithmTraits<Task, PE, TaskMaxHeapComparator, PEMinHeapComparator>::MinHeap;
-
-  // This line is present in this class to present clear compile-time errors to developers and strategy users.
-  static_assert(GreedyStrategyAlgorithmConcept<Task, PE, MaxHeap, MinHeap>::conforms(), "");
+  using MaxHeap = typename GreedyStrategyAlgorithmTraits<Task, PE>::MaxHeap;
+  using MinHeap = typename GreedyStrategyAlgorithmTraits<Task, PE>::MinHeap;
 
   /**
    * The function that will map tasks to PEs. The tasks will be mapped in th PEs parameter as it is passed as reference.
-   * @param tasks a max heap of pointers to tasks.
-   * @param PEs a min heap containing LoadBearers, interepreted as PEs in the system. This heap will contain the mapping after this function call.
+   * @type MaxHeapCmp A max-heap comparator type for the greedy algorithm.
+   * @type MinHeapCmp A min-heap comparator type for the greedy algorithm.
+   * @param tasks A max heap of pointers to tasks.
+   * @param PEs A min heap containing LoadBearers, interepreted as PEs in the system. This heap will contain the mapping after this function call.
+   * @param callback A callback class that will receive calls when a task is mapped.
+   * @param maxHeapComparator An instance of a class that can compare two tasks in regards to their load.
+   * @param minHeapComparator An instance of a class that can compare two PEs in regards to their load.
    */
-  void map(MaxHeap tasks, MinHeap PEs) const {
-    auto maxHeapComparator = TaskMaxHeapComparator();
-    auto minHeapComparator = PEMinHeapComparator();
-
+  template<typename MaxHeapCmp, typename MinHeapCmp>
+  void map(MaxHeap tasks, MinHeap PEs, Callback *callback, const MaxHeapCmp &maxHeapComparator, const MinHeapCmp &minHeapComparator) const {
     // Nothing to balance if PE heap is empty.
     if(PEs.empty())
       return;
@@ -43,10 +58,12 @@ struct GreedyStrategyAlgorithm {
 
       std::pop_heap(tasks.begin(), tasks.end(), maxHeapComparator);
       std::pop_heap(PEs.begin(), PEs.end(), minHeapComparator);
+      
       tasks.pop_back();
       PEs.pop_back();
 
-      _PE->map(task->id(), task->load());
+      // Task has been mapped and the callback method must adjust the load of the PE.
+      callback->algorithmMapped(task, _PE);
       
       PEs.push_back(_PE);
       std::push_heap(PEs.begin(), PEs.end(), minHeapComparator);

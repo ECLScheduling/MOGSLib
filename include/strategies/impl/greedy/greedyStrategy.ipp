@@ -5,10 +5,11 @@ template<typename InputAdaptor>
 void GreedyStrategy<InputAdaptor>::doTaskMapping(InputAdaptor &input) {
   MaxHeap taskHeap;
   MinHeap PEHeap;
-  GreedyAlgorithm algorithm;
 
-  Task *tasks;
-  PE *PEs;
+  MaxHeapComparator maxHeapCmp(AbstractStrategy<InputAdaptor>::currentInput);
+  MinHeapComparator minHeapCmp(AbstractStrategy<InputAdaptor>::currentInput);
+
+  GreedyAlgorithm algorithm;
 
   auto nTasks = input.taskCount();
   auto nPEs = input.PECount();
@@ -16,39 +17,10 @@ void GreedyStrategy<InputAdaptor>::doTaskMapping(InputAdaptor &input) {
   if(nTasks == 0 || nPEs == 0)
     return;
 
-  tasks = new Task[nTasks];
-  PEs = new PE[nPEs];
+  for(UInt i = 0; i < nTasks; ++i)
+    taskHeap.push_back(i);
+  for(UInt i = 0; i < nPEs; ++i)
+    PEHeap.push_back(i);
 
-  constructPEHeap(PEHeap, PEs, nPEs, input);
-  constructTaskHeap(taskHeap, tasks, nTasks, input);
-
-  algorithm.map(taskHeap, PEHeap);
-
-  for(auto PE : PEHeap)
-    AbstractStrategy<InputAdaptor>::strategyOutput.setMultiple(PE->id(), PE->tasks);
-
-  delete [] tasks;
-  delete [] PEs;
-}
-
-template<typename InputAdaptor>
-void GreedyStrategy<InputAdaptor>::constructTaskHeap(MaxHeap &maxHeap, Task * const tasks, const UInt &nTasks, InputAdaptor &input) {
-
-  for(UInt i = 0; i < nTasks; ++i) {
-    maxHeap.push_back(tasks+i);
-
-    tasks[i].setId(i);
-    tasks[i].setLoad(input.taskLoad(i));
-  }
-}
-
-template<typename InputAdaptor>
-void GreedyStrategy<InputAdaptor>::constructPEHeap(MinHeap &minHeap, PE * const PEs, const UInt &nPEs, InputAdaptor &input) {
-  
-  for(UInt i = 0; i < nPEs; ++i) {
-    minHeap.push_back(PEs+i);
-
-    PEs[i].setId(i);
-    PEs[i].setLoad(input.PELoad(i));
-  }
+  algorithm.template map<MaxHeapComparator, MinHeapComparator>(taskHeap, PEHeap, this, maxHeapCmp, minHeapCmp);
 }

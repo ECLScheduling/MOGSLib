@@ -3,48 +3,68 @@
 #include <strategies/abstractStrategy.h>
 #include <algorithms/greedy/greedyAlgorithm.h>
 
-#include <structures/simpleTask.h>
-#include <structures/simplePE.h>
-
 /**
  * This class encapsulates the implementation of a Greedy load balancer strategy.
  */
 template <typename InputAdaptor>
-class GreedyStrategy : public AbstractStrategy<InputAdaptor>{
+class GreedyStrategy : public AbstractStrategy<InputAdaptor>, public GreedyAlgorithmCallback<typename InputAdaptor::Id, typename InputAdaptor::Id> {
 public:
 
   using Load = typename InputAdaptor::Load;
   using Id = typename InputAdaptor::Id;
   using UInt = typename InputAdaptor::UInt;
 
-  using Task = SimpleTask<Id, Load>;
-  using PE = SimplePE<Task>;
-
 private:
 
   /**
-   * A sctructure to compare Tasks between itselves in conformity to their load.
+   * A sctructure to compare Tasks in conformity to their load.
    */
   struct MaxHeapComparator {
-    inline bool operator ()(const Task *a, const Task *b) const {
-      return *a < *b;
+    const InputAdaptor *strategyInput;
+
+    MaxHeapComparator(const InputAdaptor *inputAdaptor) : strategyInput(inputAdaptor) {}
+
+    inline bool operator ()(const Id &a, const Id &b) const {
+      return strategyInput->taskLoad(a) < strategyInput->taskLoad(b);
     }
   };
 
   /**
-   * A sctructure to compare PEs between itselves in conformity to their load.
+   * A sctructure to compare PEs in conformity to their load.
    */
   struct MinHeapComparator {
-    inline bool operator ()(const PE *a, const PE *b) const {
-      return *a > *b;
+    const InputAdaptor *strategyInput;
+
+    MinHeapComparator(const InputAdaptor *inputAdaptor) : strategyInput(inputAdaptor) {}
+
+    inline bool operator ()(const Id &a, const Id &b) const {
+      return strategyInput->PELoad(a) > strategyInput->PELoad(b);
     }
   };
 
 public:
 
-  using GreedyAlgorithm = GreedyStrategyAlgorithm<Task, PE, MaxHeapComparator, MinHeapComparator>;
+  using GreedyAlgorithm = GreedyStrategyAlgorithm<Id, Id, GreedyStrategy>;
   using MaxHeap = typename GreedyAlgorithm::MaxHeap;
   using MinHeap = typename GreedyAlgorithm::MinHeap;
+
+  /**
+   * This method is called everytime the greedy algorithm maps a task to a PE.
+   * @details Inside this method the load of the task must be adjusted to match it's addition to the PE's mapped tasks.
+   * @param task The task that has been mapped.
+   * @param toPE The PE that has received the task.
+   */
+  inline void algorithmMapped(const Id &task, const Id &toPE) {
+
+    // Set the mapping as part of the output.
+    AbstractStrategy<InputAdaptor>::strategyOutput.set(toPE, task);
+
+    // Adjust the load of the PE as the current PE's load plus the task's load.
+    auto inputAdaptorPtr = AbstractStrategy<InputAdaptor>::currentInput;
+    auto newLoad = inputAdaptorPtr->PELoad(toPE) + inputAdaptorPtr->taskLoad(task);
+    
+    inputAdaptorPtr->setPELoad(toPE, newLoad);
+  }
 
 protected:
 
@@ -53,16 +73,6 @@ protected:
    * @param input The strategy's input
    */
   void doTaskMapping(InputAdaptor &input);
-
-  /**
-   * Construct the task heap to be used in the task mapping.
-   */
-  void constructTaskHeap(MaxHeap &maxHeap, Task * const tasks, const UInt &nTasks, InputAdaptor &input);
-
-  /**
-   * Construct the PE heap to be used in the task mapping.
-   */
-  void constructPEHeap(MinHeap &minHeap, PE * const PEs, const UInt &nPEs, InputAdaptor &input);
 
 };
 

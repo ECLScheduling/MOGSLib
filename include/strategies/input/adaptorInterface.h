@@ -32,6 +32,13 @@ public:
 	virtual const Load PELoad(const UInt &index) = 0;
 
 	/**
+	 * Sets a new value for the PE load.
+	 * @param index The index of the PE.
+	 * @param newLoad The value of the new load value for the PE.
+	 */
+	virtual void setPELoad(const UInt &index, const Load &newLoad) = 0;
+
+	/**
 	 * @param index The index of the PE.
 	 * @return The id of the PE.
 	 */
@@ -47,6 +54,13 @@ public:
 	 * @return The load of the index-th task present in this input.
 	 */
 	virtual const Load taskLoad(const UInt &index) = 0;
+
+	/**
+	 * Set a new value for the load assigned to the task.
+	 * @param index The index of the task.
+	 * @param newLoad The value of the new load value for the task
+	 */
+	virtual void setTaskLoad(const UInt &index, const Load &newLoad) = 0;
 
 	/**
 	 * @param index The index of the task.

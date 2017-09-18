@@ -12,6 +12,7 @@ template<typename InputAdaptor>
 class AbstractStrategy {
 public:
 
+  using Input = InputAdaptor;
   using Output = MigrationElement<typename InputAdaptor::Id>;
 
 protected:
@@ -27,6 +28,11 @@ protected:
    */
   Output strategyOutput;
 
+  /**
+   * The current input being used in a strategy.
+   */
+  Input *currentInput;
+
 public:
 
   /**
@@ -35,7 +41,11 @@ public:
    * @return The result task mapping given by the strategy.
    */
   const Output& mapTasks(InputAdaptor &input) {
+    currentInput = &input;
+    
     doTaskMapping(input);
+    
+    currentInput = 0;
     return strategyOutput;
   }
 };
