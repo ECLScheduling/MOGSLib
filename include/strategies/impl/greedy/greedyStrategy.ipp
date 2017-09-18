@@ -6,8 +6,8 @@ void GreedyStrategy<InputAdaptor>::doTaskMapping(InputAdaptor &input) {
   MaxHeap taskHeap;
   MinHeap PEHeap;
 
-  MaxHeapComparator maxHeapCmp(AbstractStrategy<InputAdaptor>::currentInput);
-  MinHeapComparator minHeapCmp(AbstractStrategy<InputAdaptor>::currentInput);
+  MaxHeapComparator maxHeapCmp(StrategyInterface<InputAdaptor>::currentInput);
+  MinHeapComparator minHeapCmp(StrategyInterface<InputAdaptor>::currentInput);
 
   GreedyAlgorithm algorithm;
 

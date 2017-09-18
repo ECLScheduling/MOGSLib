@@ -13,13 +13,16 @@ namespace GreedyAlogorithmTests {
 #define GREEDY_STRATEGY_TEST_DEBUG true
 #define GREEDY_ALGORITHM_TEST_DEBUG true
 
-using Load = typename Traits<void>::Load;
-using Id = typename Traits<void>::Load;
+using LoadType = typename Traits<void>::Load;
+using IdType = typename Traits<void>::Load;
 
 /**
  * A basic structure that mocks a real environment's task/PE set for the greedy algorithm.
  */
 struct LoadContainer {
+  using Id = IdType;
+  using Load = LoadType;
+
   std::vector<Id> id;
   std::vector<Load> load;
 };
@@ -27,8 +30,9 @@ struct LoadContainer {
 /**
  * A basic structure that serve the purpose of holding the partial map to tasks into PEs.
  */
-struct DummyGreedyCallback : GreedyAlgorithmCallback<Id, Id> {
-  
+struct DummyGreedyCallback : GreedyAlgorithmCallback<IdType, IdType> {
+  using Id = IdType;
+
   std::map<Id, std::vector<Id> > mapping;
   LoadContainer *taskRef, *PERef;
 
@@ -56,6 +60,8 @@ struct DummyGreedyCallback : GreedyAlgorithmCallback<Id, Id> {
  */
 class AlgorithmTest : public ::testing::Test {
 public:
+  using Id = IdType;
+  using Load = LoadType;
 
   /**
    * A basic structure that satisfies the greedy's algorithm min heap comparator.
@@ -98,6 +104,9 @@ public:
   TaskCompare *taskComparator;
   PECompare *PEComparator;
 
+  /**
+   * A proxy method to the tested feature in this fixture.
+   */
   void callMap() {
     algorithm.map<TaskCompare, PECompare>(maxHeap, minHeap, callbackReceiver, *taskComparator, *PEComparator);
   }
@@ -116,107 +125,117 @@ public:
 
 };
 
-// class DummyAdaptor : public AdaptorInterface<> {
-// public:
+/**
+ * A dummy structure to mimic an input adaptor.
+ */
+class DummyAdaptor : public AdaptorInterface<> {
+public:
 
-//   LoadContainer PEs;
-//   LoadContainer tasks;
+  using Id = IdType;
+  using Load = LoadType;
 
-//   inline const Load PELoad(const UInt &index) {
-//     return PE->load[index];
-//   }
+  LoadContainer PEs;
+  LoadContainer tasks;
 
-//   inline void setPELoad(const UInt &index, const Load &load) {
-//     return PE->load[index] = load;
-//   }
+  inline const Load PELoad(const UInt &index) {
+    return PEs.load[index];
+  }
 
-//   inline const Id PEId(const UInt &index) {
-//     return PEs->id[index];
-//   }
+  inline void setPELoad(const UInt &index, const Load &load) {
+    PEs.load[index] = load;
+  }
 
-//   inline const UInt PECount() {
-//     return PEs->id.size();
-//   }
+  inline const Id PEId(const UInt &index) {
+    return PEs.id[index];
+  }
 
-//   inline const Load taskLoad(const UInt &index) {
-//     return tasks->load[index];
-//   }
+  inline const UInt PECount() {
+    return PEs.id.size();
+  }
 
-//   inline void setTaskLoad(const UInt &index, const Load &load) {
-//     return tasks->load[index] = load;
-//   }
+  inline const Load taskLoad(const UInt &index) {
+    return tasks.load[index];
+  }
 
-//   inline const Id taskId(const UInt &index) {
-//     return tasks->id[index];
-//   }
+  inline void setTaskLoad(const UInt &index, const Load &load) {
+    tasks.load[index] = load;
+  }
 
-//   inline const UInt taskCount() {
-//     return tasks->id.size();
-//   }
+  inline const Id taskId(const UInt &index) {
+    return tasks.id[index];
+  }
 
-// };
+  inline const UInt taskCount() {
+    return tasks.id.size();
+  }
+
+};
 
 
-// /**
-//  * This class is a fixture for the tests on the greedy strategy algorithm class.
-//  */
-// class StrategyTest : public ::testing::Test {
-// public:
-//   using Strategy = GreedyStrategy<DummyAdaptor>;
-//   using Output = typename Strategy::Output;
+/**
+ * This class is a fixture for the tests on the greedy strategy algorithm class.
+ */
+class StrategyTest : public ::testing::Test {
+public:
 
-//   Strategy greedyStrategy;
-//   DummyAdaptor adaptor;
+  using Id = IdType;
+  using Load = LoadType;
 
-//   Output result;
+  using Strategy = GreedyStrategy<DummyAdaptor>;
+  using Output = typename Strategy::Output;
 
-//   void SetUp() {
+  Strategy greedyStrategy;
+  DummyAdaptor adaptor;
 
-//   }
+  Output result;
 
-//   void TearDown() {
+  void SetUp() {
 
-//   }
+  }
 
-//   /**
-//    * Generates a simple case where there are 8 PEs and 50 inputs with a increasing load.
-//    */
-//   void generateSimpleCase() {
-//     for(auto i = 0; i < 50; ++i) {
-//       adaptor.taskLoads.push_back(i);
-//       adaptor.taskIds.push_back(i);
-//     }
+  void TearDown() {
 
-//     for(auto i = 0; i < 8; ++i) {
-//       adaptor.PEIds.push_back(i);
-//       adaptor.PELoads.push_back(0);
-//     }
-//   }
+  }
 
-//   /**
-//    * Prints the output of the strategy
-//    */
-//   void printResult() {
+  /**
+   * Generates a simple case where there are 8 PEs and 50 inputs with a increasing load.
+   */
+  void generateSimpleCase() {
+    for(auto i = 0; i < 50; ++i) {
+      adaptor.tasks.load.push_back(i);
+      adaptor.tasks.id.push_back(i);
+    }
 
-//     auto map = result.map;
+    for(auto i = 0; i < 8; ++i) {
+      adaptor.PEs.id.push_back(i);
+      adaptor.PEs.load.push_back(0);
+    }
+  }
 
-//     #if GREEDY_STRATEGY_TEST_DEBUG
-//     for (auto it= map.begin(); it!= map.end(); ++it) {
-//       auto totalLoad = 0;
-//       std::cout << "PE[" << it->first << "] with size (" << it->second.size() << "): "; 
-//       for(auto task : it->second) {
-//         totalLoad += adaptor.taskLoads[task];
-//         std::cout << task << " ";
-//       }
-//       std::cout << "(" << totalLoad << ")" <<std::endl;
-//     }
-//     #endif
-//   }
+  /**
+   * Prints the output of the strategy
+   */
+  void printResult() {
 
-//   void mapTasks() {
-//     result = greedyStrategy.mapTasks(adaptor);
-//   }
+    auto map = result.map;
 
-// };
+    #if GREEDY_STRATEGY_TEST_DEBUG
+    for (auto it= map.begin(); it!= map.end(); ++it) {
+      auto totalLoad = 0;
+      std::cout << "PE[" << it->first << "] with size (" << it->second.size() << "): "; 
+      for(auto task : it->second) {
+        totalLoad += adaptor.taskLoad(task);
+        std::cout << task << " ";
+      }
+      std::cout << "(" << totalLoad << ")" <<std::endl;
+    }
+    #endif
+  }
+
+  void mapTasks() {
+    result = greedyStrategy.mapTasks(adaptor);
+  }
+
+};
 
 }

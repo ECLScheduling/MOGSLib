@@ -5,11 +5,11 @@
 #include <system/traits.h>
 
 /**
- * Class from which every load balancing strategy must inherit from. The AbstractStrategy's input class must be provided at compile time.
+ * Class from which every load balancing strategy must inherit from. The StrategyInterface's input class must be provided at compile time.
  * @type InputAdaptor The input adaptor which serve as an interface to the input objects passed to the strategy.
  */
 template<typename InputAdaptor>
-class AbstractStrategy {
+class StrategyInterface {
 public:
 
   using Input = InputAdaptor;
