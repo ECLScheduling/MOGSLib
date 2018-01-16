@@ -5,7 +5,7 @@
 #include <map>
 #include <iostream>
 
-#include <strategies/input/adaptorInterface.h>
+#include <strategies/adaptor/adaptorInterface.h>
 #include <strategies/impl/greedy/greedyStrategy.h>
 
 namespace GreedyAlogorithmTests {

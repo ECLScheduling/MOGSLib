@@ -4,12 +4,12 @@
 #include <algorithms/greedy/greedyAlgorithm.h>
 
 /**
- * This class encapsulates the implementation of a Greedy load balancer strategy.
+ * @brief This class encapsulates the implementation of a Greedy load balancer strategy.
  */
 template <typename InputAdaptor>
 class GreedyStrategy : public StrategyInterface<InputAdaptor>, public GreedyAlgorithmCallback<typename InputAdaptor::Id, typename InputAdaptor::Id> {
-public:
-
+public: 
+  
   using Load = typename InputAdaptor::Load;
   using Id = typename InputAdaptor::Id;
   using UInt = typename InputAdaptor::UInt;
