@@ -31,7 +31,6 @@ public:
   void cleanLoads() {
     delete [] loads;
   }
-
 };
 
 TEST_F(LoadSetInfoTest, LoadInfoAreCreatedEmpty) {

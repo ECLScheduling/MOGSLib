@@ -26,6 +26,11 @@ struct LoadSetInfo {
   Load load_max;
 
   /**
+   * The minimum load value of all tasks, used for optimizing counting sort.
+   */
+  Load load_min;
+
+  /**
    * A reference pointer to all the load values of the tasks.
    */
   Load *loads;
@@ -47,7 +52,7 @@ struct LoadSetInfo {
    * @param max_chunks The maximum desired amount of chunks to be created by BinLPT for this dataset.
    * @return A LoadSetInfo structure initialized to be used in the BinLPT partitioning phase.
    */
-  static const LoadSetInfo analyzeLoadArray(Load * const &loads, const UInt &load_size, const UInt &max_chunks) {
+  static LoadSetInfo analyzeLoadArray(Load * const &loads, const UInt &load_size, const UInt &max_chunks) {
     assert(max_chunks > 0); // The maximum number of chunks must be at least 1.
 
     LoadSetInfo load_info;
@@ -57,13 +62,21 @@ struct LoadSetInfo {
     load_info.load_size = load_size;
 
     for(UInt i = 0; i < load_size; ++i) {
+      // Calculate the load sum.
       load_info.load_sum += loads[i];
       
+      // Find the maximum load.
       if(load_info.load_max < loads[i])
         load_info.load_max = loads[i];
+      // Find the minimum load.
+      if(load_info.load_min > loads[i])
+        load_info.load_min = loads[i];
     }    
 
+    // Calculate the load average.
     load_info.load_avg = load_info.load_sum / load_info.chunks_size;
+    if(load_info.load_avg == 0)
+      load_info.load_avg = 1;
     return load_info;
   }
 
@@ -73,10 +86,11 @@ struct LoadSetInfo {
   LoadSetInfo() {
     load_sum = 0;
     load_avg = 0;
+    load_min = 0;
     load_max = 0;
     load_size = 0;
     chunks_size = 0;
-    loads = NULL;  
+    loads = nullptr;  
   }
 
 };
