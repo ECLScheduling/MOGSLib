@@ -39,7 +39,7 @@ struct Algorithms {
    * @param chunks_ref A reference to the memory location where the chunks are allocated.
    * @return This method rearrange the chunks in the chunks_ref pointer.
    */
-  inline static void sortChunks(const LoadInfo &load_info, Chunk * const chunks_ref) {
+  inline static void sortChunks(const LoadInfo &load_info, Chunk *chunks_ref) {
     ChunkSort::function(load_info, chunks_ref);    
   }
 
