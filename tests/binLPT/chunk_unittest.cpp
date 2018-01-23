@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <algorithms/binLPT/binLPTAlgorithm.h>
+#include <structures/binLPT/taskChunks.h>
 #include <system/traits.h>
 
 namespace BinLPT_Chunk_Test {
@@ -13,60 +13,67 @@ public:
   using UInt = Traits<void>::UInt;
   using Load = Traits<void>::Load;
 
-  using TaskChunk = BinLPT::TaskChunk<Load, UInt>;
+  using TaskChunks = BinLPT::TaskChunks<Load, UInt>;
 
-  TaskChunk chunkA, chunkB;
+  TaskChunks *chunks;
   Load loadA, loadB;
+
+  void allocateChunks(const UInt &chunk_count) {
+    chunks = new TaskChunks(chunk_count);
+  }
+
+  void TearDown() {
+    delete chunks;
+  }
+
 };
 
 TEST_F(TaskChunkTest, chunksAreCreatedEmpty) {
-  ASSERT_EQ(chunkA.load_sum, 0);
-  ASSERT_EQ(chunkA.it_indice.size(), 0);
+  allocateChunks(1);
+
+  ASSERT_EQ(chunks->load_sum[0], 0);
+  ASSERT_EQ(chunks->tasks[0].size(), 0);
 }
 
 TEST_F(TaskChunkTest, chunksRegisterTheAmountOfAddedTasks) {
-  chunkA.addTask(0,0);
+  allocateChunks(1);
+  chunks->addTask(0,0,1);
 
-  ASSERT_EQ(chunkA.it_indice.size(), 1);
+  ASSERT_EQ(chunks->tasks[0].size(), 1);
 }
 
 TEST_F(TaskChunkTest, chunksRegisterTheLoadSumOfAddedTasks) {
   loadA = 10;
+  allocateChunks(1);
+  chunks->addTask(0,0,loadA);
 
-  chunkA.addTask(0, loadA);
-
-  ASSERT_EQ(chunkA.load_sum, loadA);
+  ASSERT_EQ(chunks->load_sum[0], loadA);
 }
 
 TEST_F(TaskChunkTest, chunksRegisterTheLoadSumOfAllAddedTasks) {
   loadA = 10;
   loadB = 20;
 
-  chunkA.addTask(0, loadA);
-  chunkA.addTask(1, loadB);
+  allocateChunks(1);
+  chunks->addTask(0,0,loadA);
+  chunks->addTask(0,1,loadB);
 
-  ASSERT_EQ(chunkA.it_indice.size(), 2);
-  ASSERT_EQ(chunkA.load_sum, loadA + loadB);
+  ASSERT_EQ(chunks->tasks[0].size(), 2);
+  ASSERT_EQ(chunks->load_sum[0], loadA + loadB);
 }
 
-TEST_F(TaskChunkTest, operatorGreaterThan) {
+TEST_F(TaskChunkTest, tasksToDifferentchunks) {
   loadA = 10;
   loadB = 20;
 
-  chunkA.addTask(0, loadA);
-  chunkB.addTask(1, loadB);
+  allocateChunks(2);
+  chunks->addTask(0,0,loadA);
+  chunks->addTask(1,1,loadB);
 
-  ASSERT_TRUE(chunkB > chunkA);
-}
-
-TEST_F(TaskChunkTest, operatorLessThan) {
-  loadA = 10;
-  loadB = 20;
-
-  chunkA.addTask(0, loadA);
-  chunkB.addTask(1, loadB);
-
-  ASSERT_FALSE(chunkB < chunkA);
+  ASSERT_EQ(chunks->tasks[0].size(), 1);
+  ASSERT_EQ(chunks->tasks[1].size(), 1);
+  ASSERT_EQ(chunks->load_sum[0], loadA);
+  ASSERT_EQ(chunks->load_sum[1], loadB);
 }
 
 }

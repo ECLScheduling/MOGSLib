@@ -1,12 +1,12 @@
 #pragma once
 
 #include <type_traits>
+#include <algorithm>
+#include <vector>
 #include <map>
-#include <cstdlib>
 
-#include <structures/binLPT/taskChunk.h>
+#include <structures/binLPT/taskChunks.h>
 #include <structures/binLPT/loadsetInfo.h>
-#include <iostream>
 
 namespace BinLPT {
 
@@ -19,19 +19,16 @@ template<typename Load, typename UInt, bool counting_sort_possible>
 struct ChunkSorting {
   
   using LoadInfo = LoadSetInfo<Load, UInt>;
-  using Chunk = TaskChunk<Load, UInt>;
+  using Chunks = TaskChunks<Load, UInt>;
 
   /**
    * The sorting function implementation when counting-sort is not possible due to the Load typename.
    */
-  inline static void function(const LoadInfo &load_info, Chunk *chunks_ref) {
-    std::qsort(chunks_ref, load_info.chunks_size, sizeof *chunks_ref, [](const void *a, const void *b) {
-      Chunk arg1 = *static_cast<const Chunk *>(a);
-      Chunk arg2 = *static_cast<const Chunk *>(b);
+  inline static void function(const LoadInfo &load_info, std::vector<UInt> &chunk_indexes) {
+    auto chunks = load_info.chunks;
 
-      if(arg1 < arg2) return 1; // This is the inverse of a normal quick-sort due to the need to sort in decrescent order.
-      if(arg1 > arg2) return -1; // This is the inverse of a normal quick-sort due to the need to sort in decrescent order.
-      return 0;
+    std::sort(chunk_indexes.begin() , chunk_indexes.end(), [&chunks](UInt a, UInt b) {
+      return chunks->load_sum[a] > chunks->load_sum[b];
     });
   }
 
@@ -45,46 +42,42 @@ template<typename Load, typename UInt>
 struct ChunkSorting<Load, UInt, true> {
   
   using LoadInfo = LoadSetInfo<Load, UInt>;
-  using Chunk = TaskChunk<Load, UInt>;
+  using Chunks = TaskChunks<Load, UInt>;
 
-  static void countSort(Chunk *chunks_ref, const UInt &size, const Load &max_val) {
-    std::map<Load, std::vector<Chunk*>* > chunk_bucket;
+  /**
+   * A counting sort implementation that looks the chunk load sum to order a set of indice to TaskChunk representations.
+   * @details This function modifies the chunk_indexes reference input.
+   * @param chunks_ref A reference to the Chunks data-oriented structure.
+   * @param chunk_indexes A initial reference list of valid indice to the task chunk representations in chunks_ref.
+   */
+  static void countSort(Chunks *chunks_ref, std::vector<UInt> &chunk_indexes) {
+    std::map<Load, std::vector<UInt> > chunk_indice_bucket;
 
-    for(UInt i = 0; i < size; ++i){
-      auto key = chunks_ref[i].load_sum;
+    for(UInt i = 0; i < chunks_ref->size; ++i){
+      auto key = chunks_ref->load_sum[i];
       
-      std::cout << "Inserting into position " << key << std::endl;
-      if(chunk_bucket.find(key) == chunk_bucket.end()){
-        chunk_bucket[key] = new std::vector<Chunk*>(size);
-        std::cout << "First time for this position " << key << std::endl;
+      if(chunk_indice_bucket.find(key) == chunk_indice_bucket.end()){
+        chunk_indice_bucket[key] = std::vector<UInt>();
       }
-      chunk_bucket[key]->push_back(&chunks_ref[i]);
+      chunk_indice_bucket.at(key).push_back(i);
     }
 
-    for (auto it = chunk_bucket.rbegin(); it != chunk_bucket.rend(); ++it) {
-      std::cout << "Key: " << it->first << std::endl;
-      //TODO: Put them back in the index as output.
+    UInt i = 0;
+    for (auto it = chunk_indice_bucket.rbegin(); it != chunk_indice_bucket.rend(); ++it) {
+      std::vector<UInt> &indice_vector = it->second;
+      for(auto chunk_index : indice_vector) {
+        chunk_indexes[i] = chunk_index;
+        ++i;
+      }
     }
-
-    // while(output_i < size) {
-    //   while(bucket[chunk_i].size() == 0) {
-    //     ++chunk_i;
-    //   }
-    //   std::cout << "Position " << chunk_i << " had elements" << std::endl;
-    //   auto cur_bucket = bucket[chunk_i];
-    //   for(UInt j = 0; j < cur_bucket.size(); ++j) {
-    //     chunks_ref[output_i] = *cur_bucket[j];
-    //     ++output_i;
-    //   }
-    //   ++chunk_i;
-    // }
   }
 
   /**
    * The counting-sort function implementation.
+   * @param load_info The reference to the load_info structure.
    */
-  inline static void function(const LoadInfo &load_info, Chunk *chunks_ref) {
-    countSort(chunks_ref, load_info.chunks_size, load_info.load_sum);
+  inline static void function(const LoadInfo &load_info, std::vector<UInt> &chunk_indexes) {
+    countSort(load_info.chunks, chunk_indexes);
   }
 };
 

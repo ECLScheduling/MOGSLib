@@ -2,12 +2,14 @@
 #include <algorithm>
 
 template<typename InputAdaptor>
-void GreedyStrategy<InputAdaptor>::doTaskMapping(InputAdaptor &input) {
+void GreedyStrategy<InputAdaptor>::doTaskMapping() {
+  InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;
+  
   MaxHeap taskHeap;
   MinHeap PEHeap;
 
-  MaxHeapComparator maxHeapCmp(StrategyInterface<InputAdaptor>::currentInput);
-  MinHeapComparator minHeapCmp(StrategyInterface<InputAdaptor>::currentInput);
+  MaxHeapComparator maxHeapCmp(&input);
+  MinHeapComparator minHeapCmp(&input);
 
   GreedyAlgorithm algorithm;
 

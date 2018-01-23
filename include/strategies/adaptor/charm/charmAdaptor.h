@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "../adaptorInterface.h"
+#include "../interface/defaultAdaptor.h"
 #include "charmTypes.h"
 #include <cassert>
 
@@ -16,7 +16,7 @@
  * This class is the implementation of the AdaptorInterface to be linked in the Charm environment.
  * @details This class presents basic translation from Charm++ datatypes to generic input for load balancing strategies.
  */
-class CharmAdaptor : public AdaptorInterface<CharmTypes> {
+class CharmAdaptor : public DefaultAdaptor<CharmTypes> {
 public:
 
   using LDStats = BaseLB::LDStats;
@@ -38,6 +38,8 @@ private:
    */
   LDStats *input;
 
+  //TODO: _PEVector and _taskVector must be removed since they have become obsolete. However, internal charm++ calculations are made when those objects are created. As a result, these vectors must remain until the calculations are studied and replicated or invoked here. 
+
   /**
    * @variable _PEVector The vector of every available PE in the environment.
    */
@@ -49,9 +51,29 @@ private:
   TaskVector _taskVector;
 
   /**
+   * @variable loads_pe The loads of every PE.
+   */
+  std::vector<Load> loads_pe;
+
+  /**
+   * @variable loads_tasks The loads of every task.
+   */
+  std::vector<Load> loads_tasks;
+
+  /**
+   * @variable ids_pe The ids of every pe.
+   */
+  std::vector<Id> ids_pe;
+
+  /**
+   * @variable ids_tasks The ids of every task.
+   */
+  std::vector<Id> ids_tasks;
+
+  /**
    * Populates the internal vectors that will be used to implement the interface methods.
    */
-  void populateVectors(){
+  void readCharmData(){
     int nPEs = input->nprocs();
     int nTasks = input->n_objs;
 
@@ -87,9 +109,31 @@ private:
     delete [] map;
 
     // Adds the overhead to the total load of a PE.
-    for (auto pe = 0; pe < _PEVector.size(); pe++)
+    for (auto pe = 0; pe < _PEVector.size(); pe++){
       _PEVector[pe].totalLoad() +=  _PEVector[pe].overhead();
+    }
 }
+
+  void populateInputVectors() {
+    UInt pe_count = _PEVector.size();
+    UInt task_count = _taskVector.size();;
+
+    ids_pe = std::vector<Id>(pe_count);
+    loads_pe = std::vector<Load>(pe_count);
+
+    loads_tasks = std::vector<Load>(task_count);
+    ids_tasks = std::vector<Id>(task_count);
+
+    for(UInt i = 0; i < pe_count; ++i) {
+      loads_pe[i] = _PEVector[i].getTotalLoad();
+      ids_pe[i] = _PEVector[i].getProcId();
+    }
+
+    for(UInt i = 0; i < task_count; ++i) {
+      loads_tasks[i] = _taskVector[i].getVertexLoad();
+      ids_tasks[i] = _taskVector[index].getVertexId()
+    }
+  }
 
 public:
 
@@ -98,71 +142,36 @@ public:
    * @param stats The collected usefull data for load balancing, given by the Charm++ run time system.
    */
   CharmAdaptor(LDStats *stats) : input(stats) {
-    populateVectors();
+    readCharmData();
+    populateInputVectors();
   }
 
   /**
-   * @param index The index of the PE.
-   * @return The load of the index-th PE present in this input.
+   * @return A vector of loads for the PEs
    */
-  inline const Load PELoad(const UInt &index) {
-    return _PEVector[index].getTotalLoad();
+  inline std::vector<Load>& PELoads() {
+    return loads_pe;
   }
 
   /**
-   * Sets a new value for the PE load.
-   * @param index The index of the PE.
-   * @param newLoad The value of the new load value for the PE.
+   * @return A vector of ids for the PEs.
    */
-  inline void setPELoad(const UInt &index, const Load &newLoad) {
-    _PEVector[index].totalLoad() = newLoad;
+  inline std::vector<Id>& PEIds() {
+    return ids_pe;
   }
 
   /**
-   * @param index The index of the PE.
-   * @return The id of the PE.
-  */
-  inline const Id PEId(const UInt &index) {
-   return _PEVector[index].getProcId();
+   * @return A vector of loads for the tasks.
+   */
+  inline std::vector<Load>& taskLoads() {
+    return loads_tasks;
   }
 
   /**
-   * @return The ammount of PEs in the library's input.
+   * @return A vector of Ids for the tasks.
    */
-  inline const UInt PECount() {
-    return _PEVector.size();
-  }
-
-  /**
-   * @param index The index of the task.
-   * @return The load of the index-th task present in this input.
-   */
-  inline const Load taskLoad(const UInt &index) {
-    return _taskVector[index].getVertexLoad();
-  }
-
-  /**
-   * Set a new value for the load assigned to the task.
-   * @param index The index of the task.
-   * @param newLoad The value of the new load value for the task
-   */
-  void setTaskLoad(const UInt &index, const Load &newLoad) {
-    _taskVector[index].setCompLoad(newLoad);
-  }
-
-  /**
-   * @param index The index of the task.
-   * @return The id of the task.
-   */
-  inline const Id taskId(const UInt &index) {
-    return _taskVector[index].getVertexId();
-  }
-  
-  /**
-   * @return The ammount of tasks in the library's input.
-   */
-  inline const UInt taskCount() {
-    return _taskVector.size();
+  inline std::vector<Id>& taskIds() {
+    return ids_tasks;
   }
 
 };

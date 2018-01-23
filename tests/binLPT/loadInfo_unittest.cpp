@@ -15,30 +15,29 @@ public:
 
   using LoadSetInfo = BinLPT::LoadSetInfo<Load, UInt>;
 
-  LoadSetInfo load_info;
-  Load *loads;
+  LoadSetInfo *load_info;
+  std::vector<Load> loads;
   UInt loads_size;
   UInt chunk_amount;
 
   void initializeLoadsWithIncreasingValues(const UInt &amount = 1) {
-    loads = new Load[amount];
-    loads_size = amount;
     for(UInt i = 0; i < amount; ++i) {
-      loads[i] = i+1;
+      loads.push_back(i+1);
     }
   }
 
-  void cleanLoads() {
-    delete [] loads;
+  void TearDown() {
+    loads.clear();
   }
 };
 
 TEST_F(LoadSetInfoTest, LoadInfoAreCreatedEmpty) {
-  ASSERT_EQ(load_info.load_sum, 0);
-  ASSERT_EQ(load_info.load_avg, 0);
-  ASSERT_EQ(load_info.load_max, 0);
-  ASSERT_EQ(load_info.load_size, 0);
-  ASSERT_EQ(load_info.chunks_size, 0);
+  load_info = new LoadSetInfo();
+
+  ASSERT_EQ(load_info->load_sum, 0);
+  ASSERT_EQ(load_info->load_avg, 0);
+  ASSERT_EQ(load_info->load_max, 0);
+  ASSERT_EQ(load_info->loads, nullptr);
 }
 
 TEST_F(LoadSetInfoTest, AnalysisTest) {
@@ -50,15 +49,13 @@ TEST_F(LoadSetInfoTest, AnalysisTest) {
   const Load &expected_load_sum = 5+4+3+2+1;
 
   // Initialize the structure
-  load_info = LoadSetInfo::analyzeLoadArray(loads, loads_size, chunk_amount);
+  load_info = LoadSetInfo::analyzeLoadArray(loads, chunk_amount);
 
-  ASSERT_EQ(load_info.load_sum, expected_load_sum);
-  ASSERT_EQ(load_info.load_avg, expected_load_sum/chunk_amount);
-  ASSERT_EQ(load_info.load_max, 5);
-  ASSERT_EQ(load_info.load_size, amount_of_tasks);
-  ASSERT_EQ(load_info.chunks_size, chunk_amount);
-
-  cleanLoads();
+  ASSERT_EQ(load_info->load_sum, expected_load_sum);
+  ASSERT_EQ(load_info->load_avg, expected_load_sum/chunk_amount);
+  ASSERT_EQ(load_info->load_max, 5);
+  ASSERT_EQ(load_info->loads->size(), amount_of_tasks);
+  ASSERT_EQ(load_info->chunks->size, chunk_amount);
 }
 
 TEST_F(LoadSetInfoTest, AnalysisTestUnorderedValues) {
@@ -67,7 +64,7 @@ TEST_F(LoadSetInfoTest, AnalysisTestUnorderedValues) {
   const Load &expected_load_sum = 6+5+4+3+2+1;
 
   // Create the loads dataset
-  loads = new Load[amount_of_tasks];
+  loads = std::vector<Load>(amount_of_tasks);
   loads[0] = 2;
   loads[1] = 4;
   loads[2] = 3;
@@ -76,15 +73,13 @@ TEST_F(LoadSetInfoTest, AnalysisTestUnorderedValues) {
   loads[5] = 1;
 
   // Initialize the structure
-  load_info = LoadSetInfo::analyzeLoadArray(loads, amount_of_tasks, chunk_amount);
+  load_info = LoadSetInfo::analyzeLoadArray(loads, chunk_amount);
 
-  ASSERT_EQ(load_info.load_sum, expected_load_sum);
-  ASSERT_EQ(load_info.load_avg, expected_load_sum/chunk_amount);
-  ASSERT_EQ(load_info.load_max, 6);
-  ASSERT_EQ(load_info.load_size, amount_of_tasks);
-  ASSERT_EQ(load_info.chunks_size, chunk_amount);
-
-  cleanLoads();
+  ASSERT_EQ(load_info->load_sum, expected_load_sum);
+  ASSERT_EQ(load_info->load_avg, expected_load_sum/chunk_amount);
+  ASSERT_EQ(load_info->load_max, 6);
+  ASSERT_EQ(load_info->loads->size(), amount_of_tasks);
+  ASSERT_EQ(load_info->chunks->size, chunk_amount);
 }
 
 }

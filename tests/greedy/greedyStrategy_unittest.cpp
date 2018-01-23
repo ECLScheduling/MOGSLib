@@ -1,47 +1,47 @@
-#include "fixtures/greedyFixtures.h"
+// #include "fixtures/greedyFixtures.h"
 
-namespace GreedyAlogorithmTests {
+// namespace GreedyAlogorithmTests {
 
-TEST_F(StrategyTest, simpleCase) {
+// TEST_F(StrategyTest, simpleCase) {
 
-  generateSimpleCase();
+//   generateSimpleCase();
 
-  mapTasks();
+//   mapTasks();
 
-  printResult();
-}
+//   printResult();
+// }
 
-TEST_F(StrategyTest, PEIdsInvertedShouldWork) {
+// TEST_F(StrategyTest, PEIdsInvertedShouldWork) {
 
-  for(auto i = 0; i < 50; ++i) {
-    adaptor.tasks.load.push_back(i);
-    adaptor.tasks.id.push_back(i);
-  }
+//   for(auto i = 0; i < 50; ++i) {
+//     adaptor.tasks.load.push_back(i);
+//     adaptor.tasks.id.push_back(i);
+//   }
 
-  for(auto i = 0; i < 8; ++i) {
-    adaptor.PEs.id.push_back(8-i);
-    adaptor.PEs.load.push_back(0);
-  }
+//   for(auto i = 0; i < 8; ++i) {
+//     adaptor.PEs.id.push_back(8-i);
+//     adaptor.PEs.load.push_back(0);
+//   }
 
-  mapTasks();
-  printResult();
-}
+//   mapTasks();
+//   printResult();
+// }
 
-TEST_F(StrategyTest, taskIdsInvertedShouldWork) {
+// TEST_F(StrategyTest, taskIdsInvertedShouldWork) {
 
-  for(auto i = 0; i < 50; ++i) {
-    adaptor.tasks.load.push_back(i);
-    adaptor.tasks.id.push_back(50-i);
-  }
+//   for(auto i = 0; i < 50; ++i) {
+//     adaptor.tasks.load.push_back(i);
+//     adaptor.tasks.id.push_back(50-i);
+//   }
 
-  for(auto i = 0; i < 8; ++i) {
-    adaptor.PEs.id.push_back(i);
-    adaptor.PEs.load.push_back(0);
-  }
+//   for(auto i = 0; i < 8; ++i) {
+//     adaptor.PEs.id.push_back(i);
+//     adaptor.PEs.load.push_back(0);
+//   }
 
-  mapTasks();
+//   mapTasks();
 
-  printResult();
-}
+//   printResult();
+// }
 
-}
+// }

@@ -38,37 +38,67 @@
 //   return 0;
 // }
 
-#include <algorithms/binLPT/binLPTAlgorithm.h>
-#include <iostream>
+#include <strategies/impl/binLPT/binLPT.h>
+#include <strategies/adaptor/interface/defaultAdaptor.h>
 
-using Load = unsigned int;
-using UInt = unsigned int;
+struct MyDataTypes {
+  using UInt = unsigned int;
+  using Load = unsigned int;
+  using Id = unsigned int;
+};
 
-using Algorithms = BinLPT::Algorithms<Load, UInt>;
-using Chunk = BinLPT::TaskChunk<Load, UInt>;
-using LoadInfo = BinLPT::LoadSetInfo<Load, UInt>;
+using UInt = MyDataTypes::UInt;
+
+class MyInputAdaptor : public DefaultAdaptor<MyDataTypes>, public WithGenericStructure<typename MyDataTypes::UInt> {
+public:
+
+  std::vector<Load> loads_pe;
+  std::vector<Load> loads_tasks;
+
+  std::vector<Id> ids_pe;
+  std::vector<Id> ids_tasks;
+
+  UInt k;
+
+  inline UInt& structure() {
+    return k;
+  }
+
+  inline std::vector<Load>& PELoads() {
+    return loads_pe;
+  }
+
+  inline std::vector<Id>& PEIds() {
+    return ids_pe;
+  }
+
+  inline std::vector<Load>& taskLoads() {
+    return loads_tasks;
+  }
+
+  inline std::vector<Id>& taskIds() {
+    return ids_tasks;
+  }
+
+};
+
+using Strategy = BinLPT::Strategy<MyInputAdaptor>;
 
 int main(int argc, char *argv[]) {
-  auto chunk_size = 5;
-  auto load_size = 20;
+  MyInputAdaptor input;
+  Strategy strategy;
 
-  LoadInfo load_info;
-  Load *loads;
-  Chunk *chunks;
-
-  loads = new Load[load_size];
-  chunks = new Chunk[chunk_size];
-
-  for(int i = 0; i < load_size; ++i)
-    loads[i] = i+1;
-
-  load_info = LoadInfo::analyzeLoadArray(loads, 20, 5);
-  Algorithms::partitionChunks(load_info, chunks);
-  Algorithms::sortChunks(load_info, chunks);
-
-  for(int i = 0; i < chunk_size; ++i) {
-    std::cout << "Chunk " << i << " load: " << chunks[i].load_sum << std::endl;
+  for(UInt i = 0; i < 20; ++i) {
+    input.loads_tasks.push_back(i+1);
+    input.ids_tasks.push_back(i);
   }
+  for(UInt i = 0; i < 4; ++i) {
+    input.loads_pe.push_back(0);
+    input.loads_pe.push_back(i);
+  }
+  input.k = 5;
+
+  strategy.mapTasks(input);
 
   return 0;
 }
