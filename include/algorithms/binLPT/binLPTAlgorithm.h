@@ -74,22 +74,6 @@ struct Algorithms {
     return ordered_indexes;
   }
 
-  /**
-   * This method decides the assignment of the chunks to the PEs in the input.
-   * @details The actual assignment is made through the class that implementes the callback signature.
-   * @param load_info The information about the load and chunks.
-   * @param chunk_ordered_indexes The sequence of indexes to be accessed to find the chunks in a decrescent order.
-   * @param callback A reference to the object that implements the callback method and will be responsible to formulate the output.
-   */
-   static void assignChunks(const LoadInfo &load_info, const std::vector<UInt> &chunk_ordered_indexes, CallbackType *callback){
-     for(auto i : chunk_ordered_indexes) {
-       auto task_vector = &(load_info.chunks->tasks[i]);
-       UInt to_PE = 0; //TODO: Escolha do PE.
-
-       callback->algorithmMapped(task_vector, to_PE, load_info.chunks->load_sum[i]);
-     }
-   }
-
 };
 
 }

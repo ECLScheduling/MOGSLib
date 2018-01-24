@@ -23,16 +23,16 @@ protected:
   virtual void doTaskMapping() {}
 
   /**
-   * The MigrationElement object that every strategy needs to output a result.
-   */
-  Output strategyOutput;
-
-  /**
    * The current input being used in a strategy.
    */
   Input *currentInput;
 
 public:
+
+  /**
+   * The MigrationElement object that every strategy needs to output a result.
+   */
+  Output strategyOutput;
 
   /**
    * The main entrypoint for every strategy.

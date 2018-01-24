@@ -9,6 +9,27 @@
 namespace BinLPT {
 
 /**
+ * A comparator structure used to order the PE indexes by their load in a crescent ordering.
+ * @type Load The load type that will be indirectly compared by the comparator.
+ * @type UInt The type used as unsigned integer (index) in this comparator.
+ */
+template<typename Load, typename UInt>
+struct LoadReverseComparator {
+  std::vector<Load> *loads;
+  
+  /**
+   * @details This behaviour is the oposite behaviour of a classic comparator object.
+   * @param a The first index.
+   * @param b The second index.
+   * @return true if the load, stored in the loads pointer, in the index a is GREATER than the load in the index b.
+   */
+  bool operator ()(const UInt &a, const UInt &b) {
+    return loads->at(a) > loads->at(b);
+  }
+
+};
+
+/**
  * @brief This class encapsulates the implementation of the BinLPT strategy.
  * @details The BinLPT strategy was originally implemented for OpenMP to act as a loop scheduler.
  */
@@ -25,12 +46,14 @@ public:
   using AlgorithmSet = Algorithms<Load, UInt, Strategy>;
   using LoadInfo = typename AlgorithmSet::LoadInfo;
 
+  using LoadComp = LoadReverseComparator<Load, UInt>;
+
 protected:
 
   /**
    * @variable A variable that saves the state between the different BinLPT algorithm stages.
    */
-  LoadInfo *load_info;
+  LoadInfo *load_info = nullptr;
 
   /**
    * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
@@ -45,11 +68,11 @@ protected:
   std::vector<UInt> partitioningPhase();
 
   /**
-   * Executes the assign phase of the BinLPT algorithm.
-   * @details This phase is where the chunks are assigned to the system's PE in a greedy fashion.
-   * @param chunk_ordering The indexes list that the chunks must be accessed to assert a decreasing order.
+   * This method decides the assignment of the chunks to the PEs in the input.
+   * @details This method uses a binary heap to order the PEs in increasing ordering, thus applying the LPT rule to the assigning phase.
+   * @param chunk_ordered_indexes The sequence of indexes to be accessed to find the chunks in a decrescent order.
    */
-  void assignPhase(const std::vector<UInt> chunk_ordering);
+  void assignPhase(const std::vector<UInt> chunk_ordered_indexes);
 
   /**
    * Clear any memory that may still be pointed by load_info.
@@ -67,19 +90,20 @@ public:
    * This method is called everytime the BinLPT algorithm maps a task chunk to a PE.
    * @details Inside this method the load of the task must be adjusted to match it's addition to the PE's mapped tasks.
    * @param task_indexes The tasks indexes that have been mapped.
-   * @param to_PE The PE that has received the task chunk.
+   * @param PE_index The index of the PE in the input that has received the task chunk.
    * @param total_load The load sum of the tasks that are being mapped.
    */
-  inline void algorithmMapped(const std::vector<UInt> *task_indexes, const UInt &to_PE, const Load &total_load) {
+  inline void algorithmMapped(const std::vector<UInt> *task_indexes, const UInt &PE_index, const Load &total_load) {
     auto &output = StrategyInterface<InputAdaptor>::strategyOutput;
     auto &input = StrategyInterface<InputAdaptor>::currentInput;
 
     // Set the mapping as part of the output.
-    for(auto task : *task_indexes)
-      output.set(input->PEIds()[to_PE], input->taskIds()[task]);
+    for(auto task : *task_indexes){
+      output.set(input->PEIds()[PE_index], input->taskIds()[task]);
+    }
     
     // Adjust the PE load.
-    input->PELoads()[to_PE] += total_load;
+    input->PELoads()[PE_index] += total_load;
   }
 
   ~Strategy() {

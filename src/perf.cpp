@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
   }
   for(UInt i = 0; i < 4; ++i) {
     input.loads_pe.push_back(0);
-    input.loads_pe.push_back(i);
+    input.ids_pe.push_back(i);
   }
   input.k = 5;
 
