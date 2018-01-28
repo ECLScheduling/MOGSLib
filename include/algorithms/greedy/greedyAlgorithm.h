@@ -3,7 +3,7 @@
 #include <system/traits.h>
 
 /**
- * The default definition of the GreedyAlgorithm callback class.
+ * @brief The default definition of the GreedyAlgorithm callback class.
  * @type Task The type definition of the task that a greedy algorithm uses.
  * @type PE the type definition of the PE that a greedy algorithm uses.
  */
@@ -21,7 +21,7 @@ public:
 };
 
 /**
- * The struct that defines the generic greedy load balancer algorithm with compile-time defined data structures and types.
+ * @brief The struct that defines the generic greedy load balancer algorithm with compile-time defined data structures and types.
  * @type Task A type that serve as a task abstraction to the algorithm. This type must be a pointer.
  * @type PE A type that serve as a PE abtraction to the algorithm. This type must be a pointer
  * @type CallbackType A type that has the method algorithmMapped, that will be called everytime a task is mapped to a PE in the algorithm.

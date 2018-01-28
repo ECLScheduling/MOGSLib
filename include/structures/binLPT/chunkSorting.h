@@ -11,6 +11,26 @@
 namespace BinLPT {
 
 /**
+ * @brief A comparator structure used to order the PE indexes by their load in a crescent ordering.
+ * @type Load The load type that will be indirectly compared by the comparator.
+ * @type UInt The type used as unsigned integer (index) in this comparator.
+ */
+template<typename Load, typename UInt>
+struct LoadReverseComparator {
+  std::vector<Load> *loads;
+  
+  /**
+   * @details This behaviour is the oposite behaviour of a classic comparator object.
+   * @param a The first index.
+   * @param b The second index.
+   * @return true if the load, stored in the loads pointer, in the index a is GREATER than the load in the index b.
+   */
+  bool operator ()(const UInt &a, const UInt &b) {
+    return loads->at(a) > loads->at(b);
+  }
+};
+
+/**
  * @brief A meta-programed structure to hold the sorting method used in the binLPT algorithm.
  * @details If counting sort is possible (when Load is of type unsigned int) it will be compiled and used, otherwise quick-sort will be used instead.
  * @note This method will sort in a descending order.

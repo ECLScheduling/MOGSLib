@@ -10,5 +10,5 @@ if [ "$1" = "$rts_name_charm" ]; then
   printf "// This line states that the build is intended for the Charm environment.\n" >> "$definitions_file";
   printf "#define RTS_IS_CHARM" >> "$definitions_file";
 else
-  echo "Deu ruim"
+  echo "Undefined RTS name"
 fi;

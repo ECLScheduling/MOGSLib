@@ -1,6 +1,3 @@
-#include <vector>
-#include <algorithm>
-
 template<typename InputAdaptor>
 void GreedyStrategy<InputAdaptor>::doTaskMapping() {
   InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;

@@ -4,10 +4,10 @@
 #include <map>
 
 /**
- * This class serve as a form of output to the strategies in this library.
+ * @brief This class serve as a form of output to the strategies in this library.
  */
 template <typename Id>
-class MigrationElement {
+class StrategyOutput {
 public:
 
   /**
@@ -44,4 +44,3 @@ public:
   }
 
 };
-

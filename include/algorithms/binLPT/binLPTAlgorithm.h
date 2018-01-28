@@ -6,31 +6,11 @@
 namespace BinLPT {
 
 /**
- * The default definition of the BinLPT callback class.
- * @details A class that formulates a strategy output must implement the methods of this virtual class in order to be able to use the BinLPT Algorithm.
+ * @brief The structure that encapsulate the algorithms used in the BinLPT strategy.
  * @type Load The type definition of the Load the BinLPT algorithm will use.
  * @type UInt the type definition of the Unsigned Integer the BinLPT algorithm will use.
  */
 template<typename Load, typename UInt>
-class AlgorithmCallback {
-public:
-  
-  /**
-   * This method is called everytime the binLPT algorithm maps a chunk of tasks to a PE.
-   * @details Inside this method the load of the PE must be adjusted to match it's received tasks. In addition, this callback must register the addition to formulate the strategy output.
-   * @param task_count The amount of tasks that are being added to the PE.
-   * @param to_PE The PE that has received the task.
-   */
-  virtual void algorithmMapped(const std::vector<UInt> *task_indexes, const UInt &to_PE, const Load &total_load) = 0;
-};
-
-/**
- * The structure that encapsulate the algorithms used in the BinLPT strategy.
- * @type Load The type definition of the Load the BinLPT algorithm will use.
- * @type UInt the type definition of the Unsigned Integer the BinLPT algorithm will use.
- * @type CallbackType A type that has the method algorithmMapped, that will be called everytime a task is mapped to a PE in the algorithm.
- */
-template<typename Load, typename UInt, typename CallbackType>
 struct Algorithms {
 
   using Chunks = TaskChunks<Load, UInt>;

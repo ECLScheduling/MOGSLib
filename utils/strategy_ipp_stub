@@ -1,5 +1,3 @@
-
-
 template<typename InputAdaptor>
 void STRATEGYNAME<InputAdaptor>::doTaskMapping(InputAdaptor &input) {
 

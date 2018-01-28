@@ -1,7 +1,10 @@
 #pragma once
 
-#include <strategies/strategyInterface.h>
+#include <interfaces/strategy/strategyInterface.h>
 #include <algorithms/greedy/greedyAlgorithm.h>
+
+#include <vector>
+#include <algorithm>
 
 /**
  * @brief This class encapsulates the implementation of a Greedy load balancer strategy.

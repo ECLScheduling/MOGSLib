@@ -1,10 +1,11 @@
 #pragma once
 
+#include <system/definitions.h>
 #ifdef RTS_IS_CHARM
 
 #include <vector>
 
-#include "../interface/defaultAdaptor.h"
+#include <interfaces/adaptor/defaultAdaptor.h>
 #include "charmTypes.h"
 #include <cassert>
 
@@ -13,10 +14,10 @@
 #include <CentralLB.h>
 
 /**
- * This class is the implementation of the AdaptorInterface to be linked in the Charm environment.
+ * @brief This class is the implementation of the AdaptorInterface to be linked in the Charm environment.
  * @details This class presents basic translation from Charm++ datatypes to generic input for load balancing strategies.
  */
-class CharmAdaptor : public DefaultAdaptor<CharmTypes> {
+class CharmDefaultAdaptor : public DefaultAdaptor<CharmTypes::Load> {
 public:
 
   using LDStats = BaseLB::LDStats;
@@ -31,14 +32,14 @@ public:
    */
   using TaskVector = std::vector<Vertex>;
 
-private:
+public:
 
   /**
    * @variable input A reference the Charm's LDStats instance.
    */
   LDStats *input;
 
-  //TODO: _PEVector and _taskVector must be removed since they have become obsolete. However, internal charm++ calculations are made when those objects are created. As a result, these vectors must remain until the calculations are studied and replicated or invoked here. 
+  //TODO: _PEVector and _taskVector can be removed since they have become obsolete after the creation of pe_loads and task_loads. However, internal charm++ calculations are made when those objects are manipulated. As a result, these vectors must remain in the code until charm++ dataflow is studied and replicated or invoked here. 
 
   /**
    * @variable _PEVector The vector of every available PE in the environment.
@@ -53,22 +54,12 @@ private:
   /**
    * @variable loads_pe The loads of every PE.
    */
-  std::vector<Load> loads_pe;
+  std::vector<Load> pe_loads;
 
   /**
    * @variable loads_tasks The loads of every task.
    */
-  std::vector<Load> loads_tasks;
-
-  /**
-   * @variable ids_pe The ids of every pe.
-   */
-  std::vector<Id> ids_pe;
-
-  /**
-   * @variable ids_tasks The ids of every task.
-   */
-  std::vector<Id> ids_tasks;
+  std::vector<Load> task_loads;
 
   /**
    * Populates the internal vectors that will be used to implement the interface methods.
@@ -109,29 +100,20 @@ private:
     delete [] map;
 
     // Adds the overhead to the total load of a PE.
-    for (auto pe = 0; pe < _PEVector.size(); pe++){
+    for (auto pe = 0; pe < _PEVector.size(); pe++)
       _PEVector[pe].totalLoad() +=  _PEVector[pe].overhead();
-    }
-}
+  }
 
   void populateInputVectors() {
     UInt pe_count = _PEVector.size();
     UInt task_count = _taskVector.size();;
 
-    ids_pe = std::vector<Id>(pe_count);
-    loads_pe = std::vector<Load>(pe_count);
-
-    loads_tasks = std::vector<Load>(task_count);
-    ids_tasks = std::vector<Id>(task_count);
-
     for(UInt i = 0; i < pe_count; ++i) {
-      loads_pe[i] = _PEVector[i].getTotalLoad();
-      ids_pe[i] = _PEVector[i].getProcId();
+      pe_loads.push_back(_PEVector[i].getTotalLoad());
     }
 
     for(UInt i = 0; i < task_count; ++i) {
-      loads_tasks[i] = _taskVector[i].getVertexLoad();
-      ids_tasks[i] = _taskVector[index].getVertexId()
+      task_loads.push_back(_taskVector[i].getVertexLoad());
     }
   }
 
@@ -141,7 +123,7 @@ public:
    * The constructor funcion of this class. It is used to initialize it's internal state.
    * @param stats The collected usefull data for load balancing, given by the Charm++ run time system.
    */
-  CharmAdaptor(LDStats *stats) : input(stats) {
+  CharmDefaultAdaptor(LDStats *stats) : input(stats) {
     readCharmData();
     populateInputVectors();
   }
@@ -150,28 +132,14 @@ public:
    * @return A vector of loads for the PEs
    */
   inline std::vector<Load>& PELoads() {
-    return loads_pe;
-  }
-
-  /**
-   * @return A vector of ids for the PEs.
-   */
-  inline std::vector<Id>& PEIds() {
-    return ids_pe;
+    return pe_loads;
   }
 
   /**
    * @return A vector of loads for the tasks.
    */
   inline std::vector<Load>& taskLoads() {
-    return loads_tasks;
-  }
-
-  /**
-   * @return A vector of Ids for the tasks.
-   */
-  inline std::vector<Id>& taskIds() {
-    return ids_tasks;
+    return task_loads;
   }
 
 };

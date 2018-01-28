@@ -1,11 +1,11 @@
 #pragma once
 
-#include <strategies/output/migrationElement.h>
+#include "strategyOutput.h"
 #include <memory>
 #include <system/traits.h>
 
 /**
- * Class from which every load balancing strategy must inherit from. The StrategyInterface's input class must be provided at compile time.
+ * @brief Class from which every load balancing strategy must inherit from. The StrategyInterface's input class must be provided at compile time.
  * @type InputAdaptor The input adaptor which serve as an interface to the input objects passed to the strategy.
  */
 template<typename InputAdaptor>
@@ -13,7 +13,7 @@ class StrategyInterface {
 public:
 
   using Input = InputAdaptor;
-  using Output = MigrationElement<typename InputAdaptor::Id>;
+  using Output = StrategyOutput<typename InputAdaptor::UInt>;
 
 protected:
 
@@ -41,7 +41,7 @@ public:
    */
   const Output& mapTasks(InputAdaptor &input) {
     currentInput = &input;
-    
+
     doTaskMapping();
 
     currentInput = nullptr;
