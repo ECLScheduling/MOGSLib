@@ -1,59 +1,102 @@
 #pragma once
 
-#include <structures/binLPT/chunkSorting.h>
+#include <algorithms/utility.h>
+#include <cassert>
+#include <cstring>
+
 #include <iostream>
 
 namespace BinLPT {
 
 /**
  * @brief The structure that encapsulate the algorithms used in the BinLPT strategy.
+ *
  * @type Load The type definition of the Load the BinLPT algorithm will use.
  * @type UInt the type definition of the Unsigned Integer the BinLPT algorithm will use.
  */
 template<typename Load, typename UInt>
 struct Algorithms {
 
-  using Chunks = TaskChunks<Load, UInt>;
-  using LoadInfo = LoadSetInfo<Load, UInt>;
-  using ChunkSort = ChunkSorting<Load, UInt, std::is_integral<Load>::value>;
-
   /**
-   * Create the chunk of tasks that will be assigned to the system's PUs.
-   * @param load_info A structure that defines the characteristics of the tasks load.
+   * @brief Computes chunk sizes.
+   *
+   * @param tasks   Target tasks.
+   * @param ntasks  Number of tasks.
+   * @param nchunks Number of chunks.
+   *
+   * @returns Chunk sizes.
    */
-  inline static void partitionChunks(const LoadInfo &load_info) {
-    UInt chunk_i = 0;
-    auto chunks_ref = load_info.chunks;
-    
-    // For each load data, iterate.
-    for(UInt i = 0; i < load_info.loads->size(); ++i) {
-      // If the current chunk has already more load than the expected average...
-      if(chunks_ref->load_sum[chunk_i] >= load_info.load_avg)
-        // increment the chunk i to the next chunk available.
-        chunk_i = (chunk_i+1)%chunks_ref->size;
-      // Add the task to the chunk.
-      chunks_ref->addTask(chunk_i, i, load_info.loads->at(i));
+  inline static UInt *compute_chunksizes(const Load* tasks, const UInt ntasks, const UInt nchunks) {
+    UInt i, k;
+    UInt *chunksizes = new UInt[nchunks];
+    Load *workload, chunkweight;
+
+    assert(chunksizes != nullptr);
+    assert(nchunks > 0);
+
+    memset(chunksizes, 0, sizeof chunksizes * nchunks);
+
+    if(!ntasks)
+      return chunksizes;
+
+    workload = UtilityAlgorithms::compute_cummulativesum<Load>(tasks, ntasks);
+    chunkweight = (workload[ntasks - 1] + tasks[ntasks - 1])/nchunks;
+
+    /* Compute chunksizes. */
+    k = 0;
+    for (i = 0; i < ntasks; /* noop */)
+    {
+      UInt j = ntasks;
+
+      if (k < (nchunks - 1))
+      {
+        for (j = i + 1; j < ntasks; j++)
+        {
+          if (workload[j] - workload[i] > chunkweight)
+          break;
+        }
+      }
+
+      chunksizes[k] = j - i;
+      i = j;
+      k++;
     }
+
+    delete workload;
+    return (chunksizes);
   }
 
   /**
-   * This method sort the chunks in descending order to be used in the chunk assigning phase.
-   * @param load_info The load information that has been used in the partitioning phase.
-   * @return A vector of indices to access the chunks in the TaskChunk structure.
+   * @brief Computes chunks loads.
+   *
+   * @param tasks The task loads.
+   * @param ntasks The size of tasks.
+   * @param chunksizes The size of the chunks.
+   * @param nchunks The size of the chunksizes array.
    */
-  static const std::vector<UInt> sortChunks(const LoadInfo &load_info) {
-    const UInt &index_size = load_info.chunks->size;
-    std::vector<UInt> ordered_indexes(index_size);
-    
-    for(UInt i = 0; i < index_size; ++i) {
-      ordered_indexes[i] = i;
+  inline static Load *compute_chunkloads(const Load *tasks, UInt ntasks, const UInt *chunksizes, const UInt nchunks) {
+    UInt i, k;    /* Loop indexes. */
+    Load *chunk_loads; /* Chunks.       */
+
+    chunk_loads = new Load[nchunks];
+    assert(chunk_loads != nullptr);
+
+    memset(chunk_loads, 0, sizeof chunk_loads * nchunks);
+
+    /* Compute chunks. */
+    k = 0;
+    for (i = 0; i < nchunks; ++i)
+    {
+      UInt j;
+
+      assert(k <= ntasks);
+
+      for (j = 0; j < chunksizes[i]; ++j)
+        chunk_loads[i] += tasks[k++];
     }
 
-    ChunkSort::function(load_info, ordered_indexes);
-
-    return ordered_indexes;
+    return (chunk_loads);
   }
-
 };
 
 }

@@ -1,60 +1,50 @@
 template<typename InputAdaptor>
 void Strategy<InputAdaptor>::doTaskMapping() {
-  InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;
-
-  /**
-   * Initialize the vector of Ids.
-   */
-  PE_ids.clear();
-  for(UInt i = 0; i < input.PELoads().size(); ++i) {
-    PE_ids.push_back(i);  
-  }
-  clearLoadInfo();
-
-  load_info = LoadInfo::analyzeLoadArray(input.taskLoads(), input.structure());
   
-  assignPhase(partitioningPhase());
-}
-
-template<typename InputAdaptor>
-std::vector<typename Strategy<InputAdaptor>::UInt> Strategy<InputAdaptor>::partitioningPhase() {
-  AlgorithmSet::partitionChunks(*load_info);
-
-  return AlgorithmSet::sortChunks(*load_info);
-}
-
-template<typename InputAdaptor>
-void Strategy<InputAdaptor>::assignPhase(const std::vector<UInt> chunk_ordered_indexes) {
+  /* Retrieve the input from the adaptor */
   InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;
-  
-  LoadComp comp;
-  comp.loads = &(input.PELoads());
+  Load *task_loads = input.taskLoads().data();
+  const UInt ntask = input.taskLoads().size();
+  const UInt nchunks = input.structure();
 
-  // Create a heap of indices to access the actual PE information
-  std::make_heap(PE_ids.begin(), PE_ids.end(), comp);
+  Load *pe_loads = input.PELoads().data();
+  const UInt npes = input.PELoads().size();
 
-  for(auto i : chunk_ordered_indexes) {
-    auto task_vector = &(load_info->chunks->tasks[i]);
+  /* Partition the input into chunks */
+  UInt *chunk_sizes = AlgorithmSet::compute_chunksizes(task_loads, ntasks, nchunks);
+  Load *chunk_loads = AlgorithmSet::compute_chunkloads(task_loads, ntasks, chunk_sizes, nchunks);
+  UInt *chunk_map = new UInt[nchunks];
 
-    // Assign the chunk to the PE in the heap front.
-    assignChunk(task_vector, PE_ids.front(), load_info->chunks->load_sum[i]);
+  /* Initialize the chunk map for sorting */
+  for(UInt i = 0; i < nchunks; ++i)
+    chunk_map[i] = i;
 
-    // Update the PE's position in the heap without taking the value out of the list.
-    std::pop_heap(PE_ids.begin(), PE_ids.end(), comp);
-    std::push_heap(PE_ids.begin(), PE_ids.end(), comp);
+  /* Sort the chunks by load */
+  UtilityAlgorithms::insertion_sort<Load, UInt>(chunk_map, chunk_loads, nchunks);
+
+  /* Iterate over the chunks and assign to PEs */
+  for (UInt i = nchunks; i > 0; --i) {
+    const UInt idx = i-1;
+    UInt pe_id = 0;
+
+    if(chunk_loads[idx] == 0)
+      continue;
+
+    /* Find the least overloaded PE to receive the task chunk. */
+    for(UInt j = 0; j < npes; ++j) {
+      if(pe_loads[j] < pe_loads[pe_id])
+        pe_id = j;
+    }
+
+    //TODO: Assign the tasks in the chunk to the PE.
+    for(UInt j = 0; j < chunk_sizes[chunk_map[idx]]; ++j) {
+      output.set(pe_id, /* Task id */);
+    }
+    //pe_loads[] += task load
   }
-}
 
-template<typename InputAdaptor>
-void Strategy<InputAdaptor>::assignChunk(const std::vector<UInt> *task_indexes, const UInt &PE_index, const Load &total_load){
-  auto &output = StrategyInterface<InputAdaptor>::strategyOutput;
-  auto &input = StrategyInterface<InputAdaptor>::currentInput;
-
-  // Set the mapping as part of the output.
-  for(auto task : *task_indexes){
-    output.set(PE_index, task);
-  }
-    
-  // Adjust the PE load.
-  input->PELoads()[PE_index] += total_load;
+  /* Clean memory */
+  delete [] chunk_sizes;
+  delete [] chunk_loads;
+  delete [] chunk_map;
 }
