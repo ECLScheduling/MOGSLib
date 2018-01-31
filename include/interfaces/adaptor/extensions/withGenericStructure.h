@@ -9,7 +9,7 @@ class WithGenericStructure {
 public:
 
   /**
-   * A method to obtain the additional input structure.
+   * @brief A method to obtain the additional input structure.
    */
   virtual T& structure() = 0;
 

@@ -20,7 +20,7 @@ public:
    * @param peId The id of the PE.
    * @param taskId The id of the task that will be mapped to the PE.
    */
-  void set(Id peId, Id taskId) {
+  void set(const Id peId, const Id taskId) {
     auto it = map.find(peId);
 
     if(it != map.end())
@@ -34,7 +34,7 @@ public:
    * @param peId The id of the PE.
    * @param tasks The vector of tasks to be mapped to the peId.
    */
-  void setMultiple(Id peId, std::vector<Id> &tasks) {
+  void setMultiple(const Id peId, const std::vector<Id> &tasks) {
     auto it = map.find(peId);
 
     if(it != map.end())

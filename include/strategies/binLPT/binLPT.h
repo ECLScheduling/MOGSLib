@@ -5,6 +5,8 @@
 #include <interfaces/strategy/strategyInterface.h>
 #include <algorithms/binLPT/binLPTAlgorithm.h>
 
+#include <iostream>
+
 namespace BinLPT {
 
 /**
@@ -15,12 +17,14 @@ template <typename InputAdaptor>
 class Strategy : public StrategyInterface<InputAdaptor> {
   static_assert(BinLPTAdaptorRequirements<InputAdaptor, typename InputAdaptor::UInt>::value, "Input Adaptor must implement the WithGenericStructure<UInt> adaptor extension using the same UInt as the remainder of the system. The default UInt is defined in Traits<void>.");
 
-public: 
+public:
 
   using Load = typename InputAdaptor::Load;
   using UInt = typename InputAdaptor::UInt;
 
   using AlgorithmSet = Algorithms<Load, UInt>;
+
+  virtual ~Strategy() {}
 
 protected:
 

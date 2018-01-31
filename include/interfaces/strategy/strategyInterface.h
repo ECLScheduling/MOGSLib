@@ -18,24 +18,24 @@ public:
 protected:
 
   /**
-   * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
+   * @brief The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
    */
   virtual void doTaskMapping() {}
 
   /**
-   * The current input being used in a strategy.
+   * @variable The current input being used in a strategy.
    */
   Input *currentInput;
 
 public:
 
   /**
-   * The MigrationElement object that every strategy needs to output a result.
+   * @variable The object that holds the output.
    */
-  Output strategyOutput;
+  Output output;
 
   /**
-   * The main entrypoint for every strategy.
+   * @brief The main entrypoint for every strategy.
    * @param input The strategy's relevant input about the environment, architecture and tasks.
    * @return The result task mapping given by the strategy.
    */
@@ -45,7 +45,7 @@ public:
     doTaskMapping();
 
     currentInput = nullptr;
-    return strategyOutput;
+    return output;
   }
 };
 
