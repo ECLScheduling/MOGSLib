@@ -17,7 +17,7 @@
  * @brief This class is the implementation of the AdaptorInterface to be linked in the Charm environment.
  * @details This class presents basic translation from Charm++ datatypes to generic input for load balancing strategies.
  */
-class CharmDefaultAdaptor : public DefaultAdaptor<CharmTypes::Load> {
+class CharmDefaultAdaptor : public DefaultAdaptor<CharmTypes::Load, CharmTypes::UInt> {
 public:
 
   using LDStats = BaseLB::LDStats;
@@ -32,7 +32,7 @@ public:
    */
   using TaskVector = std::vector<Vertex>;
 
-public:
+protected:
 
   /**
    * @variable input A reference the Charm's LDStats instance.
@@ -131,15 +131,29 @@ public:
   /**
    * @return A vector of loads for the PEs
    */
-  inline std::vector<Load>& PELoads() {
-    return pe_loads;
+  inline Load* PELoads() {
+    return pe_loads.data();
   }
 
   /**
    * @return A vector of loads for the tasks.
    */
-  inline std::vector<Load>& taskLoads() {
-    return task_loads;
+  inline Load* taskLoads() {
+    return task_loads.data();
+  }
+
+  /**
+   * @return The amount of PEs in the input.
+   */
+  inline UInt nPEs() {
+    return pe_loads.size();
+  }
+
+  /**
+   * @return The amount of tasks in the input.
+   */
+  inline UInt ntasks() {
+    return task_loads.size();
   }
 
 };

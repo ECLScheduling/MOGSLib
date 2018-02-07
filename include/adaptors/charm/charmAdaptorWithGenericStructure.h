@@ -9,7 +9,6 @@
  * @brief This class is an extended adaptor for Charm++ that serves the purpose of implementing the WithGenericStructure interface.
  * @details This class uses the same initialization code that the CharmDefaultAdaptor.
  */
-template<typename T>
 class CharmAdaptorWithGenericStructure : public CharmDefaultAdaptor, public WithGenericStructure<T> {
 protected:
 

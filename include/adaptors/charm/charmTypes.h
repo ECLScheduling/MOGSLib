@@ -1,5 +1,7 @@
 #pragma once
 
+#include <system/traits.h>
+
 /**
  * This namespace defines the data types used in Charm++ needed in adaptors.
  */
@@ -10,4 +12,5 @@ namespace CharmTypes {
    */
   using Load = double; 
 
+  using UInt = Traits<void>::UInt;
 };

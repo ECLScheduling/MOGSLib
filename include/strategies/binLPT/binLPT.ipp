@@ -3,12 +3,12 @@ void Strategy<InputAdaptor>::doTaskMapping() {
   
   /* Retrieve the input from the adaptor */
   InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;
-  Load *task_loads = input.taskLoads().data();
-  const UInt ntasks = input.taskLoads().size();
+  Load *task_loads = input.taskLoads();
+  const UInt ntasks = input.ntasks();
   const UInt nchunks = input.structure();
 
-  Load *pe_loads = input.PELoads().data();
-  const UInt npes = input.PELoads().size();
+  Load *pe_loads = input.PELoads();
+  const UInt npes = input.nPEs();
 
   /* Partition the input into chunks */
   UInt *chunk_sizes = AlgorithmSet::compute_chunksizes(task_loads, ntasks, nchunks);
