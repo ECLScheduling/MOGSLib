@@ -1,16 +1,16 @@
 #pragma once
 
-#include "charmDefaultAdaptor.h"
-#ifdef RTS_IS_CHARM
+#include "openMPDefaultAdaptor.h"
+#ifdef RTS_IS_OPENMP
 
 #include <interfaces/adaptor/extensions/withGenericStructure.h>
 
 /**
- * @brief This class is an extended adaptor for Charm++ that serves the purpose of implementing the WithGenericStructure interface.
- * @details This class uses the same initialization code that the CharmDefaultAdaptor.
+ * @brief This class is an extended adaptor for OpenMP++ that serves the purpose of implementing the WithGenericStructure interface.
+ * @details This class uses the same initialization code that the OpenMPDefaultAdaptor.
  */
 template<typename T>
-class CharmAdaptorWithGenericStructure : public CharmDefaultAdaptor, public WithGenericStructure<T> {
+class OpenMPAdaptorWithGenericStructure : public OpenMPDefaultAdaptor, public WithGenericStructure<T> {
 protected:
 
   /**
@@ -20,7 +20,7 @@ protected:
 
 public:
 
-  CharmAdaptorWithGenericStructure(LDStats *stats) : CharmDefaultAdaptor(stats) {}
+  OpenMPAdaptorWithGenericStructure() : OpenMPDefaultAdaptor(){}
 
   /**
    * Initializes the reference to the structure that this adaptor provides to the strategy.
