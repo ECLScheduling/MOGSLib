@@ -1,7 +1,5 @@
 #pragma once
 
-#include "strategyOutput.h"
-#include <memory>
 #include <system/traits.h>
 
 /**
@@ -13,7 +11,7 @@ class StrategyInterface {
 public:
 
   using Input = InputAdaptor;
-  using Output = StrategyOutput<typename InputAdaptor::UInt>;
+  using UInt = typename InputAdaptor::UInt;
 
 protected:
 
@@ -30,17 +28,19 @@ protected:
 public:
 
   /**
-   * @variable The object that holds the output.
+   * @variable A task map that indicates which processor is responsible for the task in the same index.
+   * @details If output[2] = 1 then the task[2] is mapped to pe[1].
    */
-  Output output;
+  UInt *output;
 
   /**
    * @brief The main entrypoint for every strategy.
    * @param input The strategy's relevant input about the environment, architecture and tasks.
    * @return The result task mapping given by the strategy.
    */
-  const Output& mapTasks(InputAdaptor &input) {
-    currentInput = &input;
+  UInt* mapTasks(InputAdaptor *input) {
+    currentInput = input;
+    output = new UInt[input->ntasks()]();
 
     doTaskMapping();
 

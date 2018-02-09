@@ -6,7 +6,8 @@ extern "C" {
 #endif
 
 extern void input_set_PE_count(void*, unsigned);
-extern void strategy_map_tasks(void*, void*);
+extern void input_set_chunksize(void* input, unsigned chunksize); //TODO: This function is problematic
+extern unsigned *strategy_map_tasks(void*, void*);
 
 #ifdef __cplusplus
 }

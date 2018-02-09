@@ -9,11 +9,14 @@
 
 namespace BinLPT_Strategy_Test {
 
-using UInt = Traits<void>::UInt;
-using Load = UInt;
+using UIntType = Traits<void>::UInt;
+using LoadType = UIntType;
 
-class TestInputAdaptor : public DefaultAdaptor<Load>, public WithGenericStructure<UInt> {
+class TestInputAdaptor : public DefaultAdaptor<LoadType, UIntType>, public WithGenericStructure<UIntType> {
 public:
+
+  using UInt = UIntType;
+  using Load = UInt;
 
   std::vector<Load> pe_loads;
   std::vector<Load> task_loads;
@@ -29,15 +32,23 @@ public:
   /**
    * @return A vector of loads for the PEs
    */
-  inline std::vector<Load>& PELoads() { 
-    return pe_loads;
+  inline Load* PELoads() { 
+    return pe_loads.data();
   }
 
   /**
    * @return A vector of loads for the tasks.
    */
-  inline std::vector<Load>& taskLoads() {
-    return task_loads;
+  inline Load* taskLoads() {
+    return task_loads.data();
+  }
+
+  inline UInt nPEs() {
+    return pe_loads.size();
+  }
+
+  inline UInt ntasks() {
+    return task_loads.size();
   }
 
   virtual ~TestInputAdaptor() {}
@@ -51,18 +62,28 @@ class StrategyTest : public ::testing::Test {
 public:
 
   using Strategy = BinLPT::Strategy<TestInputAdaptor>;
-  using Output = Strategy::Output;
+  using UInt = UIntType;
+  using Load = UInt;
 
   TestInputAdaptor *input;
-  Output output;
+  UInt *output;
   Strategy *strategy;
 
   UInt ntasks;
   UInt npes;
   Load *tasks;
 
+  UInt *tasksum_pe;
+
+  void calculate_tasksum() {
+    tasksum_pe = new UInt[npes]();
+    for(UInt i = 0; i < ntasks; ++i) {
+      tasksum_pe[output[i]] += 1;
+    }
+  }
+
   void callTestFunction() {
-    output = strategy->mapTasks(*input);
+    output = strategy->mapTasks(input);
   }
 
   void allocTasks() {
@@ -90,6 +111,7 @@ public:
     strategy = new Strategy();
 
     tasks = nullptr;
+    tasksum_pe = nullptr;
   }
 
   void TearDown() {
@@ -105,15 +127,12 @@ public:
       delete [] tasks;
       tasks = nullptr;
     }
+    if(tasksum_pe != nullptr){
+      delete tasksum_pe;
+      tasksum_pe = nullptr;
+    }
   }
 };
-
-TEST_F(StrategyTest, emptyInput) {
-  input->k = 1;
-  callTestFunction();
-
-  EXPECT_EQ(output.map.size(), 0);
-}
 
 TEST_F(StrategyTest, oneTask) {
   ntasks = 1;
@@ -126,9 +145,7 @@ TEST_F(StrategyTest, oneTask) {
 
   callTestFunction();
 
-  EXPECT_EQ(output.map.size(), 1); // Only one PE got tasks.
-  EXPECT_EQ(output.map[0].size(), ntasks); // The PE only got one task.
-  EXPECT_EQ(output.map[0].at(0), 0); // The task that the PE got is the first one.
+  EXPECT_EQ(output[0], 0); // The PE only got one task.
 }
 
 TEST_F(StrategyTest, twoTasks) {
@@ -143,10 +160,8 @@ TEST_F(StrategyTest, twoTasks) {
 
   callTestFunction();
 
-  EXPECT_EQ(output.map.size(), 1); // Only one PE got tasks.
-  EXPECT_EQ(output.map[0].size(), ntasks); // The PE only got two tasks.
-  EXPECT_EQ(output.map[0].at(0), 0); // The task that the PE got is the first one and the second.
-  EXPECT_EQ(output.map[0].at(1), 1); // The task that the PE got is the first one and the second.
+  EXPECT_EQ(output[0], 0); // The task that the PE got is the first one and the second.
+  EXPECT_EQ(output[1], 0); // The task that the PE got is the first one and the second.
 }
 
 TEST_F(StrategyTest, twoTasksTwoChunksOnePE) {
@@ -161,10 +176,8 @@ TEST_F(StrategyTest, twoTasksTwoChunksOnePE) {
 
   callTestFunction(); // Loads = 20, 10; load/chunk = 15
 
-  EXPECT_EQ(output.map.size(), 1); // Only one PE got tasks.
-  EXPECT_EQ(output.map[0].size(), ntasks); // The PE only got two tasks.
-  EXPECT_EQ(output.map[0].at(0), 0); // The task that the PE got is the first one and the second.
-  EXPECT_EQ(output.map[0].at(1), 1); // The task that the PE got is the first one and the second.
+  EXPECT_EQ(output[0], 0); // The task that the PE got is the first one and the second.
+  EXPECT_EQ(output[1], 0); // The task that the PE got is the first one and the second.
 }
 
 TEST_F(StrategyTest, twoTasksTwoChunksTwoPE) {
@@ -179,10 +192,8 @@ TEST_F(StrategyTest, twoTasksTwoChunksTwoPE) {
 
   callTestFunction(); // Loads = 20, 10; load/chunk = 15
 
-  ASSERT_EQ(output.map.size(), npes); // Both PEs got tasks.
-
-  EXPECT_EQ(output.map[0].size(), 1); // Each got one task.
-  EXPECT_EQ(output.map[1].size(), 1); // Each got one task.
+  EXPECT_EQ(output[0], 0); // Each got one task.
+  EXPECT_EQ(output[1], 1); // Each got one task.
 }
 
 TEST_F(StrategyTest, twoTasksTwoChunksTwoPE_OtherCase) {
@@ -197,9 +208,8 @@ TEST_F(StrategyTest, twoTasksTwoChunksTwoPE_OtherCase) {
 
   callTestFunction(); // Loads = 10, 20; load/chunk = 15; First chunk will take up both tasks
 
-  EXPECT_EQ(output.map.size(), 1); // Only one chunk, thus only one PE gets all the load.
-
-  EXPECT_EQ(output.map[0].size(), ntasks); // First PE got all the tasks.
+  for(UInt i = 0; i < ntasks; ++i)
+    EXPECT_EQ(output[i], 0); // First PE got all the tasks.
 }
 
 TEST_F(StrategyTest, taskSetTest) {
@@ -217,12 +227,11 @@ TEST_F(StrategyTest, taskSetTest) {
   // Chunks = [20,19], [18,17], [16,15], [14,13], [12,11,10], [9,8,7,6], [5,4,3,2,1], []
   // PEs / Chunk = [0] [1,6] [2,5] [3,4]
 
-  EXPECT_EQ(output.map.size(), npes); // All pes have tasks
-
-  EXPECT_EQ(output.map[0].size(), 2); // 20, 19
-  EXPECT_EQ(output.map[1].size(), 7); // 18, 17, 5, 4, 3, 2, 1
-  EXPECT_EQ(output.map[2].size(), 5); // 12, 11, 10, 14, 13
-  EXPECT_EQ(output.map[3].size(), 6); // 16, 15, 9, 8, 7, 6
+  calculate_tasksum();
+  EXPECT_EQ(tasksum_pe[0], 2); // 20, 19
+  EXPECT_EQ(tasksum_pe[1], 7); // 18, 17, 5, 4, 3, 2, 1
+  EXPECT_EQ(tasksum_pe[2], 5); // 12, 11, 10, 14, 13
+  EXPECT_EQ(tasksum_pe[3], 6); // 16, 15, 9, 8, 7, 6
 }
 
 TEST_F(StrategyTest, highImbalance) {
@@ -243,18 +252,11 @@ TEST_F(StrategyTest, highImbalance) {
   // Chunks = [20,20], [20,20], [1,1,1,...,1], []
   // PEs / Chunk = [0] [1] [2] []
 
-  EXPECT_EQ(output.map.size(), npes-1); // All pes but one will have tasks because it will have less chunks than PEs
-
-  EXPECT_EQ(output.map[0].size(), 2);
-  for(auto task : output.map[0])
-    EXPECT_EQ(tasks[task], 20);
-  EXPECT_EQ(output.map[1].size(), 2);
-  for(auto task : output.map[1])
-    EXPECT_EQ(tasks[task], 20);
-  EXPECT_EQ(output.map[2].size(), 16);
-  for(auto task : output.map[2])
-    EXPECT_EQ(tasks[task], 1);
-  EXPECT_EQ(output.map[3].size(), 0);
+  calculate_tasksum();
+  EXPECT_EQ(tasksum_pe[0], 2);
+  EXPECT_EQ(tasksum_pe[1], 2);
+  EXPECT_EQ(tasksum_pe[2], 16);
+  EXPECT_EQ(tasksum_pe[3], 0);
 }
 
 TEST_F(StrategyTest, noImbalance) {
@@ -272,12 +274,11 @@ TEST_F(StrategyTest, noImbalance) {
   // Chunks = [6x1], [6x1], [6x1], [2x1]
   // PEs / Chunk = [0] [1] [2] [3]
 
-  EXPECT_EQ(output.map.size(), npes);
-
-  EXPECT_EQ(output.map[0].size(), 6);
-  EXPECT_EQ(output.map[1].size(), 6);
-  EXPECT_EQ(output.map[2].size(), 6);
-  EXPECT_EQ(output.map[3].size(), 2);
+  calculate_tasksum();
+  EXPECT_EQ(tasksum_pe[0], 6);
+  EXPECT_EQ(tasksum_pe[1], 6);
+  EXPECT_EQ(tasksum_pe[2], 6);
+  EXPECT_EQ(tasksum_pe[3], 2);
 }
 
 

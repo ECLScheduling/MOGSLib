@@ -2,35 +2,28 @@
 
 #include <system/traits.h>
 
-/**
- * @brief The default definition of the GreedyAlgorithm callback class.
- * @type Task The type definition of the task that a greedy algorithm uses.
- * @type PE the type definition of the PE that a greedy algorithm uses.
- */
-template<typename Task, typename PE>
-class GreedyAlgorithmCallback {
-public:
-  
-  /**
-   * This method is called everytime the greedy algorithm maps a task to a PE.
-   * @details Inside this method the load of the task must be adjusted to match it's addition to the PE's mapped tasks.
-   * @param task The task that has been mapped.
-   * @param toPE The PE that has received the task.
-   */
-  virtual void algorithmMapped(const Task &task, const PE &toPE) = 0;
-};
+namespace Greedy {
 
 /**
- * @brief The struct that defines the generic greedy load balancer algorithm with compile-time defined data structures and types.
- * @type Task A type that serve as a task abstraction to the algorithm. This type must be a pointer.
- * @type PE A type that serve as a PE abtraction to the algorithm. This type must be a pointer
- * @type CallbackType A type that has the method algorithmMapped, that will be called everytime a task is mapped to a PE in the algorithm.
+ * @brief The struct that defines the generic greedy scheduler algorithms.
+ * @type Load A type that serve as a load abstraction to the algorithm.
+ * @type UInt A type that serve as an unsigned integer to the algorithm.
  */
-template<typename Task, typename PE, typename Callback>
-struct GreedyStrategyAlgorithm {
-  
-  using MaxHeap = typename GreedyStrategyAlgorithmTraits<Task, PE>::MaxHeap;
-  using MinHeap = typename GreedyStrategyAlgorithmTraits<Task, PE>::MinHeap;
+template<typename Load, typename UInt>
+class Algorithms {
+
+
+static UInt* order_tasks(Load *task_loads, UInt ntasks) {
+  UInt *map = new UInt[ntasks]();
+
+  return map;
+}
+
+static UInt* order_PEs(Load *pe_loads, UInt nPEs) {
+  UInt *map = new UInt[nPEs]();
+
+  return map;
+}
 
   /**
    * The function that will map tasks to PEs. The tasks will be mapped in th PEs parameter as it is passed as reference.
@@ -43,9 +36,9 @@ struct GreedyStrategyAlgorithm {
    * @param minHeapComparator An instance of a class that can compare two PEs in regards to their load.
    */
   template<typename MaxHeapCmp, typename MinHeapCmp>
-  void map(MaxHeap tasks, MinHeap PEs, Callback *callback, const MaxHeapCmp &maxHeapComparator, const MinHeapCmp &minHeapComparator) const {
+  static void map(Load *task_loads, Load *pe_loads, UInt *task_map, UInt *pe_map, const UInt ntasks, const UInt npes) {
     // Nothing to balance if PE heap is empty.
-    if(PEs.empty())
+    if(!npes || ntasks)
       return;
 
     std::make_heap(tasks.begin(), tasks.end(), maxHeapComparator);
@@ -70,3 +63,5 @@ struct GreedyStrategyAlgorithm {
     }
   }
 };
+
+}

@@ -4,8 +4,6 @@
 #include <cassert>
 #include <cstring>
 
-#include <iostream>
-
 namespace BinLPT {
 
 /**
@@ -28,13 +26,11 @@ struct Algorithms {
    */
   inline static UInt *compute_chunksizes(const Load* tasks, const UInt ntasks, const UInt nchunks) {
     UInt i, k;
-    UInt *chunksizes = new UInt[nchunks];
+    UInt *chunksizes = new UInt[nchunks]();
     Load *workload, chunkweight;
 
     assert(chunksizes != nullptr);
     assert(nchunks > 0);
-
-    memset(chunksizes, 0, sizeof chunksizes * nchunks);
 
     if(!ntasks)
       return chunksizes;
@@ -78,10 +74,8 @@ struct Algorithms {
     UInt i, k;    /* Loop indexes. */
     Load *chunk_loads; /* Chunks.       */
 
-    chunk_loads = new Load[nchunks];
+    chunk_loads = new Load[nchunks]();
     assert(chunk_loads != nullptr);
-
-    memset(chunk_loads, 0, sizeof chunk_loads * nchunks);
 
     /* Compute chunks. */
     k = 0;

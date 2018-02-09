@@ -1,6 +1,5 @@
 template<typename InputAdaptor>
 void Strategy<InputAdaptor>::doTaskMapping() {
-  
   /* Retrieve the input from the adaptor */
   InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;
   Load *task_loads = input.taskLoads();
@@ -9,7 +8,7 @@ void Strategy<InputAdaptor>::doTaskMapping() {
 
   Load *pe_loads = input.PELoads();
   const UInt npes = input.nPEs();
-
+  
   /* Partition the input into chunks */
   UInt *chunk_sizes = AlgorithmSet::compute_chunksizes(task_loads, ntasks, nchunks);
   Load *chunk_loads = AlgorithmSet::compute_chunkloads(task_loads, ntasks, chunk_sizes, nchunks);
@@ -40,7 +39,7 @@ void Strategy<InputAdaptor>::doTaskMapping() {
 
     /* Assign the tasks in the chunk to the PE. */
     for(UInt j = 0; j < chunk_sizes[cur_chunk_idx]; ++j) {
-      StrategyInterface<InputAdaptor>::output.set(pe_id, chunk_offset[cur_chunk_idx] + j);
+      StrategyInterface<InputAdaptor>::output[chunk_offset[cur_chunk_idx] + j] = pe_id;
     }
 
     /* Update the load on the pe */

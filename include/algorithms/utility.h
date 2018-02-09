@@ -63,4 +63,24 @@ static void insertion_sort(UInt *map, T *a, const UInt n) {
   }
 }
 
+template <typename T, typename UInt>
+static void heap_sort(UInt *map, T *a, const UInt n) {
+  T t;    /* Temporary value. */
+  UInt i, j, t_map; /* Loop indexes.    */
+  
+  /* Sort. */
+  for (i = 0; i < (n - 1); i++)
+  {
+    for (j = i + 1; j < n; j++)
+    {
+      /* Swap. */
+      if (a[j] < a[i])
+      {
+        exch(a[i], a[j], t);
+        exch(map[i], map[j], t_map);
+      }
+    }
+  }
+}
+
 }

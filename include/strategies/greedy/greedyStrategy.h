@@ -6,50 +6,18 @@
 #include <vector>
 #include <algorithm>
 
+namespace Greedy {
+
 /**
  * @brief This class encapsulates the implementation of a Greedy load balancer strategy.
  */
 template <typename InputAdaptor>
-class GreedyStrategy : public StrategyInterface<InputAdaptor>, public GreedyAlgorithmCallback<typename InputAdaptor::Id, typename InputAdaptor::Id> {
+class Strategy : public StrategyInterface<InputAdaptor>, public GreedyAlgorithmCallback<typename InputAdaptor::Id, typename InputAdaptor::Id> {
 public: 
   
   using Load = typename InputAdaptor::Load;
-  using Id = typename InputAdaptor::Id;
   using UInt = typename InputAdaptor::UInt;
-
-private:
-
-  /**
-   * A sctructure to compare Tasks in conformity to their load.
-   */
-  struct MaxHeapComparator {
-    InputAdaptor * const strategyInput;
-
-    MaxHeapComparator(InputAdaptor *inputAdaptor) : strategyInput(inputAdaptor) {}
-
-    inline bool operator ()(const Id &a, const Id &b) const {
-      return strategyInput->taskLoad(a) < strategyInput->taskLoad(b);
-    }
-  };
-
-  /**
-   * A sctructure to compare PEs in conformity to their load.
-   */
-  struct MinHeapComparator {
-    InputAdaptor * const strategyInput;
-
-    MinHeapComparator(InputAdaptor *inputAdaptor) : strategyInput(inputAdaptor) {}
-
-    inline bool operator ()(const Id &a, const Id &b) const {
-      return strategyInput->PELoad(a) > strategyInput->PELoad(b);
-    }
-  };
-
-public:
-
-  using GreedyAlgorithm = GreedyStrategyAlgorithm<Id, Id, GreedyStrategy>;
-  using MaxHeap = typename GreedyAlgorithm::MaxHeap;
-  using MinHeap = typename GreedyAlgorithm::MinHeap;
+  using Algorithm = Algorithms<Load, UInt>;
 
   /**
    * This method is called everytime the greedy algorithm maps a task to a PE.
@@ -80,3 +48,5 @@ protected:
 };
 
 #include "greedyStrategy.ipp"
+
+}
