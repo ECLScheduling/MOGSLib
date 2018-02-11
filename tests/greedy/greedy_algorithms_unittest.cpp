@@ -97,7 +97,7 @@ TEST_F(AlgorithmsTest, tasksMustHaveDecrescentOrdering) {
   Algorithm::order_tasks(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   for(UInt i = 0; i < n; ++i) {
     EXPECT_EQ(map[i], expected_map[i]);
@@ -111,7 +111,7 @@ TEST_F(AlgorithmsTest, tasksMustHaveDecrescentOrdering2) {
   Algorithm::order_tasks(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   for(UInt i = 0; i < n; ++i) {
     EXPECT_EQ(map[i], expected_map[i]);
@@ -125,7 +125,7 @@ TEST_F(AlgorithmsTest, PEsMustBeOrderedInABinaryHeap) {
   Algorithm::order_PEs(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   for(UInt i = 0; i < n; ++i)
     EXPECT_EQ(map[i], expected_map[i]);
@@ -138,7 +138,7 @@ TEST_F(AlgorithmsTest, PEsMustBeOrderedInABinaryHeap2) {
   Algorithm::order_PEs(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   for(UInt i = 0; i < n; ++i)
     EXPECT_EQ(map[i], expected_map[i]);
@@ -150,16 +150,16 @@ TEST_F(AlgorithmsTest, PEsMustBeKeptInOrderAfterUpdated) {
   Algorithm::order_PEs(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   loads[map[0]] = 3; // from 2 to 3; should not alter anything.
 
   UInt expected_map[] = {0, 3, 2, 1, 4, 5, 6, 7};
   Algorithm::reorder_PEs(loads, map, n);
 
-  debug<LibTests>(trace) << "\nAfter updating head...\n";
+  debug_trc<LibTests>() << "\nAfter updating head...\n";
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   for(UInt i = 0; i < n; ++i)
     EXPECT_EQ(map[i], expected_map[i]);
@@ -170,17 +170,17 @@ TEST_F(AlgorithmsTest, PEsMustBeKeptInOrderAfterUpdated_2) {
 
   Algorithm::order_PEs(loads, n, map);
 
-  debug<LibTests>(trace) << "Before updating any PE's load: " << "\n";
+  debug_trc<LibTests>() << "Before updating any PE's load: " << "\n";
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   loads[map[0]] = 5; // from 2 to 3; should sift down once.
   UInt expected_map[] = {3, 0, 2, 1, 4, 5, 6, 7};
   Algorithm::reorder_PEs(loads, map, n);
 
-  debug<LibTests>(trace) << "\nAfter updating head...\n";
+  debug_trc<LibTests>() << "\nAfter updating head...\n";
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   for(UInt i = 0; i < n; ++i)
     EXPECT_EQ(map[i], expected_map[i]);
@@ -191,17 +191,17 @@ TEST_F(AlgorithmsTest, PEsMustBeKeptInOrderAfterUpdated_3) {
 
   Algorithm::order_PEs(loads, n, map);
 
-  debug<LibTests>(trace) << "Before updating any PE's load: " << "\n";
+  debug_trc<LibTests>() << "Before updating any PE's load: " << "\n";
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   loads[map[0]] = 18; // from 2 to 3; should sift down to the bottom.
   UInt expected_map[] = {3, 1, 2, 7, 4, 5, 6, 0};
   Algorithm::reorder_PEs(loads, map, n);
 
-  debug<LibTests>(trace) << "\nAfter updating head...\n";
+  debug_trc<LibTests>() << "\nAfter updating head...\n";
   for(UInt i = 0; i < n; ++i)
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << loads[i] << "\n";
 
   for(UInt i = 0; i < n; ++i)
     EXPECT_EQ(map[i], expected_map[i]);
