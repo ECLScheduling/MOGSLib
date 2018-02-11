@@ -132,7 +132,7 @@ echo -e "\tAdaptor set to ${CAPS_ADAPTOR_NAME}.";
 
 ############ Resolving an Adaptor Templates #################
 function PREPARE_TO_ADAPTOR_TEMPLATES {
-ADAPTOR_TEMPLATES="${$ADAPTOR_TEMPLATES//_/ }"
+ADAPTOR_TEMPLATES="$(sed "s/_\(.\)/, \U\1/g" <<< ${ADAPTOR_TEMPLATES})"
 ADAPTOR_TEMPLATES="<${ADAPTOR_TEMPLATES^}>"
 
 echo -e "\tAdaptor templates set to ${ADAPTOR_TEMPLATES}.";
@@ -151,13 +151,16 @@ PARSE_PARAMS $@;
 # Parse RTS
 PREPARE_TO_RTS;
 
+# Parse Strategy
 if [ "$STRATEGY_NAME" != "" ]; then
   PREPARE_TO_STRATEGY;
 fi
 
+# Parse Adaptor
 if [ "$ADAPTOR_NAME" != "" ]; then
   PREPARE_TO_ADAPTOR;
   
+  # Parse Adaptor templates
   if [ "$ADAPTOR_TEMPLATES" != "" ]; then
     PREPARE_TO_ADAPTOR_TEMPLATES;
   fi
@@ -165,3 +168,6 @@ if [ "$ADAPTOR_NAME" != "" ]; then
   # Swap Adaptor template placeholders
   sed -i -e "s/@ADAPTOR_TEMPLATES@/${ADAPTOR_TEMPLATES}/g" "$rts_file"
 fi
+
+# Save the command line for future use
+echo $@ > config_script_args.txt
