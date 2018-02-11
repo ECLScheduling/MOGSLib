@@ -5,8 +5,6 @@
 #include <interfaces/strategy/strategyInterface.h>
 #include <algorithms/binLPT/binLPTAlgorithm.h>
 
-#include <iostream>
-
 namespace BinLPT {
 
 /**
@@ -29,11 +27,11 @@ public:
 protected:
 
   /**
-   * The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
+   * @brief The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
    */
   void doTaskMapping();
 };
 
-#include "binLPT.ipp"
+#include "binLPTStrategy.ipp"
 
 }

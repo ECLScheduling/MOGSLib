@@ -3,7 +3,7 @@
 #ifdef RTS_IS_OPENMP
 
 #include <adaptors/openmp/openMPAdaptorWithGenericStructure.h>
-#include <strategies/binLPT/binLPT.h>
+#include <strategies/binLPT/binLPTStrategy.h>
 #include <mogslib.h>
 
 /**

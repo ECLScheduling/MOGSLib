@@ -1,3 +1,4 @@
+
 template<typename InputAdaptor>
 void Strategy<InputAdaptor>::doTaskMapping() {
   /* Retrieve the input from the adaptor */

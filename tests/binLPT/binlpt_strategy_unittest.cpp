@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <strategies/binLPT/binLPT.h>
+#include <strategies/binLPT/binLPTStrategy.h>
 
 #include <interfaces/adaptor/defaultAdaptor.h>
 #include <interfaces/adaptor/extensions/withGenericStructure.h>
@@ -12,6 +12,9 @@ namespace BinLPT_Strategy_Test {
 using UIntType = Traits<DefaultTypes>::UInt;
 using LoadType = UIntType;
 
+/**
+ * @brief A dummy adaptor that extends a real adaptor to test the BinLPT Strategy.
+ */
 class TestInputAdaptor : public DefaultAdaptor<LoadType, UIntType>, public WithGenericStructure<UIntType> {
 public:
 

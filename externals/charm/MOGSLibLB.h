@@ -10,7 +10,7 @@
 #include "MOGSLibLB.decl.h"
 
 #include <system/traits.h>
-#include <strategies/binLPT/binLPT.h>
+#include <strategies/binLPT/binLPTStrategy.h>
 #include <adaptors/charm/charmAdaptorWithGenericStructure.h>
 
 #include "ckgraph.h"
