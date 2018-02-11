@@ -1,6 +1,6 @@
 #pragma once
 
-#include "charmDefaultAdaptor.h"
+#include "charmAdaptorDefault.h"
 #ifdef RTS_IS_CHARM
 
 #include <interfaces/adaptor/extensions/withGenericStructure.h>

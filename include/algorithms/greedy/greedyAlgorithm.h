@@ -20,17 +20,10 @@ struct Algorithms {
  *
  * @param loads The array of task loads.
  * @param ntasks The amount of tasks.
- *
- * @return A map of index to access the array in decreasing order.
+ * @param A map of index to access the array with default values to be changed into a map in decreasing order.
  */
-static UInt* order_tasks(Load *loads, UInt ntasks) {
-  UInt *map = new UInt[ntasks]();
-  for(UInt i = 0; i < ntasks; ++i)
-    map[i] = i;
-
+static void order_tasks(Load *loads, UInt ntasks, UInt *map) {
   UtilityAlgorithms::insertion_sort<Load, UInt, false>(map, loads, ntasks);
-
-  return map;
 }
 
 /**
@@ -39,16 +32,10 @@ static UInt* order_tasks(Load *loads, UInt ntasks) {
  * @param pe_loads The array of PE loads.
  * @param nPEs The amount of PEs.
  *
- * @return A map of the original indexes of the array that is now a binary heap.
+ * @param A map of index to access the array with default values to be changed into a binary heap.
  */
-static UInt* order_PEs(Load *pe_loads, UInt nPEs) {
-  UInt *map = new UInt[nPEs]();
-  for(UInt i = 0; i < nPEs; ++i)
-    map[i] = i;
-
-  UtilityAlgorithms::heap_sort<Load, UInt, true>(map, pe_loads, nPEs);
-
-  return map;
+static void order_PEs(Load *pe_loads, UInt nPEs, UInt *map) {
+  UtilityAlgorithms::make_heap<Load, UInt, true>(map, pe_loads, nPEs);
 }
 
 /**

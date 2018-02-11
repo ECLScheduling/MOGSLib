@@ -22,6 +22,7 @@ public:
 
   using AlgorithmSet = Algorithms<Load, UInt>;
 
+  Strategy() : StrategyInterface<InputAdaptor>() {}
   virtual ~Strategy() {}
 
 protected:

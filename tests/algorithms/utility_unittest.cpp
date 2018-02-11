@@ -92,13 +92,13 @@ public:
  * #################### Heap Sort Tests ##########################
  */
 
-TEST_F(AlgorithmsTest, heap_sort1) {
+TEST_F(AlgorithmsTest, make_heap1) {
   createTest1();
 
   UInt expected_map[] = {6, 4, 5, 3, 1, 0, 2, 7};
   T expected_output[] = {8, 7, 5, 6, 4, 1, 2, 3};
 
-  UtilityAlgorithms::heap_sort<T, UInt, false>(map, A, n);
+  UtilityAlgorithms::make_heap<T, UInt, false>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
@@ -110,12 +110,12 @@ TEST_F(AlgorithmsTest, heap_sort1) {
   }
 }
 
-TEST_F(AlgorithmsTest, heap_sort2) {
+TEST_F(AlgorithmsTest, make_heap2) {
   createTest2();
   UInt expected_map[] = {7, 4, 6, 3, 0, 5, 2, 1};
   T expected_output[] = {8, 5, 7, 4, 1, 6, 3, 2};
 
-  UtilityAlgorithms::heap_sort<T, UInt, false>(map, A, n);
+  UtilityAlgorithms::make_heap<T, UInt, false>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
@@ -127,12 +127,12 @@ TEST_F(AlgorithmsTest, heap_sort2) {
   }
 }
 
-TEST_F(AlgorithmsTest, heap_sort3) {
+TEST_F(AlgorithmsTest, make_heap3) {
   createTest3();
   UInt expected_map[] = {0, 1, 2, 3, 4, 5, 6, 7};
   T expected_output[] = {8, 7, 6, 5, 4, 3, 2, 1};
 
-  UtilityAlgorithms::heap_sort<T, UInt, false>(map, A, n);
+  UtilityAlgorithms::make_heap<T, UInt, false>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
@@ -144,12 +144,12 @@ TEST_F(AlgorithmsTest, heap_sort3) {
   }
 }
 
-TEST_F(AlgorithmsTest, heap_sort_ascending_order1) {
+TEST_F(AlgorithmsTest, make_heap_ascending_order1) {
   createTest1();
   UInt expected_map[] = {0, 7, 2, 1, 4, 5, 6, 3};
   T expected_output[] = {1, 3, 2, 4, 7, 5, 8, 6};
 
-  UtilityAlgorithms::heap_sort<T, UInt, true>(map, A, n);
+  UtilityAlgorithms::make_heap<T, UInt, true>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
@@ -161,12 +161,12 @@ TEST_F(AlgorithmsTest, heap_sort_ascending_order1) {
   }
 }
 
-TEST_F(AlgorithmsTest, heap_sort_ascending_order2) {
+TEST_F(AlgorithmsTest, make_heap_ascending_order2) {
   createTest2();
   UInt expected_map[] = {0, 1, 2, 3, 4, 5, 6, 7};
   T expected_output[] = {1, 2, 3, 4, 5, 6, 7, 8};
 
-  UtilityAlgorithms::heap_sort<T, UInt, true>(map, A, n);
+  UtilityAlgorithms::make_heap<T, UInt, true>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
@@ -178,12 +178,12 @@ TEST_F(AlgorithmsTest, heap_sort_ascending_order2) {
   }
 }
 
-TEST_F(AlgorithmsTest, heap_sort_ascending_order3) {
+TEST_F(AlgorithmsTest, make_heap_ascending_order3) {
   createTest3();
   UInt expected_map[] = {7, 4, 6, 3, 0, 5, 2, 1};
   T expected_output[] = {1, 4, 2, 5, 8, 3, 6, 7};
 
-  UtilityAlgorithms::heap_sort<T, UInt, true>(map, A, n);
+  UtilityAlgorithms::make_heap<T, UInt, true>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";

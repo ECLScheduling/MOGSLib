@@ -34,3 +34,7 @@ This library can be integrated with the Charm++ runtime system following the fol
   3.c) Run make depends
   3.d) Run make charm++
   3.e) Run make everylb
+
+# Integrate with OpenMP through libGOMP
+
+1) TODO. In this early development stage, the only way to integrate MOGSLib into OpenMP is using a modified version of libGOMP which still hasn't been uploaded.

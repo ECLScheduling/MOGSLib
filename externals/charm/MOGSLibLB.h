@@ -9,9 +9,7 @@
 #include "CentralLB.h"
 #include "MOGSLibLB.decl.h"
 
-#include <system/traits.h>
-#include <strategies/binLPT/binLPTStrategy.h>
-#include <adaptors/charm/charmAdaptorWithGenericStructure.h>
+#include <rts/rts_includes.h>
 
 #include "ckgraph.h"
 #include <cassert>
@@ -20,11 +18,6 @@ void CreateMOGSLibLB();
 
 class MOGSLibLB : public CBase_MOGSLibLB {
 public:
-  using UInt = Traits<DefaultTypes>::UInt;
-  using Adaptor = CharmAdaptorWithGenericStructure<UInt>;
-  using Strategy = BinLPT::Strategy<Adaptor>;
-  using Output = typename Strategy::Output;
-
   Adaptor *adaptor;
 
   MOGSLibLB(const CkLBOptions &);

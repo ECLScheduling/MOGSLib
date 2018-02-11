@@ -125,7 +125,7 @@ void heapify(UInt *map, T *A, const UInt n, const UInt i) {
  * @param n the size of the array A.
  */
 template <typename T, typename UInt, bool ascending_order = true>
-void heap_sort(UInt *map, T *A, const UInt n) {
+void make_heap(UInt *map, T *A, const UInt n) {
   for(UInt i = (n-1)/2; i > 0; --i)
     heapify<T, UInt, ascending_order>(map, A, n, i);
   heapify<T, UInt, ascending_order>(map, A, n, static_cast<UInt>(0));

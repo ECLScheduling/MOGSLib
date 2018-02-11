@@ -1,6 +1,6 @@
 #pragma once
 
-#include "openMPDefaultAdaptor.h"
+#include "openmpAdaptorDefault.h"
 #ifdef RTS_IS_OPENMP
 
 #include <interfaces/adaptor/extensions/withGenericStructure.h>

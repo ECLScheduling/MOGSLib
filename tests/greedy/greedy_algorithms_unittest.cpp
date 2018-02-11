@@ -55,6 +55,7 @@ public:
     loads[7] = 9;
     loads[8] = 7;
     loads[9] = 10;
+    initMap(n);
   }
 
   void test_case2() {
@@ -70,6 +71,7 @@ public:
     loads[7] = 8;
     loads[8] = 9;
     loads[9] = 10;
+    initMap(n);
   }
 
   void test_case3() {
@@ -83,6 +85,7 @@ public:
     loads[5] = 12;
     loads[6] = 16;
     loads[7] = 10;
+    initMap(n);
   }
 
 };
@@ -91,7 +94,7 @@ TEST_F(AlgorithmsTest, tasksMustHaveDecrescentOrdering) {
   test_case1();
   UInt expected_map[] = {9, 7, 3, 8, 5, 4, 2, 1, 6, 0};
 
-  map = Algorithm::order_tasks(loads, n);
+  Algorithm::order_tasks(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
@@ -105,7 +108,7 @@ TEST_F(AlgorithmsTest, tasksMustHaveDecrescentOrdering2) {
   test_case2();
   UInt expected_map[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
 
-  map = Algorithm::order_tasks(loads, n);
+  Algorithm::order_tasks(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
@@ -119,7 +122,7 @@ TEST_F(AlgorithmsTest, PEsMustBeOrderedInABinaryHeap) {
   test_case1();
   UInt expected_map[] = {0, 1, 6, 8, 4, 5, 2, 7, 3, 9};
 
-  map = Algorithm::order_PEs(loads, n);
+  Algorithm::order_PEs(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
@@ -132,7 +135,7 @@ TEST_F(AlgorithmsTest, PEsMustBeOrderedInABinaryHeap2) {
   test_case2();
   UInt expected_map[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-  map = Algorithm::order_PEs(loads, n);
+  Algorithm::order_PEs(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
@@ -144,7 +147,7 @@ TEST_F(AlgorithmsTest, PEsMustBeOrderedInABinaryHeap2) {
 TEST_F(AlgorithmsTest, PEsMustBeKeptInOrderAfterUpdated) {
   test_case3();
 
-  map = Algorithm::order_PEs(loads, n);
+  Algorithm::order_PEs(loads, n, map);
 
   for(UInt i = 0; i < n; ++i)
     debug<LibTests>(trace) << "map: " << map[i] << ". val: " << loads[i] << "\n";
@@ -165,7 +168,7 @@ TEST_F(AlgorithmsTest, PEsMustBeKeptInOrderAfterUpdated) {
 TEST_F(AlgorithmsTest, PEsMustBeKeptInOrderAfterUpdated_2) {
   test_case3();
 
-  map = Algorithm::order_PEs(loads, n);
+  Algorithm::order_PEs(loads, n, map);
 
   debug<LibTests>(trace) << "Before updating any PE's load: " << "\n";
   for(UInt i = 0; i < n; ++i)
@@ -186,7 +189,7 @@ TEST_F(AlgorithmsTest, PEsMustBeKeptInOrderAfterUpdated_2) {
 TEST_F(AlgorithmsTest, PEsMustBeKeptInOrderAfterUpdated_3) {
   test_case3();
 
-  map = Algorithm::order_PEs(loads, n);
+  Algorithm::order_PEs(loads, n, map);
 
   debug<LibTests>(trace) << "Before updating any PE's load: " << "\n";
   for(UInt i = 0; i < n; ++i)

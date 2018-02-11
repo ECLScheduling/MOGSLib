@@ -17,7 +17,7 @@
  * @brief This class is the implementation of the AdaptorInterface to be linked in the Charm environment.
  * @details This class presents basic translation from Charm++ datatypes to generic input for load balancing strategies.
  */
-class CharmDefaultAdaptor : public DefaultAdaptor<CharmTypes::Load, CharmTypes::UInt> {
+class CharmAdaptorDefault : public DefaultAdaptor<CharmTypes::Load, CharmTypes::UInt> {
 public:
 
   using LDStats = BaseLB::LDStats;

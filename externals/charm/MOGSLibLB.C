@@ -32,16 +32,12 @@ void MOGSLibLB::work(LDStats* stats) {
   
   CkPrintf("Adaptor Initialized... Invoking library implementation...\n");
 
-  auto output = strategy.mapTasks(*adaptor);
+  auto output = strategy.mapTasks(adaptor);
   
   CkPrintf("Applying library mapping...\n");
 
-  auto map = output.map;
-  for(auto it= map.begin(); it!= map.end(); ++it) {
-    auto PEId = it->first;
-    for(auto taskId : it->second)
-      stats->assign(taskId, PEId);
-  }
+  for(UInt i = 0; i < adaptor.ntasks(); ++i)
+    stats->assign(i, output[i]);
 
   delete adaptor;
 }

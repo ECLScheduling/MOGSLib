@@ -3,14 +3,14 @@
 #include <system/definitions.h>
 #ifdef RTS_IS_OPENMP
 
-#include "openMPTypes.h"
+#include "openmpTypes.h"
 #include <interfaces/adaptor/defaultAdaptor.h>
 
 /**
  * @brief This class is the implementation of the DefaultAdaptor to be linked in the OpenMP environment.
  * @details This class presents basic translation from OpenMP datatypes to generic input for load balancing strategies.
  */
-class OpenMPDefaultAdaptor : public DefaultAdaptor<OpenMPTypes::Load, OpenMPTypes::UInt> {
+class OpenMPAdaptorDefault : public DefaultAdaptor<OpenMPTypes::Load, OpenMPTypes::UInt> {
 protected:
 
   /**
