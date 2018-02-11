@@ -20,7 +20,7 @@ void Strategy<InputAdaptor>::doTaskMapping() {
     chunk_map[i] = i;
 
   /* Sort the chunks by load */
-  UtilityAlgorithms::insertion_sort<Load, UInt>(chunk_map, chunk_loads, nchunks); // Loads are sorted but the data not, use the chunk_map to get the correct chunk data about that load.
+  UtilityAlgorithms::insertion_sort<Load, UInt, true>(chunk_map, chunk_loads, nchunks); // Loads are sorted but the data not, use the chunk_map to get the correct chunk data about that load.
 
   /* Iterate over the chunks and assign to PEs */
   for (UInt i = nchunks; i > 0; --i) {

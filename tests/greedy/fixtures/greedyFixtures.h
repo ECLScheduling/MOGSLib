@@ -13,8 +13,8 @@
 // #define GREEDY_STRATEGY_TEST_DEBUG true
 // #define GREEDY_ALGORITHM_TEST_DEBUG true
 
-// using LoadType = typename Traits<void>::Load;
-// using IdType = typename Traits<void>::Load;
+// using LoadType = typename Traits<DefaultTypes>::Load;
+// using IdType = typename Traits<DefaultTypes>::Load;
 
 // /**
 //  * A basic structure that mocks a real environment's task/PE set for the greedy algorithm.

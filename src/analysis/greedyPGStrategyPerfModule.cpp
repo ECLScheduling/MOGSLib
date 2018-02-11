@@ -5,7 +5,7 @@
 
 namespace GreedyPGModule {
 
-typedef Traits<void>::Load Weight;
+typedef Traits<DefaultTypes>::Load Weight;
 
 const Weight penalityFunction(unsigned int size) {
   return 0;

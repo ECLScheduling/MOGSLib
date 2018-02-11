@@ -14,8 +14,8 @@ private:
 
 public:
 
-  using UInt = Traits<void>::UInt;
-  using Load = Traits<void>::Load;
+  using UInt = Traits<DefaultTypes>::UInt;
+  using Load = Traits<DefaultTypes>::Load;
 
   using Algorithms = BinLPT::Algorithms<Load, UInt>;
 

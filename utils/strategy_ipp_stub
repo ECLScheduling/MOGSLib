@@ -1,4 +1,4 @@
 template<typename InputAdaptor>
-void STRATEGYNAME<InputAdaptor>::doTaskMapping(InputAdaptor &input) {
+void Strategy<InputAdaptor>::doTaskMapping(InputAdaptor &input) {
 
 }

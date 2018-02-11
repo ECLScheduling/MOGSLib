@@ -1,14 +1,15 @@
 #pragma once
 
 #include <interfaces/strategy/strategyInterface.h>
-#include <system/traits.h>
+
+namespace @STRATEGYNAME@ {
 
 template <typename InputAdaptor>
-class STRATEGYNAME : public StrategyInterface<InputAdaptor> {
+class Strategy : public StrategyInterface<InputAdaptor> {
 public: 
   
   using Load = typename InputAdaptor::Load;
-  using UInt = Traits<void>::UInt;
+  using UInt = InputAdaptor::UInt;
 
 protected:
 
@@ -21,3 +22,5 @@ protected:
 };
 
 #include "STRATEGYNAME.ipp"
+
+}

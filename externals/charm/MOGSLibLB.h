@@ -20,7 +20,7 @@ void CreateMOGSLibLB();
 
 class MOGSLibLB : public CBase_MOGSLibLB {
 public:
-  using UInt = Traits<void>::UInt;
+  using UInt = Traits<DefaultTypes>::UInt;
   using Adaptor = CharmAdaptorWithGenericStructure<UInt>;
   using Strategy = BinLPT::Strategy<Adaptor>;
   using Output = typename Strategy::Output;

@@ -12,5 +12,5 @@ namespace CharmTypes {
    */
   using Load = double; 
 
-  using UInt = Traits<void>::UInt;
+  using UInt = Traits<DefaultTypes>::UInt;
 };

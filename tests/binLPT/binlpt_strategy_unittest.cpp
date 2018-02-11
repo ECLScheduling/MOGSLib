@@ -9,7 +9,7 @@
 
 namespace BinLPT_Strategy_Test {
 
-using UIntType = Traits<void>::UInt;
+using UIntType = Traits<DefaultTypes>::UInt;
 using LoadType = UIntType;
 
 class TestInputAdaptor : public DefaultAdaptor<LoadType, UIntType>, public WithGenericStructure<UIntType> {

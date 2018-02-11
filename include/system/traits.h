@@ -1,44 +1,99 @@
 #pragma once
 
 #include <cstdint>
-#include <map>
-#include <set>
-#include <queue>
+#include <system/types.h>
 
-//#########################
-// Global Traits
-//#########################
-
+/**
+ * @brief General Traits used by most library components.
+ */
 template<typename T>
 struct Traits {
-  
   /**
-   * The type definition that will serve as an unsigned int inside the library.
+   * @brief A flag to indicate if a component is active.
+   */
+  constexpr static bool enabled = true;
+
+  /**
+   * @brief A flag to indicate if debugging is enabled for a given component.
+   */
+  constexpr static bool debugged = true;
+
+  /**
+   * @brief A flag to indicate if a detailed debugging is enabled for a given component.
+   */
+  constexpr static bool histerically_debugged = false;
+};
+
+/**
+ * @brief The default traits to the system.
+ */
+template<>
+struct Traits<DefaultTypes> : Traits<void> {
+
+  /**
+   * @brief The type definition that will serve as an unsigned int inside the library.
    */
   using UInt = uint_fast32_t;
 
   /**
-   * The type definition that will serve to quantify a task's load value for the framework.
+   * @brief The type definition that will serve to quantify a task's load value for the framework.
    */
   using Load = UInt;
-
 };
 
+template<>
+struct Traits<Debugger> : Traits<void> {
+  constexpr static bool enabled = debugged;
 
-//#########################
-// Algorithms default Traits
-//#########################
+  /**
+   * @brief A flag to indicate whether the debugger should print error messages.
+   */
+  constexpr static bool error = true;
 
-template<typename Task, typename PE>
-struct GreedyStrategyAlgorithmTraits : Traits<void> {
-  
   /**
-   * Default type used as a max heap for the greedy algorithm.
+   * @brief A flag to indicate whether the debugger should print warning messages.
    */
-  using MaxHeap = std::vector<Task>;
-  
+  constexpr static bool warning = true;
+
   /**
-   * Default used as a min heap for the greedy algorithm.
+   * @brief A flag to indicate whether the debugger should print information messages.
    */
-  using MinHeap = std::vector<PE>;
+  constexpr static bool info = false;
+
+  /**
+   * @brief A flag to indicate whether the debugger should print trace messages.
+   */
+  constexpr static bool trace = false;
+};
+
+/**
+ * @brief Traits for the unit tests in the composition of library elements.
+ */
+template<>
+struct Traits<LibTests> : Traits<void> {
+  constexpr static bool debugged = true;
+};
+
+/**
+ * @brief Traits for the algorithm components of the library.
+ */
+template<>
+struct Traits<Algorithm> : Traits<void> {
+  constexpr static bool debugged = histerically_debugged;
+};
+
+/**
+ * @brief Traits for the strategies components of library.
+ */
+template<>
+struct Traits<Strategy> : Traits<void> {
+  constexpr static bool debugged = histerically_debugged;
+};
+
+/**
+ * @brief Traits for the adaptors components of library.
+ */
+template<>
+struct Traits<Adaptor> : Traits<void> {
+  constexpr static bool debugged = histerically_debugged;
 };

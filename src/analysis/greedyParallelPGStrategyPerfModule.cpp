@@ -4,7 +4,7 @@
 #include <random>
 
 namespace GreedyPGPModule {
-  typedef Traits<void>::Load Weight;
+  typedef Traits<DefaultTypes>::Load Weight;
 
   /**
    * The penality function used in the performance module below.
