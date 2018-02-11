@@ -1,1 +1,1 @@
--s binLPT -a withGenericStructure -at uInt -rts openmp
+-s binLPT -a withGenericStructure -at uInt -rts charm

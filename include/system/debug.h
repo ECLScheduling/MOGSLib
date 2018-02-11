@@ -16,7 +16,7 @@ public:
   }
 };
 
-#define UNUSED(x) (void)(x)
+#define MOGSLIB_UNUSED(x) (void)(x)
 /**
  * @brief Null debugging class responsible for disabling debug messages without breaking the code semantic.
  *
@@ -27,7 +27,7 @@ public:
 
   template<typename T>
   No_Debug& operator<< (const T &o) {
-    UNUSED(o);
+    MOGSLIB_UNUSED(o);
     return *this;
   }
 };

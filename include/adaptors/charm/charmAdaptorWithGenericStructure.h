@@ -7,10 +7,11 @@
 
 /**
  * @brief This class is an extended adaptor for Charm++ that serves the purpose of implementing the WithGenericStructure interface.
- * @details This class uses the same initialization code that the CharmDefaultAdaptor.
+ *
+ * @details This class uses the same initialization code that the CharmAdaptorDefault.
  */
 template<typename T>
-class CharmAdaptorWithGenericStructure : public CharmDefaultAdaptor, public WithGenericStructure<T> {
+class CharmAdaptorWithGenericStructure : public CharmAdaptorDefault, public WithGenericStructure<T> {
 protected:
 
   /**
@@ -20,10 +21,11 @@ protected:
 
 public:
 
-  CharmAdaptorWithGenericStructure(LDStats *stats) : CharmDefaultAdaptor(stats) {}
+  CharmAdaptorWithGenericStructure(LDStats *stats) : CharmAdaptorDefault(stats) {}
 
   /**
-   * Initializes the reference to the structure that this adaptor provides to the strategy.
+   * @brief Initializes the reference to the structure that this adaptor provides to the strategy.
+   *
    * @param structure_ref The reference to the structure.
    */
   void setStructure(T &structure_ref) {
@@ -31,7 +33,7 @@ public:
   }
 
   /**
-   * A method to obtain the additional input structure.
+   * @brief A method to obtain the additional input structure.
    */
   inline T &structure() {
     return ref;

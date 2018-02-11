@@ -7,6 +7,7 @@
 
 /**
  * @brief This class is an extended adaptor for OpenMP++ that serves the purpose of implementing the WithGenericStructure interface.
+ *
  * @details This class uses the same initialization code that the OpenMPDefaultAdaptor.
  */
 template<typename T>
@@ -23,7 +24,8 @@ public:
   OpenMPAdaptorWithGenericStructure() : OpenMPAdaptorDefault(){}
 
   /**
-   * Initializes the reference to the structure that this adaptor provides to the strategy.
+   * @brief Initializes the reference to the structure that this adaptor provides to the strategy.
+   *
    * @param structure_ref The reference to the structure.
    */
   void setStructure(T &structure_ref) {
@@ -31,7 +33,7 @@ public:
   }
 
   /**
-   * A method to obtain the additional input structure.
+   * @brief A method to obtain the additional input structure.
    */
   inline T &structure() {
     return ref;

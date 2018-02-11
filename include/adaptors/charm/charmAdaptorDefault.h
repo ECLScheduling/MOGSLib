@@ -122,7 +122,7 @@ public:
    * The constructor funcion of this class. It is used to initialize it's internal state.
    * @param stats The collected usefull data for load balancing, given by the Charm++ run time system.
    */
-  CharmDefaultAdaptor(LDStats *stats) : input(stats) {
+  CharmAdaptorDefault(LDStats *stats) : input(stats) {
     readCharmData();
     populateInputVectors();
   }
