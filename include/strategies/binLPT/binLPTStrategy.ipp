@@ -1,14 +1,16 @@
 
 template<typename InputAdaptor>
 void Strategy<InputAdaptor>::doTaskMapping() {
+  debug_trc<LibStrategies>() << "Entering BinLPT Strategy Mapping...\n";
+
   /* Retrieve the input from the adaptor */
   InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;
   Load *task_loads = input.taskLoads();
   const UInt ntasks = input.ntasks();
   const UInt nchunks = input.structure();
 
-  Load *pe_loads = input.PELoads();
-  const UInt npes = input.nPEs();
+  Load *PE_loads = input.PELoads();
+  const UInt nPEs = input.nPEs();
   
   /* Partition the input into chunks */
   UInt *chunk_sizes = AlgorithmSet::compute_chunksizes(task_loads, ntasks, nchunks);
@@ -33,8 +35,8 @@ void Strategy<InputAdaptor>::doTaskMapping() {
       continue;
 
     /* Find the least overloaded PE to receive the task chunk. */
-    for(UInt j = 0; j < npes; ++j) {
-      if(pe_loads[j] < pe_loads[pe_id])
+    for(UInt j = 0; j < nPEs; ++j) {
+      if(PE_loads[j] < PE_loads[pe_id])
         pe_id = j;
     }
 
@@ -44,12 +46,17 @@ void Strategy<InputAdaptor>::doTaskMapping() {
     }
 
     /* Update the load on the pe */
-    pe_loads[pe_id] += chunk_loads[idx];
+    PE_loads[pe_id] += chunk_loads[idx];
   }
+
+  for(UInt i = 0; i < nPEs; ++i)
+    debug_trc<LibStrategies>() << "PE[" << i << "]: " << PE_loads[i] << "\n";
 
   /* Clean memory */
   delete [] chunk_sizes;
   delete [] chunk_loads;
   delete [] chunk_offset;
   delete [] chunk_map;
+
+  debug_trc<LibStrategies>() << "Exiting BinLPT Strategy Mapping...\n";
 }

@@ -22,12 +22,12 @@ bool MOGSLibLB::QueryBalanceNow(int _step)
 }
 
 void MOGSLibLB::work(LDStats* stats) {
-  Strategy strategy;
+  MOGSLib::Strategy strategy;
   UInt k = 5;
 
   CkPrintf("At Load Balancer...\n");
   
-  adaptor = new Adaptor(stats);
+  adaptor = new MOGSLib::Adaptor(stats);
   adaptor->setStructure(k);
   
   CkPrintf("Adaptor Initialized... Invoking library implementation...\n");

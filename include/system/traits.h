@@ -42,7 +42,7 @@ struct Traits<DefaultTypes> : Traits<void> {
 };
 
 template<>
-struct Traits<Debugger> : Traits<void> {
+struct Traits<LibDebugger> : Traits<void> {
   constexpr static bool enabled = debugged;
 
   /**
@@ -63,7 +63,7 @@ struct Traits<Debugger> : Traits<void> {
   /**
    * @brief A flag to indicate whether the debugger should print trace messages.
    */
-  constexpr static bool trace = false;
+  constexpr static bool trace = true;
 };
 
 /**
@@ -78,7 +78,7 @@ struct Traits<LibTests> : Traits<void> {
  * @brief Traits for the algorithm components of the library.
  */
 template<>
-struct Traits<Algorithm> : Traits<void> {
+struct Traits<LibAlgorithms> : Traits<void> {
   constexpr static bool debugged = histerically_debugged;
 };
 
@@ -86,14 +86,14 @@ struct Traits<Algorithm> : Traits<void> {
  * @brief Traits for the strategies components of library.
  */
 template<>
-struct Traits<Strategy> : Traits<void> {
-  constexpr static bool debugged = histerically_debugged;
+struct Traits<LibStrategies> : Traits<void> {
+  constexpr static bool debugged = true;
 };
 
 /**
  * @brief Traits for the adaptors components of library.
  */
 template<>
-struct Traits<Adaptor> : Traits<void> {
+struct Traits<LibAdaptors> : Traits<void> {
   constexpr static bool debugged = histerically_debugged;
 };

@@ -1,12 +1,11 @@
 #!/bin/bash
 
 ################## Declaring Constants #####################
-declare -a rts_list=("charm" "openmp");
-declare -a rts_capitalized_list=("Charm" "OpenMP");
-declare -a rts_def_list=("RTS_IS_CHARM" "RTS_IS_OPENMP");
+declare -a rts_list=("none" "charm" "openmp");
+declare -a rts_capitalized_list=("None" "Charm" "OpenMP");
+declare -a rts_def_list=("RTS_IS_NONE" "RTS_IS_CHARM" "RTS_IS_OPENMP");
 
 declare rts_list_size=${#rts_list[@]}
-declare definitions_file="include/system/definitions.h";
 declare rts_file="include/rts/rts_includes.h";
 
 declare found_rts=0;
@@ -85,14 +84,12 @@ do
     found_rts=1;
     CAPS_RTS_NAME=${rts_capitalized_list[i]}
 
-    echo "#pragma once" > ${definitions_file}
-    echo "#define ${rts_def[i]}" >> ${definitions_file}
-
     cp scripts/stubs/rts_includes.stub "$rts_file"
     
     # Swap RTS placeholders
     sed -i -e "s/@CAPS_RTS_NAME@/${CAPS_RTS_NAME}/g" "$rts_file"
     sed -i -e "s/@RTS_NAME@/${RTS_NAME}/g" "$rts_file"
+    sed -i -e "s/@RTS_NAME_DEFINE@/${rts_def_list[i]}/g" "$rts_file"
 
     echo -e "\tTarget RTS set to ${rts_capitalized_list[i]}.";
   fi
@@ -125,7 +122,6 @@ CAPS_ADAPTOR_NAME="${ADAPTOR_NAME^}"
 
 # Swap Adaptor placeholders
 sed -i -e "s/@CAPS_ADAPTOR_NAME@/${CAPS_ADAPTOR_NAME}/g" "$rts_file"
-
 echo -e "\tAdaptor set to ${CAPS_ADAPTOR_NAME}.";
 }
 #############################################################

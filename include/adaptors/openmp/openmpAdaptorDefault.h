@@ -1,6 +1,5 @@
 #pragma once
 
-#include <system/definitions.h>
 #ifdef RTS_IS_OPENMP
 
 #include "openmpTypes.h"
@@ -8,6 +7,7 @@
 
 /**
  * @brief This class is the implementation of the DefaultAdaptor to be linked in the OpenMP environment.
+ *
  * @details This class presents basic translation from OpenMP datatypes to generic input for load balancing strategies.
  */
 class OpenMPAdaptorDefault : public DefaultAdaptor<OpenMPTypes::Load, OpenMPTypes::UInt> {
@@ -37,18 +37,20 @@ public:
 
   /**
    * @brief The constructor funcion of this class. It is used to initialize it's internal state.
+   *
    * @param stats The collected usefull data for load balancing, given by the Charm++ run time system.
    */
-  OpenMPDefaultAdaptor() {
+  OpenMPAdaptorDefault() {
     _task_loads = nullptr;
     _pe_loads = nullptr;
   }
 
   /**
    * @brief Releases the memory used by this structure.
+   *
    * @details This destructor does not free the memory of the tasks input as it is created outside of this class.
    */
-  virtual ~OpenMPDefaultAdaptor() {
+  virtual ~OpenMPAdaptorDefault() {
     if(_pe_loads != nullptr) {
       delete [] _pe_loads;
       _pe_loads = nullptr;
@@ -88,6 +90,7 @@ public:
 
   /**
    * @brief Set the amount of PEs that are contained in the input.
+   *
    * @param the_nPEs The amount of PEs.
    */
   void setPECount(UInt the_nPEs) {
@@ -97,6 +100,7 @@ public:
 
   /**
    * @brief Set the task loads of all tasks in the input.
+   *
    * @param tasks The load value of all tasks.
    * @param ntasks The amount of tasks.
    */

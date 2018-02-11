@@ -1,5 +1,6 @@
 #pragma once
 
+#include <system/debug.h>
 #include <interfaces/strategy/strategyInterface.h>
 #include <algorithms/greedy/greedyAlgorithm.h>
 

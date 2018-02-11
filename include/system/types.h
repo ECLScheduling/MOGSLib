@@ -1,8 +1,8 @@
 #pragma once
 
 class LibTests;
-class Algorithm;
-class Strategy;
-class Adaptor;
-class Debugger;
+class LibAlgorithms;
+class LibStrategies;
+class LibAdaptors;
+class LibDebugger;
 class DefaultTypes;

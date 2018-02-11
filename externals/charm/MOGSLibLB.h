@@ -18,7 +18,7 @@ void CreateMOGSLibLB();
 
 class MOGSLibLB : public CBase_MOGSLibLB {
 public:
-  Adaptor *adaptor;
+  MOGSLib::Adaptor *adaptor;
 
   MOGSLibLB(const CkLBOptions &);
   MOGSLibLB(CkMigrateMessage *m): CBase_MOGSLibLB(m) {}

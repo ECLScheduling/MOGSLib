@@ -1,6 +1,5 @@
 #pragma once
 
-#include <system/definitions.h>
 #ifdef RTS_IS_CHARM
 
 #include <vector>

@@ -16,6 +16,7 @@ public:
   }
 };
 
+#define UNUSED(x) (void)(x)
 /**
  * @brief Null debugging class responsible for disabling debug messages without breaking the code semantic.
  *
@@ -26,6 +27,7 @@ public:
 
   template<typename T>
   No_Debug& operator<< (const T &o) {
+    UNUSED(o);
     return *this;
   }
 };
@@ -44,57 +46,37 @@ class Selected_Debug<false> : public No_Debug {};
 
 
 /** 
- * @brief An enum to indicate that the debug message is of type error.
- */
-enum Debug_Error {error = 1};
-
-/** 
  * @brief A debug function that prints an error message.
  */
 template<typename T>
-inline Selected_Debug<(Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::error)> debug(Debug_Error e) {
-  Selected_Debug<Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::error>() << "[ERR]: ";
-  return Selected_Debug<Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::error>();
+inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::error)> debug_err() {
+  Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::error>() << "[ERR]: ";
+  return Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::error>();
 }
-
-/** 
- * @brief An enum to indicate that the debug message is of type warning.
- */
-enum Debug_Warning {warning = 2};
 
 /** 
  * @brief A debug function that prints a warning message.
  */
 template<typename T>
-inline Selected_Debug<(Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::warning)> debug(Debug_Warning w) {
-  Selected_Debug<Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::warning>() << "[WRN]: ";
-  return Selected_Debug<Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::warning>();
+inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::warning)> debug_wrn() {
+  Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::warning>() << "[WRN]: ";
+  return Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::warning>();
 }
-
-/** 
- * @brief An enum to indicate that the debug message is of type information.
- */
-enum Debug_Info {info = 3};
 
 /** 
  * @brief A debug function that prints an information message.
  */
 template<typename T>
-inline Selected_Debug<(Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::info)> debug(Debug_Info i) {
-  Selected_Debug<Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::info>() << "[INF]: ";
-  return Selected_Debug<Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::info>();
+inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::info)> debug_inf() {
+  Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::info>() << "[INF]: ";
+  return Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::info>();
 }
-
-/** 
- * @brief An enum to indicate that the debug message is of type trace.
- */
-enum Debug_Trace {trace = 4};
 
 /** 
  * @brief A debug function that prints a trace message.
  */
 template<typename T>
-inline Selected_Debug<(Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::trace)> debug(Debug_Trace t) {
-  Selected_Debug<Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::trace>() << "[TRC]: ";
-  return Selected_Debug<Traits<T>::debugged && Traits<Debugger>::enabled && Traits<Debugger>::trace>();
+inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::trace)> debug_trc() {
+  Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::trace>() << "[TRC]: ";
+  return Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::trace>();
 }

@@ -10,7 +10,7 @@
  * @details This class uses the same initialization code that the OpenMPDefaultAdaptor.
  */
 template<typename T>
-class OpenMPAdaptorWithGenericStructure : public OpenMPDefaultAdaptor, public WithGenericStructure<T> {
+class OpenMPAdaptorWithGenericStructure : public OpenMPAdaptorDefault, public WithGenericStructure<T> {
 protected:
 
   /**
@@ -20,7 +20,7 @@ protected:
 
 public:
 
-  OpenMPAdaptorWithGenericStructure() : OpenMPDefaultAdaptor(){}
+  OpenMPAdaptorWithGenericStructure() : OpenMPAdaptorDefault(){}
 
   /**
    * Initializes the reference to the structure that this adaptor provides to the strategy.

@@ -1,9 +1,7 @@
-#include <system/definitions.h>
+#include <rts/rts_includes.h>
 
 #ifdef RTS_IS_OPENMP
 
-#include <adaptors/openmp/openMPAdaptorWithGenericStructure.h>
-#include <strategies/binLPT/binLPTStrategy.h>
 #include <mogslib.h>
 
 /**
@@ -13,12 +11,7 @@
  * currently configure.sh, to better address the problem of selecting the strategy, the target system and which information to use from within.
  * For now this is cumbersome but can already be used as a proof of concept that portability is do-able, yet not simple.
  */
-#define USE_OMP_CHUNK_SIZE
-#define INPUT_DEF OpenMPAdaptorWithGenericStructure<unsigned>
-#define STRATEGY_DEF BinLPT::Strategy<INPUT_DEF>
-
-using Input = INPUT_DEF;
-using Strategy = STRATEGY_DEF;
+//#define USE_OMP_CHUNK_SIZE
 
 struct OMP_Data {
   unsigned omp_chunk_size;
@@ -26,19 +19,20 @@ struct OMP_Data {
 OMP_Data omp_data;
 
 void call_pe_count(void *obj, unsigned npe) {
-  static_cast<INPUT_DEF *>(obj)->setPECount(npe);
+  static_cast<MOGSLib::Adaptor*>(obj)->setPECount(npe);
 }
 
 void call_set_structure(void *obj, unsigned chunksize) {
-  #ifdef USE_OMP_CHUNK_SIZE
-  static_cast<INPUT_DEF *>(obj)->setStructure(chunksize);
-  #endif
-
   omp_data.omp_chunk_size = chunksize;
+
+  //TODO: This definition is problematic as is. For now it works, but a pre-compiler must properly set it.
+  #ifdef USE_OMP_CHUNK_SIZE
+  static_cast<MOGSLib::Adaptor*>(obj)->setStructure(chunksize);
+  #endif
 }
 
 unsigned *call_strategy_map(void *obj, void *arg) {
-  return static_cast<STRATEGY_DEF *>(obj)->mapTasks(static_cast<INPUT_DEF *>(arg));
+  return static_cast<MOGSLib::Strategy*>(obj)->mapTasks(static_cast<MOGSLib::Adaptor*>(arg));
 }
 
 extern "C" {

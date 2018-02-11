@@ -1,12 +1,18 @@
 #pragma once
 
+#define RTS_IS_OPENMP
+
 #include <system/traits.h>
-#include <adaptors/charm/charmTypes.h>
+#include <adaptors/openmp/openmpTypes.h>
 #include <strategies/binLPT/binLPTStrategy.h>
-#include <adaptors/charm/charmAdaptorWithGenericStructure.h>
+#include <adaptors/openmp/openmpAdaptorWithGenericStructure.h>
 
-using UInt = CharmTypes::UInt;
-using Load = CharmTypes::Load;
+namespace MOGSLib {
 
-using Adaptor = CharmAdaptorWithGenericStructure<Uint>;
+using UInt = OpenMPTypes::UInt;
+using Load = OpenMPTypes::Load;
+
+using Adaptor = OpenMPAdaptorWithGenericStructure<UInt>;
 using Strategy = BinLPT::Strategy<Adaptor>;
+
+}

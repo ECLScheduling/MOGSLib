@@ -101,7 +101,7 @@ TEST_F(AlgorithmsTest, make_heap1) {
   UtilityAlgorithms::make_heap<T, UInt, false>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -118,7 +118,7 @@ TEST_F(AlgorithmsTest, make_heap2) {
   UtilityAlgorithms::make_heap<T, UInt, false>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -135,7 +135,7 @@ TEST_F(AlgorithmsTest, make_heap3) {
   UtilityAlgorithms::make_heap<T, UInt, false>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -152,7 +152,7 @@ TEST_F(AlgorithmsTest, make_heap_ascending_order1) {
   UtilityAlgorithms::make_heap<T, UInt, true>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -169,7 +169,7 @@ TEST_F(AlgorithmsTest, make_heap_ascending_order2) {
   UtilityAlgorithms::make_heap<T, UInt, true>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -186,7 +186,7 @@ TEST_F(AlgorithmsTest, make_heap_ascending_order3) {
   UtilityAlgorithms::make_heap<T, UInt, true>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -207,7 +207,7 @@ TEST_F(AlgorithmsTest, insertion_sort1) {
   UtilityAlgorithms::insertion_sort<T, UInt, false>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -224,7 +224,7 @@ TEST_F(AlgorithmsTest, insertion_sort2) {
   UtilityAlgorithms::insertion_sort<T, UInt, false>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -241,7 +241,7 @@ TEST_F(AlgorithmsTest, insertion_sort3) {
   UtilityAlgorithms::insertion_sort<T, UInt, false>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -258,7 +258,7 @@ TEST_F(AlgorithmsTest, insertion_sort_ascending1) {
   UtilityAlgorithms::insertion_sort<T, UInt, true>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -275,7 +275,7 @@ TEST_F(AlgorithmsTest, insertion_sort_ascending2) {
   UtilityAlgorithms::insertion_sort<T, UInt, true>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
@@ -292,7 +292,7 @@ TEST_F(AlgorithmsTest, insertion_sort_ascending3) {
   UtilityAlgorithms::insertion_sort<T, UInt, true>(map, A, n);
 
   for(UInt i = 0; i < n; ++i) {
-    debug<LibTests>(trace) << "map: " << map[i] << ". val: " << A[i] << "\n";
+    debug_trc<LibTests>() << "map: " << map[i] << ". val: " << A[i] << "\n";
   }
 
   for(UInt i = 0; i < n; ++i) {
