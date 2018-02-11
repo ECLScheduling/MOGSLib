@@ -1,0 +1,9 @@
+module MOGSLibLB {
+
+extern module CentralLB;
+initnode void lbinit(void);
+group [migratable] MOGSLibLB : CentralLB {
+  entry void MOGSLibLB(const CkLBOptions &);  
+};
+
+};

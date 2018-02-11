@@ -31,3 +31,7 @@
 # Makefile's created dependencies
 bin/
 .deps/
+
+# Custom files
+config_script_args
+include/rts/rts_includes.h

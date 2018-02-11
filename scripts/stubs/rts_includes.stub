@@ -1,0 +1,18 @@
+#pragma once
+
+#define @RTS_NAME_DEFINE@
+
+#include <system/traits.h>
+#include <adaptors/@RTS_NAME@/@RTS_NAME@Types.h>
+#include <strategies/@STRATEGY_NAME@/@STRATEGY_NAME@Strategy.h>
+#include <adaptors/@RTS_NAME@/@RTS_NAME@Adaptor@CAPS_ADAPTOR_NAME@.h>
+
+namespace MOGSLib {
+
+using UInt = @CAPS_RTS_NAME@Types::UInt;
+using Load = @CAPS_RTS_NAME@Types::Load;
+
+using Adaptor = @CAPS_RTS_NAME@Adaptor@CAPS_ADAPTOR_NAME@@ADAPTOR_TEMPLATES@;
+using Strategy = @CAPS_STRATEGY_NAME@::Strategy<Adaptor>;
+
+}

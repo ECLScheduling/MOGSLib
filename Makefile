@@ -41,7 +41,8 @@ BINARIES  :=$(BINDIR)/execute_me
 CXXFLAGS :=-std=c++14 -Wall -fopenmp -O3
 LDFLAGS  :=
 LDLIBS   :=
-INCLUDE  :=-I$(INCDIR)
+INCLUDE  :=$(foreach d, $(INCDIR), -I$d)
+#-I$(INCDIR)
 ### TESTS-RELATED VARIABLES
 # Files
 TMAINFILES :=$(shell find $(TSTDIR) -name '*.cpp' 2> /dev/null)

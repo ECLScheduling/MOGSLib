@@ -1,48 +1,55 @@
 #pragma once
 
-#include "concepts/greedyConcepts.h"
-
 #include <system/traits.h>
+#include <algorithms/utility.h>
+
+namespace Greedy {
 
 /**
- * The struct that defines the generic greedy load balancer algorithm with compile-time defined data structures and types.
- * @type Task A type that serve as a task abstraction to the algorithm.
- * @type PE A type that serve as a PE abtraction to the algorithm.
- * @type MaxHeapTemplate A type that will be serve as a Max Heap for the greedy algorithm. Defaults to GreedyDefaultDataStructure::MaxHeap
- * @type MinHeapTemplate A type that will be serve as a Min Heap for the greedy algorithm. Defaults to GreedyDefaultDataStructure::MinHeap
+ * @brief The struct that defines the generic greedy scheduler algorithms.
+ *
+ * @type Load A type that serve as a load abstraction to the algorithms.
+ * @type UInt A type that serve as an unsigned integer to the algorithms.
  */
-template<typename Task, typename PE, typename MaxHeapTemplate = typename GreedyStrategyAlgorithmTraits<Task, PE>::MaxHeap, typename MinHeapTemplate = typename GreedyStrategyAlgorithmTraits<Task, PE>::MinHeap>
-struct GreedyStrategyAlgorithm {
-  
-  typedef typename GreedyStrategyAlgorithmTraits<Task, PE>::Id Id;
-  typedef typename GreedyStrategyAlgorithmTraits<Task, PE>::Load Load;
-  typedef MaxHeapTemplate MaxHeap;
-  typedef MinHeapTemplate MinHeap;
+template<typename Load, typename UInt>
+struct Algorithms {
 
-  // This line is present in this class to present clear compile-time errors to developers and strategy users.
-  static_assert(GreedyStrategyAlgorithmConcept<Task, PE, MaxHeap, MinHeap>::conforms(), "");
 
-  /**
-   * The function that will map tasks to PEs. The tasks will be mapped in th PEs parameter as it is passed as reference.
-   * @param tasks a max heap containing LoadBearers, interepreted as tasks in the system.
-   * @param PEs a min heap containing LoadBearers, interepreted as PEs in the system. This heap will contain the mapping after this function call.
-   */
-  void map(MaxHeap tasks, MinHeap &PEs) const {
+/**
+ * @brief Order the tasks that will be assigned by the Greedy Strategy by their load.
+ *
+ * @param loads The array of task loads.
+ * @param ntasks The amount of tasks.
+ * @param A map of index to access the array with default values to be changed into a map in decreasing order.
+ */
+static void order_tasks(Load *loads, UInt ntasks, UInt *map) {
+  UtilityAlgorithms::insertion_sort<Load, UInt, false>(map, loads, ntasks);
+}
 
-    // Doesnt make sense to balance a load to an empty set of processing units.
-    if(PEs.empty() || tasks.empty())
-      return;
+/**
+ * @brief Creates a binary min-heap with the PEs by their load values.
+ *
+ * @param pe_loads The array of PE loads.
+ * @param nPEs The amount of PEs.
+ *
+ * @param A map of index to access the array with default values to be changed into a binary heap.
+ */
+static void order_PEs(Load *pe_loads, UInt nPEs, UInt *map) {
+  UtilityAlgorithms::make_heap<Load, UInt, true>(map, pe_loads, nPEs);
+}
 
-    // Main greedy strategy loop.
-    while(!tasks.empty()) {
-      auto task = tasks.top();
-      auto _PE = PEs.top();
+/**
+ * @brief Reorder the PEs of the binary heap after the first one have been updated.
+ *
+ * @param pe_loads The array of PE loads.
+ * @param nPEs The amount of PEs.
+ *
+ * @return A map of the original indexes of the array that is now a binary heap.
+ */
+static void reorder_PEs(Load *pe_loads, UInt *pe_map, UInt nPEs) {
+  UtilityAlgorithms::heapify<Load, UInt, true>(pe_map, pe_loads, nPEs, static_cast<UInt>(0));
+}
 
-      tasks.pop();
-      PEs.pop();
-
-      _PE.mapTask(task);
-      PEs.push(_PE);
-    }
-  }
 };
+
+}

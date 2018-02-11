@@ -1,123 +1,99 @@
 #pragma once
 
-#include "types.h"
 #include <cstdint>
-#include <map>
-#include <set>
-#include <queue>
+#include <system/types.h>
 
-//#########################
-// Global Traits
-//#########################
-
+/**
+ * @brief General Traits used by most library components.
+ */
 template<typename T>
 struct Traits {
-  
   /**
-   * The type definition that will serve as an unsigned int inside the library.
+   * @brief A flag to indicate if a component is active.
    */
-  typedef uint_fast32_t UInt;
-  
-  /**
-   * The type definition that will serve to identify tasks and PEs of the system inside the framework.
-   */
-  typedef UInt Id;
+  constexpr static bool enabled = true;
 
   /**
-   * The type definition that will serve to quantify a task's load value for the framework.
+   * @brief A flag to indicate if debugging is enabled for a given component.
    */
-  typedef UInt Load;
+  constexpr static bool debugged = true;
 
   /**
-   * Reference to the zero value of the Load type.
+   * @brief A flag to indicate if a detailed debugging is enabled for a given component.
    */
-  const static Load zeroRef = 0;
-
-  /**
-   * A tag to check wether the struct must be debugged.
-   */
-  const static bool debug = false;
+  constexpr static bool histerically_debugged = false;
 };
 
-//#########################
-// Input Traits
-//#########################
-
-struct DefaultInputTraits : Traits<void> {
-
-  /**
-   * Type definition of the structure used to represent a Task.
-   */
-  typedef SimpleTask<Id, Load> Task;
+/**
+ * @brief The default traits to the system.
+ */
+template<>
+struct Traits<DefaultTypes> : Traits<void> {
 
   /**
-   * Type definition of the structure used to represent a PE (Processing Element).
+   * @brief The type definition that will serve as an unsigned int inside the library.
    */
-  typedef SimplePE<Task> PE;
-  
+  using UInt = uint_fast32_t;
+
+  /**
+   * @brief The type definition that will serve to quantify a task's load value for the framework.
+   */
+  using Load = UInt;
 };
 
-//#########################
-// Structure Traits
-//#########################
-
-
-//#########################
-// Algorithms default Traits
-//#########################
-
-template<typename Task, typename PE>
-struct GreedyStrategyAlgorithmTraits : Traits<void> {
-  /**
-   * Internal Helper struct to be used as the max-heap comparator.
-   */
-  struct MaxHeapComparator {
-    inline bool operator ()(const Task *a, const Task *b) const {
-      return *a < *b;
-    }
-
-    inline bool operator ()(Task *a, Task *b) const {
-      return *a < *b;
-    }
-  };
+template<>
+struct Traits<LibDebugger> : Traits<void> {
+  constexpr static bool enabled = debugged;
 
   /**
-   * Internal Helper struct to be used as the min-heap comparator.
+   * @brief A flag to indicate whether the debugger should print error messages.
    */
-  struct MinHeapComparator {
-    inline bool operator ()(PE a, PE b) const {
-      return a > b;
-    }
-  };
+  constexpr static bool error = true;
 
   /**
-   * Type used as a max heap for the greedy algorithm.
+   * @brief A flag to indicate whether the debugger should print warning messages.
    */
-  typedef std::priority_queue<Task, std::vector<Task*>, MaxHeapComparator > MaxHeap;
-  
+  constexpr static bool warning = true;
+
   /**
-   * Type used as a min heap for the greedy algorithm.
+   * @brief A flag to indicate whether the debugger should print information messages.
    */
-  typedef std::priority_queue<PE, std::vector<PE>, MinHeapComparator > MinHeap;
+  constexpr static bool info = false;
+
+  /**
+   * @brief A flag to indicate whether the debugger should print trace messages.
+   */
+  constexpr static bool trace = true;
 };
 
+/**
+ * @brief Traits for the unit tests in the composition of library elements.
+ */
+template<>
+struct Traits<LibTests> : Traits<void> {
+  constexpr static bool debugged = true;
+};
 
-//#########################################
-// Strategy Specific Traits
-//#########################################
+/**
+ * @brief Traits for the algorithm components of the library.
+ */
+template<>
+struct Traits<LibAlgorithms> : Traits<void> {
+  constexpr static bool debugged = histerically_debugged;
+};
 
+/**
+ * @brief Traits for the strategies components of library.
+ */
+template<>
+struct Traits<LibStrategies> : Traits<void> {
+  constexpr static bool debugged = true;
+};
 
-struct EagerMapTraits : Traits<void>{
-
-  /**
-   * The data type that represents the communication value of the EagerMap's communication matrix.
-   */
-  typedef UInt CommValue;
-
-  /**
-   * The data type that represents the communication matrix that is used by the EagerMap strategy.
-   */
-  typedef EagerMap::CommunicationMatrix CommunicationMatrix; 
-
-  typedef EagerMap::TaskGroup TaskGroup;
+/**
+ * @brief Traits for the adaptors components of library.
+ */
+template<>
+struct Traits<LibAdaptors> : Traits<void> {
+  constexpr static bool debugged = histerically_debugged;
 };
