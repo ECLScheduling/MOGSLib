@@ -4,15 +4,15 @@
 
 #include <system/traits.h>
 #include <adaptors/charm/charmTypes.h>
-#include <strategies/binLPT/binLPTStrategy.h>
-#include <adaptors/charm/charmAdaptorWithGenericStructure.h>
+#include <strategies/greedy/greedyStrategy.h>
+#include <adaptors/charm/charmAdaptorDefault.h>
 
 namespace MOGSLib {
 
 using UInt = CharmTypes::UInt;
 using Load = CharmTypes::Load;
 
-using Adaptor = CharmAdaptorWithGenericStructure<UInt>;
-using Strategy = BinLPT::Strategy<Adaptor>;
+using Adaptor = CharmAdaptorDefault;
+using Strategy = Greedy::Strategy<Adaptor>;
 
 }

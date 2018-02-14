@@ -1,1 +1,1 @@
--s binLPT -a withGenericStructure -at uInt -rts charm
+-s greedy -a default -rts charm
