@@ -1,8 +1,6 @@
 
 template<typename InputAdaptor>
 void Strategy<InputAdaptor>::doTaskMapping() {
-  debug_trc<LibStrategies>() << "Entering Greedy Strategy Mapping...\n";
-
   InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;
   auto &task_map = StrategyInterface<InputAdaptor>::task_map;
   auto &PE_map = StrategyInterface<InputAdaptor>::PE_map;
@@ -28,9 +26,4 @@ void Strategy<InputAdaptor>::doTaskMapping() {
     PE_loads[0] += task_loads[i]; // Update the PE with the added task's load.
     AlgorithmSet::reorder_PEs(PE_loads, PE_map, nPEs); // heap-replace (better than pop + push)
   }
-
-  for(UInt i = 0; i < nPEs; ++i)
-    debug_trc<LibStrategies>() << "PE[" << PE_map[i] << "]: " << PE_loads[i] << "\n";
-
-  debug_trc<LibStrategies>() << "Exiting Greedy Strategy Mapping...\n";
 }
