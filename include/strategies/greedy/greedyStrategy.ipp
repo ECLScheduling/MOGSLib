@@ -1,29 +1,44 @@
 
 template<typename InputAdaptor>
 void Strategy<InputAdaptor>::doTaskMapping() {
-  InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;
-  auto &task_map = StrategyInterface<InputAdaptor>::task_map;
-  auto &PE_map = StrategyInterface<InputAdaptor>::PE_map;
-
   /* Retrieve the input from the adaptor */
-  Load *task_loads = input.taskLoads();
-  const UInt ntasks = input.ntasks();
+  InputAdaptor &input = *StrategyInterface<InputAdaptor>::currentInput;
 
+  Load *task_loads = input.taskLoads();
   Load *PE_loads = input.PELoads();
-  const UInt nPEs = input.nPEs();
+  std::vector<LoadBearer> tasks(input.ntasks());
+  std::vector<LoadBearer> PEs(input.nPEs());
+  
+  for(UInt i = 0; i < tasks.size(); ++i) {
+    tasks[i].load = task_loads[i];
+    tasks[i].id = i;
+  }
+
+  for(UInt i = 0; i < PEs.size(); ++i) {
+    PEs[i].load = PE_loads[i];
+    PEs[i].id = i;
+  }
+
 
   /** Order the tasks in decrescent order and create a binary min-heap for the PEs **/
-  StrategyInterface<InputAdaptor>::createInputMaps(ntasks, nPEs);
-  AlgorithmSet::order_tasks(task_loads, ntasks, task_map);
-  AlgorithmSet::order_PEs(PE_loads, nPEs, PE_map);
+  std::make_heap(tasks.begin(), tasks.end(), Strategy::maxCmp);
+  std::make_heap(PEs.begin(), PEs.end(), Strategy::minCmp);
+
+  //AlgorithmSet::order_tasks(tasks, task_map);
+  //AlgorithmSet::order_PEs(PE_loads, nPEs, PE_map);
 
   /** Main Greedy Loop **/
-  for(UInt i = 0; i < ntasks; ++i) {
-    auto task_idx = task_map[i];
-    auto PE_idx = PE_map[0]; // heap-top (peek)
+  while(!tasks.empty()) {
+    auto &task = tasks.front();
+    auto &PE = PEs.front(); // heap-top (peek)
 
-    StrategyInterface<InputAdaptor>::output[task_idx] = PE_idx; // Set the output.
-    PE_loads[0] += task_loads[i]; // Update the PE with the added task's load.
-    AlgorithmSet::reorder_PEs(PE_loads, PE_map, nPEs); // heap-replace (better than pop + push)
+    StrategyInterface<InputAdaptor>::output[task.id] = PE.id; // Set the output.
+    PE.load += task.load; // Update the PE with the added task's load.
+
+    std::pop_heap(tasks.begin(), tasks.end(), Strategy::maxCmp);
+    tasks.pop_back();
+    std::pop_heap(PEs.begin(), PEs.end(), Strategy::minCmp);
+    std::push_heap(PEs.begin(), PEs.end(), Strategy::minCmp);
+    //AlgorithmSet::reorder_PEs(PE_loads, PE_map, nPEs); // heap-replace (better than pop + push)
   }
 }

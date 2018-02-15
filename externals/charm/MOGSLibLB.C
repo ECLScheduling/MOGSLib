@@ -35,7 +35,7 @@ void MOGSLibLB::work(LDStats* stats) {
   auto output = strategy.mapTasks(adaptor);
   
   for(UInt i = 0; i < adaptor->ntasks(); ++i)
-    stats->assign(i, output[i]);
+    stats->assign(adaptor->task_ids[i], adaptor->pe_ids[output[i]]);
 
   delete adaptor;
 }

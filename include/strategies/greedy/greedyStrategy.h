@@ -25,6 +25,32 @@ public:
 
 protected:
 
+  struct LoadBearer {
+    Load load;
+    UInt id;
+
+    void operator =(const LoadBearer &t) {
+      load = t.load;
+      id = t.id;
+    }
+
+    bool operator >(const LoadBearer &t) const {
+      return load > t.load;
+    }
+
+    bool operator <(const LoadBearer &t) const {
+      return load < t.load;
+    }
+  };
+
+  static inline bool maxCmp(const LoadBearer& a, const LoadBearer& b) {
+    return a < b;
+  }
+
+  static inline bool minCmp(const LoadBearer& a, const LoadBearer& b) {
+    return a > b;
+  }
+
   /**
    * @brief The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
    */
