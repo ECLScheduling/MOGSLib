@@ -26,22 +26,16 @@ void MOGSLibLB::work(LDStats* stats) {
   #ifdef USE_STRUCTURE_K
   MOGSLib::UInt k = 5;
   #endif
-
-  CkPrintf("At Load Balancer...\n");
   
   adaptor = new MOGSLib::Adaptor(stats);
   #ifdef USE_STRUCTURE_K
   adaptor->setStructure(k);
   #endif
-  
-  CkPrintf("Adaptor Initialized... Invoking library implementation...\n");
 
   auto output = strategy.mapTasks(adaptor);
   
-  CkPrintf("Applying library mapping...\n");
-
   for(UInt i = 0; i < adaptor->ntasks(); ++i)
-    stats->assign(i, output[i]);
+    stats->assign(adaptor->task_ids[i], adaptor->pe_ids[output[i]]);
 
   delete adaptor;
 }

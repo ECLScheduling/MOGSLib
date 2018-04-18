@@ -31,6 +31,9 @@ function PRINT_HELP {
   echo -e "  -a, --adaptor [adaptor_name]\t\t\tSet a target adaptor in the rts_includes.h file."
   echo -e "  -at, --adaptor-template [t1_t2_t3]\t\tSet a list of template parameters separated by '_' to formulate the adaptor in the rts_includes.h file."
   echo -e "  -rts, --runtimesystem [rts_name]\t\tSet a target RTS in the rts_includes.h file and definitions.h file."
+  echo -e "\nStart the names with lower case. If the name contains an uppercase after the first letter, this letter must be capitalized."
+  echo -e "The strategy and adaptor names can be found in the include directory under the respective subdirectories"
+  echo -e "The current supported RTS names are: 'charm' and 'openmp'"
   exit 0
 }
 ############################################################

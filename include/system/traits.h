@@ -43,7 +43,7 @@ struct Traits<DefaultTypes> : Traits<void> {
 
 template<>
 struct Traits<LibDebugger> : Traits<void> {
-  constexpr static bool enabled = debugged;
+  constexpr static bool enabled = true;
 
   /**
    * @brief A flag to indicate whether the debugger should print error messages.
