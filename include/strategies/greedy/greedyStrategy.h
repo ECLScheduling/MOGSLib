@@ -2,7 +2,6 @@
 
 #include <system/debug.h>
 #include <interfaces/strategy/strategyInterface.h>
-#include <algorithms/greedy/greedyAlgorithm.h>
 
 #include <vector>
 #include <algorithm>
@@ -18,8 +17,6 @@ public:
 
   using Load = typename InputAdaptor::Load;
   using UInt = typename InputAdaptor::UInt;
-
-  using AlgorithmSet = Algorithms<Load, UInt>;
 
   virtual ~Strategy() {}
 

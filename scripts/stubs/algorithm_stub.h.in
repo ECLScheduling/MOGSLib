@@ -1,0 +1,18 @@
+#pragma once
+
+#include <system/traits.h>
+#include <algorithms/utility.h>
+
+namespace @STRATEGYNAME@ {
+
+/**
+ * @brief The struct that defines the generic @STRATEGYNAME@ scheduler algorithms.
+ *
+ * @type Load A type that serve as a load abstraction to the algorithms.
+ * @type UInt A type that serve as an unsigned integer to the algorithms.
+ */
+template<typename Load, typename UInt>
+struct Algorithms {
+};
+
+}

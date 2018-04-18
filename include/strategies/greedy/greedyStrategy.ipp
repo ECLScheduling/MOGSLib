@@ -24,9 +24,6 @@ void Strategy<InputAdaptor>::doTaskMapping() {
   std::make_heap(tasks.begin(), tasks.end(), Strategy::maxCmp);
   std::make_heap(PEs.begin(), PEs.end(), Strategy::minCmp);
 
-  //AlgorithmSet::order_tasks(tasks, task_map);
-  //AlgorithmSet::order_PEs(PE_loads, nPEs, PE_map);
-
   /** Main Greedy Loop **/
   while(!tasks.empty()) {
     auto &task = tasks.front();
@@ -39,6 +36,5 @@ void Strategy<InputAdaptor>::doTaskMapping() {
     tasks.pop_back();
     std::pop_heap(PEs.begin(), PEs.end(), Strategy::minCmp);
     std::push_heap(PEs.begin(), PEs.end(), Strategy::minCmp);
-    //AlgorithmSet::reorder_PEs(PE_loads, PE_map, nPEs); // heap-replace (better than pop + push)
   }
 }
