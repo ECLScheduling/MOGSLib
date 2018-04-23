@@ -1,14 +1,15 @@
 template<typename Load>
-static IndexType Algorithms::UInt most_communicating_row(const CommMatrix &comm) {
+typename Algorithms<Load>::IndexType Algorithms<Load>::most_communicating_row(const CommMatrix &comm) {
   CommVal max = 0;
   IndexType chosen = 0;
   
-  for(row : comm.elements) {
+  for(UInt i = 0; i < comm.elements.size(); ++i) {
+    auto row = comm.elements[i];
     CommVal sum = 0;
     for(auto it = row.begin(); it != row.end(); ++it)
       sum += it->second;
     if(sum > max) {
-      chosen = it->first;
+      chosen = i;
       max = sum;
     }
   }
@@ -17,12 +18,11 @@ static IndexType Algorithms::UInt most_communicating_row(const CommMatrix &comm)
 }
 
 template<typename Load>
-static Group* Algorithms::generate_groups(CommMatrix comm, UInt total_elements, UInt group_elements, bool *chosen, Groups *previous_groups) {
+typename Algorithms<Load>::Group* Algorithms<Load>::generate_groups(CommMatrix &comm, UInt total_elements, UInt group_elements, bool *chosen, Group *previous_groups) {
   UInt w_max = 0;
   Group *group = new Group(group_elements);
   
-  // Caso especial (exceção): Tratar group_elements > total_elements
-  register_in_group(most_communicating_row(comm), group, 0, chosen, previous_groups);
+  group->register_element(most_communicating_row(comm), 0, chosen, previous_groups);
   
   for(UInt i = 1; i < group_elements; ++i) {
     UInt winner = 0;
@@ -31,16 +31,22 @@ static Group* Algorithms::generate_groups(CommMatrix comm, UInt total_elements, 
         UInt w = 0;
         auto row = comm[j];
         for(UInt k = 0; k < i; ++k) {
-          auto cell = row.find(group[k]);
-          if(cel != comm[j].end())
+          auto cell = row.find(group->members[k]);
+          if(cell != row.end()){
             w += cell->second;
+          }
         }
-        if(w > w_max)
+        if(w > w_max) {
           w_max = w;
           winner = j;
+        }
       }
-    register_in_group(winner, group, i, chosen, previous_groups);
+    group->register_element(winner, i, chosen, previous_groups);
   }
-
   return group;
+}
+
+template<typename Load>
+void Algorithms<Load>::recreate_matrix(CommMatrix &comm, Group *groups, const UInt &ngroups) {
+
 }

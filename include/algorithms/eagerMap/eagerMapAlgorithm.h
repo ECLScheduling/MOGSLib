@@ -1,31 +1,11 @@
 #pragma once
 
-#include <system/traits.h>
-#include <algorithms/utility.h>
-#include "structures/sparseMatrix.h"
+#include <system/debug.h>
+
+#include "structures/sparseCommMatrix.h"
+#include "structures/eagerGroup.h"
 
 namespace EagerMap {
-
-using UInt = Traits<DefaultTypes>::UInt;
-
-/**
- * @brief The struct that defines a sparse matrix tuned for the EagerMap algorithm.
- *
- * @type IndexType The type that represents a task id for which the communication is targeted.
- * @type DataType The type that represents the communication quantity.
- */
-template<typename IndexType, typename DataType>
-struct CommunicationSparseMatrix {
-  using MatrixCell = std::map<IndexType, DataType>;
-  using DataArray = std::vector<MatrixCell>;
-  
-  DataArray elements;
-
-  CommunicationSparseMatrix(DataArray::size_type size) : elements(DataArray(size)) {
-    for(decltype(size) i = 0; i < size; ++i)
-      elements[] = MatrixCell();
-  };
-};
 
 /**
  * @brief The struct that defines the generic EagerMap scheduler algorithms.
@@ -38,7 +18,7 @@ struct Algorithms {
   using IndexType = UInt;
   using CommVal = UInt;
   using CommMatrix = CommunicationSparseMatrix<IndexType,CommVal>;
-  using Group = std::vector<IndexType>;
+  using Group = EagerGroup<IndexType>;
 
   /**
    * @brief Generates a group of tasks based on communication affinity.
@@ -48,9 +28,15 @@ struct Algorithms {
    * @param chosen a boolean array to mark the chosen elements for a group to avoid selecting the same element twice.
    * @param previous_groups The array containing the groups of previous iterations.
    */
-  static Group* generate_groups(CommMatrix comm, UInt total_elements, UInt group_elements, bool *chosen, Groups *previous_groups);
+  static Group* generate_groups(CommMatrix &comm, UInt total_elements, UInt group_elements, bool *chosen, Group *previous_groups);
 
-private:
+  /**
+   * @brief Recreate the communication matrix based on the new groups communication patterns and the previous matrix data.
+   * @param comm The previous communication matrix.
+   * @param groups The array of groups created based on the previous matrix.
+   * @param ngroups The amount of groups in the groups array.
+   */
+  static void recreate_matrix(CommMatrix &comm, Group *groups, const UInt &ngroups);
 
   /**
    * @brief Returns the indice of the element (row) in the matrix with the greatest communication value sum.
@@ -58,15 +44,6 @@ private:
    * @param comm The communication matrix.
    */
   static IndexType most_communicating_row(const CommMatrix &comm);
-
-  /**
-   * @brief Register an element to a group.
-   * @details This method has been separated from generate_groups because it was used in different parts of the algorithm.
-   */
-  static inline void register_in_group(const UInt &winner, Group *group, const UInt &pos, bool *chosen, Groups *previous_groups) {
-    chosen[winner] = true;
-    group[pos] = previous_groups[winner];
-  }
 };
 
 #include "eagerMapAlgorithm.ipp"

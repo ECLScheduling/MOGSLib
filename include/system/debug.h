@@ -50,7 +50,6 @@ class Selected_Debug<false> : public No_Debug {};
  */
 template<typename T>
 inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::error)> debug_err() {
-  Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::error>() << "[ERR]: ";
   return Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::error>();
 }
 
@@ -59,7 +58,6 @@ inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Tr
  */
 template<typename T>
 inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::warning)> debug_wrn() {
-  Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::warning>() << "[WRN]: ";
   return Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::warning>();
 }
 
@@ -68,7 +66,6 @@ inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Tr
  */
 template<typename T>
 inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::info)> debug_inf() {
-  Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::info>() << "[INF]: ";
   return Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::info>();
 }
 
@@ -77,6 +74,5 @@ inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Tr
  */
 template<typename T>
 inline Selected_Debug<(Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::trace)> debug_trc() {
-  Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::trace>() << "[TRC]: ";
   return Selected_Debug<Traits<T>::debugged && Traits<LibDebugger>::enabled && Traits<LibDebugger>::trace>();
 }
