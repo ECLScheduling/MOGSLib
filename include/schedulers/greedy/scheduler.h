@@ -1,7 +1,8 @@
 #pragma once
 
-#include <system/debug.h>
-#include <interfaces/strategy/strategyInterface.h>
+#include <concepts/scheduler/scheduler.h>
+
+#include "defaults.h"
 
 #include <vector>
 #include <algorithm>
@@ -11,20 +12,21 @@ namespace Greedy {
 /**
  * @brief This class encapsulates the implementation of a Greedy load balancer strategy.
  */
-template <typename InputAdaptor>
-class Strategy : public StrategyInterface<InputAdaptor> {
+template <typename Input = Defaults::Input>
+class Scheduler : public Concepts::Scheduler<Input> {
 public:
 
-  using Load = typename InputAdaptor::Load;
-  using UInt = typename InputAdaptor::UInt;
+  using Output = typename Concepts::Scheduler<Input>::Output;
+  using Index = typename Traits<SchedulerInput>::Index;
+  using Load = typename Traits<SchedulerInput>::Load;
 
-  virtual ~Strategy() {}
+  virtual ~Scheduler() {}
 
 protected:
 
   struct LoadBearer {
     Load load;
-    UInt id;
+    Index id;
 
     void operator =(const LoadBearer &t) {
       load = t.load;
@@ -51,10 +53,10 @@ protected:
   /**
    * @brief The strategy specific code for every strategy implementation. This method must be implemented for each strategy and inside it's code it must modify the lbOutput variable.
    */
-  void doTaskMapping();
+  virtual Output map(Input &input);
 
 };
 
-#include "greedyStrategy.ipp"
+#include "scheduler.ipp"
 
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 #include <system/types.h>
 
 /**
@@ -25,20 +26,39 @@ struct Traits {
 };
 
 /**
- * @brief The default traits to the system.
+ * @brief The default types in the framework.
  */
 template<>
-struct Traits<DefaultTypes> : Traits<void> {
+struct Traits<DefaultTypes> {
 
   /**
-   * @brief The type definition that will serve as an unsigned int inside the library.
+   * @brief The type definition that will serve as index inside the framework.
    */
-  using UInt = uint_fast32_t;
+  using Index = std::size_t;
 
   /**
-   * @brief The type definition that will serve to quantify a task's load value for the framework.
+   * @brief The type definition that will serve to quantify a load values for the framework.
    */
-  using Load = UInt;
+  using Load = uint_fast32_t;
+};
+
+/**
+ * @brief The traits corresponding to the scheduler input types.
+ */
+template<>
+struct Traits<SchedulerInput> : Traits<DefaultTypes> {
+};
+
+/**
+ * @brief The traits corresponding to the scheduler output types.
+ */
+template<>
+struct Traits<SchedulerOutput> : Traits<SchedulerInput> {
+
+  /**
+   * @brief The type definition representing the scheduler concrete output.
+   */
+  using Output = Index*;
 };
 
 template<>
@@ -97,3 +117,6 @@ template<>
 struct Traits<LibAdaptors> : Traits<void> {
   constexpr static bool debugged = histerically_debugged;
 };
+
+template<typename T>
+struct Defaults {};
