@@ -11,3 +11,5 @@ class LibAlgorithms;
 class LibStrategies;
 class LibAdaptors;
 class LibDebugger;
+
+class Policy;

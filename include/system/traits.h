@@ -120,3 +120,9 @@ struct Traits<LibAdaptors> : Traits<void> {
 
 template<typename T>
 struct Defaults {};
+
+template<>
+struct Traits<Policy> : Traits<DefaultTypes> {
+  using TaskEntry = Index;
+  using TaskMap = TaskEntry*;
+};
