@@ -7,26 +7,18 @@ namespace Concepts {
  */
 template<typename Concrete>
 class LocalTopology {
-  Concrete *_c;
+  static Concrete *c;
 
 public:
-
-  LocalTopology(Concrete &c) : _c(c) {}
-
-  LocalTopology() : _c(new Concrete()) {}
-
-  ~LocalTopology() { delete _c; }
-
   /**
    * @brief Gets the depth of the topology.
    */
-  inline int depth() { return _c->depth(); }
+  static inline decltype(c->depth()) depth() { return _c->depth(); }
 
   /**
    * @brief Gets the amount of objects in a given depth.
    */
-  inline int objcount_in_depth(const int &depth) { return _c->objcount_in_depth(depth); }
-
+  static inline decltype(c->objcount_in_depth(0)) objcount_in_depth(const int &depth) { return _c->objcount_in_depth(depth); }
 };
 
 }

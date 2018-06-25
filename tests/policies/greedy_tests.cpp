@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <policies/greedy/policy.h>
+#include <policies/greedy.h>
 
 using Index = Policy::Index;
 using Load = Policy::Load;

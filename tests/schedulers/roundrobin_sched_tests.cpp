@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/roundRobin/scheduler.h>
+#include <schedulers/round_robin.h>
 
 using Index = Policy::Index;
 using Load = Policy::Load;

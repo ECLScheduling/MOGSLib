@@ -2,7 +2,7 @@
 
 #include <abstractions/scheduler.h>
 
-#include <policies/roundRobin/policy.h>
+#include <policies/round_robin.h>
 
 #include <concepts/pe_data.h>
 #include <concepts/task_data.h>
