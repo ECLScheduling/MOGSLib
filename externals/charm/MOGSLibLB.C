@@ -22,15 +22,21 @@ bool MOGSLibLB::QueryBalanceNow(int _step)
 }
 
 void MOGSLibLB::work(LDStats* stats) {
-  MOGSLib::Strategy strategy;
-  #ifdef USE_STRUCTURE_K
-  MOGSLib::UInt k = 5;
-  #endif
+  // MOGSLib::Strategy strategy;
+  // #ifdef USE_STRUCTURE_K
+  // MOGSLib::UInt k = 5;
+  // #endif
   
-  adaptor = new MOGSLib::Adaptor(stats);
-  #ifdef USE_STRUCTURE_K
-  adaptor->setStructure(k);
-  #endif
+  // adaptor = new MOGSLib::Adaptor(stats);
+  // #ifdef USE_STRUCTURE_K
+  // adaptor->setStructure(k);
+  // #endif
+
+  // BEGIN NOVAS COISAS
+  MOGSLib::RTS<MOGSLib::RuntimeSystemEnum::Charm>::stats = stats;
+  auto basic_input = new Adapter::BasicSchedulerInput();
+  MOGSLib::Initializer<MOGSLib::RuntimeSystemEnum::Charm, Adapter::BasicSchedulerInput>::init(basic_input);
+  // END NOVAS COISAS
 
   // std::string scheduler_name = "greedy";
   // auto scheduler_opt = MOGSLib::Schedulers::get_by_name(scheduler_name);
@@ -43,12 +49,12 @@ void MOGSLibLB::work(LDStats* stats) {
   // // Scheduler name is invalid
   // }
 
-  auto output = strategy.mapTasks(adaptor);
+  // auto output = strategy.mapTasks(adaptor);
   
-  for(UInt i = 0; i < adaptor->ntasks(); ++i)
-    stats->assign(adaptor->task_ids[i], adaptor->pe_ids[output[i]]);
+  // for(UInt i = 0; i < adaptor->ntasks(); ++i)
+  //   stats->assign(adaptor->task_ids[i], adaptor->pe_ids[output[i]]);
 
-  delete adaptor;
+  // delete adaptor;
 }
 
 
