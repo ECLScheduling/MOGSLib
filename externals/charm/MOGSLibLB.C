@@ -32,6 +32,17 @@ void MOGSLibLB::work(LDStats* stats) {
   adaptor->setStructure(k);
   #endif
 
+  // std::string scheduler_name = "greedy";
+  // auto scheduler_opt = MOGSLib::Schedulers::get_by_name(scheduler_name);
+  // if(scheduler_opt->has) {
+  //  // Update all the dependencies
+  //  auto scheduler_ptr = Optional::get_value<MOGSLib::Schedulers::SchedulerPtr>(scheduler_opt);
+  //  auto map = scheduler_ptr->work();
+  // // Assign output
+  // } else {
+  // // Scheduler name is invalid
+  // }
+
   auto output = strategy.mapTasks(adaptor);
   
   for(UInt i = 0; i < adaptor->ntasks(); ++i)

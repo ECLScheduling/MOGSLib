@@ -7,25 +7,25 @@ namespace Concepts {
  */
 template <typename Concrete>
 struct TaskData {
-  static Concrete *c;
+  static Concrete *concrete;
 
   /**
    * @brief Get the amount of tasks in the application.
    */
-  static inline decltype(c->ntasks()) ntasks() {
+  static inline decltype(concrete->ntasks()) ntasks() {
     return c->ntasks();
   }
 
   /**
    * @brief Get the workloads of the tasks in the application.
    */
-  static inline decltype(c->tasks_workloads()) tasks_workloads() {
-    return c->tasks_workloads();
+  static inline decltype(concrete->tasks_workloads()) tasks_workloads() {
+    return concrete->tasks_workloads();
   }
 
 };
 
 template <typename Concrete>
-Concrete* TaskData<Concrete>::c = nullptr;
+Concrete* TaskData<Concrete>::concrete = nullptr;
 
 }

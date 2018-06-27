@@ -14,7 +14,7 @@ namespace Scheduler {
  * @type T A concrete type that fulfills the TaskData concept.
  * @type P A concrete type that fulfills the PEData concept.
  **/
-template<typename T, typename P>
+template<typename T, typename P = T>
 class Greedy : public Abstraction::Scheduler {
 public:
   using TaskData = Concepts::TaskData<T>;
@@ -25,14 +25,24 @@ public:
   /**
    * @brief The method to obtain a task map based on a greedy heuristic.
    **/
-  virtual TaskMap operator()() final {
+  TaskMap work() override {
     auto ntasks = TaskData::ntasks();
 
     auto map = new Index[ntasks]();
     Policy::Greedy<>::map(map, ntasks, TaskData::tasks_workloads(), PEData::nPEs(), PEData::PEs_workloads());
     return map;
   }
-
 };
 
 }
+
+/**
+ * @brief This Bind specialization binds the concrete adapters T and P, required by the Greedy scheduler, to their respective concepts, TaskData and PEData.
+ */
+template<typename T, typename P>
+struct Bind<Scheduler::Greedy<T,P> > {
+  static void bind(T* t, P *p) {
+    Scheduler::Greedy<T,P>::TaskData::concrete = t;
+    Scheduler::Greedy<T,P>::PEData::concrete = p;
+  }
+};

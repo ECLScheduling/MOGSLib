@@ -7,25 +7,25 @@ namespace Concepts {
  */
 template<typename Concrete>
 struct PEData {
-  static Concrete *c;
+  static Concrete *concrete;
 
   /**
    * @brief Get the amount of PEs in the platform.
    */
-  static inline decltype(c->ntasks()) nPEs() {
-    return c->nPEs();
+  static inline decltype(concrete->ntasks()) nPEs() {
+    return concrete->nPEs();
   }
 
   /**
    * @brief Get the workloads of the PEs in the platform.
    */
-  static inline decltype(c->PEs_workloads()) PEs_workloads() {
-    return c->PEs_workloads();
+  static inline decltype(concrete->PEs_workloads()) PEs_workloads() {
+    return concrete->PEs_workloads();
   }
 
 };
 
 template <typename Concrete>
-Concrete* PEData<Concrete>::c = nullptr;
+Concrete* PEData<Concrete>::concrete = nullptr;
 
 }

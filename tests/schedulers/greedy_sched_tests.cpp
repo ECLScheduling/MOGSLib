@@ -74,7 +74,7 @@ public:
   }
 
   TaskMap execute_scheduler() {
-    return scheduler();
+    return scheduler.work();
   }
 
   void SetUp() {

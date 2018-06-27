@@ -6,7 +6,7 @@ namespace Policy {
   using TaskEntry = Traits<Policies>::TaskEntry;
   using TaskMap = Traits<Policies>::TaskMap;
 
-  using Index = Traits<Policies>::Index;
+  using Index = Traits<DefaultTypes>::Index;
   using Load = Traits<DefaultTypes>::Load;
 }
 
@@ -24,4 +24,9 @@ namespace Abstraction {
 
   using Index = Policy::Index;
   using Load = Policy::Load; 
+}
+
+namespace Adapter {
+  using Index = Policy::Index;
+  using Load = Policy::Load;  
 }
