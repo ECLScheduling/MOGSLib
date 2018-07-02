@@ -13,7 +13,7 @@ struct TaskData {
    * @brief Get the amount of tasks in the application.
    */
   static inline decltype(concrete->ntasks()) ntasks() {
-    return c->ntasks();
+    return concrete->ntasks();
   }
 
   /**

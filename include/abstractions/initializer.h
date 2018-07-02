@@ -14,9 +14,7 @@ struct Initializer {
   /**
    * @brief This method is used to initialize a given concrete adapter in the context of a RuntimeSystem.
    */
-  static void init(Adapter *adapter) {
-    static_assert(false, "An initializer must be specialized for this Concrete Adapter.");
-  }
+  static void init(Adapter *adapter) {}
 };
 
 }

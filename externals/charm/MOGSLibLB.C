@@ -33,9 +33,24 @@ void MOGSLibLB::work(LDStats* stats) {
   // #endif
 
   // BEGIN NOVAS COISAS
+  
+  // Map system-specific structures.
   MOGSLib::RTS<MOGSLib::RuntimeSystemEnum::Charm>::stats = stats;
+  
+  // Initialize concrete adapters
   auto basic_input = new Adapter::BasicSchedulerInput();
   MOGSLib::Initializer<MOGSLib::RuntimeSystemEnum::Charm, Adapter::BasicSchedulerInput>::init(basic_input);
+
+  // Bind concrete adapters to concepts.
+  MOGSLib::Binder<Scheduler::Greedy<Adapter::BasicSchedulerInput, Adapter::BasicSchedulerInput> >::bind(basic_input, basic_input);
+
+  // Call Scheduler with specific concepts.
+  Scheduler::Greedy<Adapter::BasicSchedulerInput> scheduler;
+
+  auto map = scheduler.work();
+  for(auto i = 0; i < basic_input->ntasks(); ++i)
+    CkPrintf("Task %d in PE %d.\n",basic_input->task_ids[i], basic_input->PE_ids[map[i]]);
+
   // END NOVAS COISAS
 
   // std::string scheduler_name = "greedy";

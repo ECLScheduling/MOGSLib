@@ -16,10 +16,12 @@ namespace MOGSLib {
  */
 template<>
 struct RTS<RuntimeSystemEnum::Charm> {
-  using LDStats = BaseLB::LDStats;
+  using LDStats = BaseLB::LDStats*;
   
-  static LDStats *stats;
+  static LDStats stats;
 };
+
+RTS<RuntimeSystemEnum::Charm>::LDStats RTS<RuntimeSystemEnum::Charm>::stats = nullptr;
 
 }
 

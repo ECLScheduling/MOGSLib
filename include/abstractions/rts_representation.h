@@ -15,8 +15,6 @@ enum RuntimeSystemEnum {
  * @details A specialization to this structure must contain static data in order to be acessed globally by Binders, Initializers, Concepts and Adaptors.
  */
 template<RuntimeSystemEnum T>
-struct RTS {
-  static_assert(false, "A Runtime system representation must be specialized in order to fairly represent the System's intricacies.");
-};
+struct RTS {};
 
 }

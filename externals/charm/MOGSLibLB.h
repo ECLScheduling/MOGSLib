@@ -13,6 +13,10 @@
 #include <mogslib/rts/charm.h>
 #include <mogslib/initializers/charm/basic_scheduler_input_init.h>
 
+#include <schedulers/greedy.h>
+#include <mogslib/binders/greedy_binder.h>
+#include <iostream>
+
 #include "ckgraph.h"
 #include <cassert>
 

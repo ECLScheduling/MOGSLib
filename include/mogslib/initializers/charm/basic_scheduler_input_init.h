@@ -1,6 +1,7 @@
 #pragma once
 
 #include <abstractions/initializer.h>
+#include <cassert>
 
 #include <mogslib/rts/charm.h>
 
@@ -29,7 +30,7 @@ struct Initializer<RuntimeSystemEnum::Charm, Adapter::BasicSchedulerInput> {
     for(auto pe = 0; pe < nPEs; ++pe) {
       map[pe] = -1;
       if(input->procs[pe].available) {
-        map[pe] = pe_ids.size();
+        map[pe] = adapter->PE_ids.size();
 
         adapter->PE_ids.push_back(pe);
         adapter->PEs.push_back(input->procs[pe].bg_walltime);
@@ -42,7 +43,7 @@ struct Initializer<RuntimeSystemEnum::Charm, Adapter::BasicSchedulerInput> {
       auto pe = input->from_proc[task]; // Get the PE's id where the task is allocated.
       
       if(taskData.migratable) {
-        const Load load = taskData.wallTime * input->procs[pe].pe_speed; // Calculate the load of a Task.
+        const auto load = taskData.wallTime * input->procs[pe].pe_speed; // Calculate the load of a Task.
         adapter->tasks.push_back(taskData.wallTime * input->procs[pe].pe_speed);// Add the task load to the data array.
         adapter->task_ids.push_back(task);// Add the task id to the data array.
 

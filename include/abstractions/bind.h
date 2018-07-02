@@ -9,9 +9,7 @@ namespace MOGSLib {
  */
 template<typename T>
 struct Binder {
-  static void bind() {
-    static_assert(false, "A Binder has to be specialized in order to link concepts.");
-  }
+  static void bind() {}
 };
 
 }

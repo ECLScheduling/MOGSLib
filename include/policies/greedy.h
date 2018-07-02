@@ -2,6 +2,7 @@
 
 #include <system/type_definitions.h>
 #include <vector>
+#include <algorithm>
 
 namespace Policy {
 
