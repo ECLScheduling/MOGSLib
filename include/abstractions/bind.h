@@ -1,8 +1,9 @@
 #pragma once
 
 #include <cassert>
+#include <system/static.h>
 
-namespace MOGSLib {
+BEGIN_NAMESPACE(Abstraction)
 
 /**
  * @brief This abstraction, when specialized, is responsible for binding abstract concepts with pointers to concrete adapters.
@@ -12,4 +13,4 @@ struct Binder {
   static void bind() {}
 };
 
-}
+END_NAMESPACE

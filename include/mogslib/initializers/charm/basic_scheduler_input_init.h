@@ -7,7 +7,9 @@
 
 #include <concepts/concrete/basic_scheduler_input.h>
 
-namespace MOGSLib {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Abstraction)
 
 /**
  * @brief Adapter structure that is responsible for initializing a BasicSchedulerInput Adapter in the Charm++ system.
@@ -60,4 +62,4 @@ struct Initializer<RuntimeSystemEnum::Charm, Adapter::BasicSchedulerInput> {
   }
 };
 
-}
+END_NAMESPACE

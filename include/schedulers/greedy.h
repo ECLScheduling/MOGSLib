@@ -7,7 +7,9 @@
 #include <concepts/pe_data.h>
 #include <concepts/task_data.h>
 
-namespace Scheduler {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Scheduler)
 
 /**
  * @brief Class that represents a scheduler which utilizes a greedy heuristic to output a task map.
@@ -17,8 +19,8 @@ namespace Scheduler {
 template<typename T, typename P = T>
 class Greedy : public Abstraction::Scheduler {
 public:
-  using TaskData = Concepts::TaskData<T>;
-  using PEData = Concepts::PEData<P>;
+  using TaskData = MOGSLib::Concept::TaskData<T>;
+  using PEData = MOGSLib::Concept::PEData<P>;
 
   Greedy() : Scheduler("greedy") {}
 
@@ -34,4 +36,4 @@ public:
   }
 };
 
-}
+END_NAMESPACE

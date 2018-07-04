@@ -2,10 +2,10 @@
 
 #include <policies/round_robin.h>
 
-using SchedulingPolicy = Policy::RoundRobin;
-using Index = Policy::Index;
-using TaskMap = Policy::TaskMap;
-using TaskEntry = Policy::TaskEntry;
+using SchedulingPolicy = MOGSLib::Policy::RoundRobin;
+using Index = MOGSLib::Policy::Index;
+using TaskMap = MOGSLib::Policy::TaskMap;
+using TaskEntry = MOGSLib::Policy::TaskEntry;
 
 class RoundRobinTests : public ::testing::Test {
 public:
@@ -14,7 +14,7 @@ public:
   TaskMap map;
 
   void execute_policy() {
-    Policy::RoundRobin::map(map, ntasks, nPEs);
+    MOGSLib::Policy::RoundRobin::map(map, ntasks, nPEs);
   }
 
   void createMap(const Index &n) {

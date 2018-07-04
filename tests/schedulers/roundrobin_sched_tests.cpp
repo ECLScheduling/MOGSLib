@@ -2,10 +2,11 @@
 
 #include <schedulers/round_robin.h>
 
-using Index = Policy::Index;
-using Load = Policy::Load;
-using TaskMap = Policy::TaskMap;
-using TaskEntry = Policy::TaskEntry;
+using Index = MOGSLib::Policy::Index;
+using Load = MOGSLib::Policy::Load;
+
+using TaskMap = MOGSLib::Policy::TaskMap;
+using TaskEntry = MOGSLib::Policy::TaskEntry;
 
 struct DataDummyContainer {
   Index _ntasks;
@@ -36,7 +37,7 @@ struct DataDummyContainer {
   }
 };
 
-using TestScheduler = Scheduler::RoundRobin<DataDummyContainer, DataDummyContainer>;
+using TestScheduler = MOGSLib::Scheduler::RoundRobin<DataDummyContainer, DataDummyContainer>;
 using TaskData = typename TestScheduler::TaskData;
 using PEData = typename TestScheduler::PEData;
 
@@ -61,13 +62,13 @@ public:
     data._ntasks = 0;
     data._nPEs = 0;
 
-    TaskData::c = &data;
-    PEData::c = &data;
+    TaskData::concrete = &data;
+    PEData::concrete = &data;
   }
 
   void TearDown() {
-    TaskData::c = nullptr;
-    PEData::c = nullptr;
+    TaskData::concrete = nullptr;
+    PEData::concrete = nullptr;
   }
 
 };

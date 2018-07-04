@@ -2,6 +2,8 @@
 
 #include <system/traits.h>
 
+namespace MOGSLib {
+
 namespace Policy {
   using TaskEntry = Traits<Policies>::TaskEntry;
   using TaskMap = Traits<Policies>::TaskMap;
@@ -29,4 +31,6 @@ namespace Abstraction {
 namespace Adapter {
   using Index = Policy::Index;
   using Load = Policy::Load;  
+}
+
 }

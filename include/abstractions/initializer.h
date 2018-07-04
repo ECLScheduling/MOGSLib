@@ -2,7 +2,9 @@
 
 #include "rts_representation.h"
 
-namespace MOGSLib {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Abstraction)
 
 /**
  * @brief A general interface for creating specialized initializers for concrete adapters.
@@ -17,4 +19,4 @@ struct Initializer {
   static void init(Adapter *adapter) {}
 };
 
-}
+END_NAMESPACE

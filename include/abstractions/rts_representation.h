@@ -1,13 +1,16 @@
 #pragma once
 
-namespace MOGSLib {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Abstraction)
 
 /**
  * @brief An enumerate of all the supported runtime systems for MOGSLib schedulers.
  */
 enum RuntimeSystemEnum {
   Custom,
-  Charm
+  Charm,
+  Openmp
 };
 
 /**
@@ -17,4 +20,4 @@ enum RuntimeSystemEnum {
 template<RuntimeSystemEnum T>
 struct RTS {};
 
-}
+END_NAMESPACE

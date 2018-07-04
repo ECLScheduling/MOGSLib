@@ -1,6 +1,8 @@
 #pragma once
 
-namespace Concepts {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Concept)
 
 /**
  * @brief A concept that displays methods to gather the data about the platform PEs.
@@ -28,4 +30,4 @@ struct PEData {
 template <typename Concrete>
 Concrete* PEData<Concrete>::concrete = nullptr;
 
-}
+END_NAMESPACE

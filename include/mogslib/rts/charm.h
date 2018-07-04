@@ -8,7 +8,9 @@
 #include <ckgraph.h>
 #include <CentralLB.h>
 
-namespace MOGSLib {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Abstraction)
 
 /**
  * @brief The declaration of a specific data structure to represent the Charm++ runtime system.
@@ -23,6 +25,6 @@ struct RTS<RuntimeSystemEnum::Charm> {
 
 RTS<RuntimeSystemEnum::Charm>::LDStats RTS<RuntimeSystemEnum::Charm>::stats = nullptr;
 
-}
+END_NAMESPACE
 
 #endif

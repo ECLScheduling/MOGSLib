@@ -1,9 +1,12 @@
 #pragma once
 
 #if USING_HWLOC
+
 #include <hwloc.h>
 
-namespace ConcreteConcepts {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Adapter)
 
 /**
  * @brief This class implements the concept of gathering topology data through the hwloc library.
@@ -53,6 +56,6 @@ public:
   }
 };
 
-}
+END_NAMESPACE
 
 #endif

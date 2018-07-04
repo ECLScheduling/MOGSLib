@@ -24,6 +24,6 @@ struct Schedulers {
   }
 };
 
-std::vector<Schedulers::SchedulerPtr> Schedulers::list = {new Scheduler::RoundRobin<Adapter::BasicSchedulerInput>()};
+std::vector<Schedulers::SchedulerPtr> Schedulers::list = { new Scheduler::RoundRobin<Adapter::BasicSchedulerInput>() };
 
 }

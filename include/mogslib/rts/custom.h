@@ -4,7 +4,9 @@
 
 #include <abstractions/rts_representation.h>
 
-namespace MOGSLib {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Abstraction)
   
 /**
  * @brief The declaration of a specific data structure to represent a Custom runtime system.
@@ -13,6 +15,6 @@ namespace MOGSLib {
 template<>
 struct RTS<RuntimeSystemEnum::Custom> {};
 
-}
+END_NAMESPACE
 
 #endif

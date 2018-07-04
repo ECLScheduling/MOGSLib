@@ -4,6 +4,8 @@
 #include <cstddef>
 #include "system/types.h"
 
+namespace MOGSLib {
+
 /**
  * @brief General Traits used by most library components.
  */
@@ -32,3 +34,5 @@ struct Traits<Policies> : Traits<DefaultTypes> {
   using TaskEntry = Index;
   using TaskMap = TaskEntry*;
 };
+
+}

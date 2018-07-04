@@ -2,12 +2,12 @@
 
 #include <policies/greedy.h>
 
-using Index = Policy::Index;
-using Load = Policy::Load;
-using TaskMap = Policy::TaskMap;
-using TaskEntry = Policy::TaskEntry;
+using Index = MOGSLib::Policy::Index;
+using Load = MOGSLib::Policy::Load;
+using TaskMap = MOGSLib::Policy::TaskMap;
+using TaskEntry = MOGSLib::Policy::TaskEntry;
 
-using SchedulingPolicy = Policy::Greedy<>;
+using SchedulingPolicy = MOGSLib::Policy::Greedy<>;
 
 class GreedyPolicyTests : public ::testing::Test {
 public:

@@ -3,9 +3,11 @@
 #include <string>
 
 #include <system/type_definitions.h>
+#include <system/static.h>
+
 #include "bind.h"
 
-namespace Abstraction {
+BEGIN_NAMESPACE(Abstraction)
 
 /**
  * @brief A scheduler abstraction that unifies all template specializations together.
@@ -32,14 +34,4 @@ public:
 
 };
 
-/**
- * @brief A scheduler that makes nothing.
- */
-class NoScheduler : public Scheduler {
-public:
-
-  NoScheduler() : Scheduler("nosched") {}
-  virtual ~NoScheduler() {}
-};
-
-}
+END_NAMESPACE

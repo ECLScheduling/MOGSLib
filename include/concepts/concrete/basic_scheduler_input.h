@@ -3,7 +3,9 @@
 #include <system/type_definitions.h>
 #include <vector>
 
-namespace Adapter {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Adapter)
 
 /**
  * @brief A concrete concept that fulfills both PEData and TaskData concepts.
@@ -60,4 +62,4 @@ struct BasicSchedulerInput {
   }
 };
 
-}
+END_NAMESPACE

@@ -1,9 +1,12 @@
 #pragma once
 
 #include <abstractions/bind.h>
+
 #include <schedulers/round_robin.h>
 
-namespace MOGSLib {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Abstraction)
 
 /**
  * @brief This Binder specialization binds the concrete adapters T and P, required by the RounRobin scheduler, to their respective concepts, TaskData and PEData.
@@ -16,4 +19,4 @@ struct Binder<Scheduler::RoundRobin<T,P> > {
   }
 };
 
-}
+END_NAMESPACE

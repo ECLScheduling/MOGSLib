@@ -25,3 +25,6 @@ struct TemplateName \
   template <typename C> static Negative test(...); \
   static const bool value = std::is_same<decltype(test<T>(0)), Positive>::value; \
 };
+
+#define BEGIN_NAMESPACE(Name) namespace MOGSLib { namespace Name {
+#define END_NAMESPACE }}

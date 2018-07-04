@@ -1,6 +1,8 @@
 #pragma once
 
-namespace Concepts {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Concept)
 
 /**
  * @brief This class presents the concept of presenting local topology data through.
@@ -21,4 +23,4 @@ public:
   static inline decltype(c->objcount_in_depth(0)) objcount_in_depth(const int &depth) { return _c->objcount_in_depth(depth); }
 };
 
-}
+END_NAMESPACE

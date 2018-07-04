@@ -1,6 +1,8 @@
 #pragma once
 
-namespace Concepts {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Concept)
   
 /**
  * @brief A concept that displays methods to gather the data about the applications tasks.
@@ -28,4 +30,4 @@ struct TaskData {
 template <typename Concrete>
 Concrete* TaskData<Concrete>::concrete = nullptr;
 
-}
+END_NAMESPACE

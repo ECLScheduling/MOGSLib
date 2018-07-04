@@ -1,9 +1,11 @@
 #pragma once
 
-namespace Optional {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Optional)
 
 /**
- * @brief A crude implementation of std::optional that will be available only on c++17 STL.
+ * @brief A crude implementation of std::optional that will be available only on C++17 STL.
  * @details This implementation is limited as it only stores references, remember to update this snippet when C++17 is stable.
  */
 template<typename T>
@@ -39,4 +41,4 @@ T& get_value(Option<T> *option) {
   return static_cast<Some<T>*>(option)->value;
 }
 
-}
+END_NAMESPACE

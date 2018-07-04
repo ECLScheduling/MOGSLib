@@ -4,7 +4,9 @@
 #include <vector>
 #include <algorithm>
 
-namespace Policy {
+#include <system/static.h>
+
+BEGIN_NAMESPACE(Policy)
 
 template<typename _Load = Load>
 class Greedy {
@@ -71,4 +73,4 @@ public:
 
 };
 
-}
+END_NAMESPACE
