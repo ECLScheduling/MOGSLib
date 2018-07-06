@@ -5,7 +5,9 @@
 extern "C" {
 #endif
 
+extern void mogslib_set_nPEs(unsigned nPEs);
 extern void mogslib_set_chunksize(unsigned chunksize);
+
 extern unsigned *mogslib_strategy_map();
 
 #ifdef __cplusplus

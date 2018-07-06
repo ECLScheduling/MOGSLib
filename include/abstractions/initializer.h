@@ -2,8 +2,6 @@
 
 #include "rts_representation.h"
 
-#include <system/static.h>
-
 BEGIN_NAMESPACE(Abstraction)
 
 /**

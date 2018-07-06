@@ -10,7 +10,7 @@ BEGIN_NAMESPACE(Abstraction)
 enum RuntimeSystemEnum {
   Custom,
   Charm,
-  Openmp
+  OpenMP
 };
 
 /**

@@ -15,13 +15,15 @@ BEGIN_NAMESPACE(Abstraction)
  * @brief Adapter structure that is responsible for initializing a BasicSchedulerInput Adapter in the Charm++ system.
  */
 template<>
-struct Initializer<RuntimeSystemEnum::Charm, Adapter::BasicSchedulerInput> {
-
+struct Initializer<RuntimeSystemEnum::Charm, MOGSLib::Adapter::BasicSchedulerInput> {
+  using TargetRTS = RuntimeSystemEnum::Charm;
+  using ConcreteAdapter = MOGSLib::Adapter::BasicSchedulerInput;
+  
   /**
    * @brief Reads the data from the LBDB on Charm and pushes its data into the Adapter
    */
-  static void init(Adapter::BasicSchedulerInput *adapter) {
-    auto input = RTS<RuntimeSystemEnum::Charm>::stats;
+  static void init(ConcreteAdapter *adapter) {
+    auto input = RTS<TargetRTS>::stats;
 
     auto nPEs = input->nprocs();
     auto nTasks = input->n_objs;

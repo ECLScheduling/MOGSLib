@@ -8,8 +8,6 @@
 #include <ckgraph.h>
 #include <CentralLB.h>
 
-#include <system/static.h>
-
 BEGIN_NAMESPACE(Abstraction)
 
 /**
