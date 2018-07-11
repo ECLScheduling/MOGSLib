@@ -1,9 +1,32 @@
-#ifdef LINKED_TO_OMP
+// #### MOGSLib Includes ####
 
+// MOGSLib RTS data
 #include <mogslib/rts/openmp.h>
+#include <mogslib/rts/openmp.ipp>
 
+// MOGSLib Scheduling Strategies
 #include <schedulers/round_robin.h>
-#include <mogslib/initializers/charm/basic_scheduler_input_init.h>
+#include <mogslib/binders/round_robin_binder.h>
+
+// MOGSLib Concrete Adapters
+#include <mogslib/initializers/openmp/basic_scheduler_input_init.h>
+#include <mogslib/initializers/openmp/basic_scheduler_input_init.ipp>
+
+// #### End of MOGSLib Includes ####
+
+namespace MOGSLibDefinitions {
+  using RTS = MOGSLib::RTS::OpenMP;
+  static constexpr auto system = RTS::SystemVal;
+
+  template<typename T>
+  using Initializer = MOGSLib::Abstraction::Initializer<system, T>;
+
+  template<typename T>
+  using Binder = MOGSLib::Abstraction::Binder<T>;
+
+  using ConcreteAdapter = MOGSLib::Adapter::BasicSchedulerInput;
+  using Scheduler = MOGSLib::Scheduler::RoundRobin<ConcreteAdapter>;
+}
 
 /**
  * @brief Set the amount of chunks in the OpenMP RTS datastructure.
@@ -11,7 +34,7 @@
  * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_chunksize(unsigned chunksize) {
-  MOGSLib::OpenMP_RTS::set_chunk_size(chunksize);
+  MOGSLibDefinitions::RTS::set_chunk_size(chunksize);
 }
 
 /**
@@ -20,7 +43,7 @@ inline void mogslib_call_set_chunksize(unsigned chunksize) {
  * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_nPEs(unsigned nPEs) {
-  MOGSLib::OpenMP_RTS::set_nPEs(nPEs);
+  MOGSLibDefinitions::RTS::set_nPEs(nPEs);
 }
 
 /**
@@ -30,28 +53,16 @@ inline void mogslib_call_set_nPEs(unsigned nPEs) {
  */
 inline unsigned *mogslib_call_strategy_map() {
   // Declare scheduler
-  static auto OpenMPEnumVal = MOGSLib::Abstraction::RuntimeSystemEnum::OpenMP;
-  using OpenMPRTS = MOGSLib::Abstraction::RTS<OpenMPEnumVal>;
-
-  template<typename T>
-  using Initializer = MOGSLib::Abstraction::Initializer<OpenMPEnumVal, T>;
-
-  template<typename T>
-  using Binder = MOGSLib::Abstraction::Binder<T>;
-
-  using ConcreteAdapter = MOGSLib::Adapter::BasicSchedulerInput;
-  using Scheduler = MOGSLib::Scheduler::RoundRobin<ConcreteAdapter>;
-
-  Scheduler scheduler;
+  MOGSLibDefinitions::Scheduler scheduler;
 
   // Declare and instantiate concrete adapters
-  auto basic_input = new ConcreteAdapter();
+  auto basic_input = new MOGSLibDefinitions::ConcreteAdapter();
 
   // Initialize concrete adapters
-  Initializer<ConcreteAdapter>::init(basic_input);
+  MOGSLibDefinitions::Initializer<MOGSLibDefinitions::ConcreteAdapter>::init(basic_input);
 
   // Bind concrete adapters to concepts.
-  Binder<Scheduler>::bind(basic_input, basic_input);
+  MOGSLibDefinitions::Binder<MOGSLibDefinitions::Scheduler>::bind(basic_input, basic_input);
 
   return scheduler.work();
 }
@@ -83,5 +94,3 @@ unsigned *mogslib_strategy_map() {
 }
 
 }
-
-#endif // RTS_IS_OPENMP

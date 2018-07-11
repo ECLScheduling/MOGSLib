@@ -9,9 +9,10 @@ BEGIN_NAMESPACE(Scheduler)
  */
 class Null : public Abstraction::Scheduler {
 public:
+  static constexpr auto TypeToken = MOGSLib::SchedulerTypes::Null;
 
-  NoScheduler() : Scheduler("nosched") {}
-  virtual ~NoScheduler() {}
+  Null() : Scheduler(SchedulerTraits<TypeToken>::name) {}
+  virtual ~Null() {}
 };
 
 END_NAMESPACE

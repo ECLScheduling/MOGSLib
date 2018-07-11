@@ -17,10 +17,12 @@ BEGIN_NAMESPACE(Scheduler)
 template<typename T, typename P = T>
 class RoundRobin : public Abstraction::Scheduler {
 public:
+  static constexpr auto TypeToken = MOGSLib::SchedulerTypes::RoundRobin;
+
   using TaskData = Concept::TaskData<T>;
   using PEData = Concept::PEData<P>;
 
-  RoundRobin() : Scheduler("roundrobin") {}
+  RoundRobin() : Scheduler(SchedulerTraits<TypeToken>::name) {}
 
   /**
    * @brief The method to obtain a task map based on a roundrobin heuristic.

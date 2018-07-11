@@ -1,6 +1,7 @@
 #pragma once
 
 #include <system/static.h>
+#include <system/type_definitions.h>
 
 BEGIN_NAMESPACE(Abstraction)
 

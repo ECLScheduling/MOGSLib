@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include <system/type_definitions.h>
 #include <system/static.h>
 
@@ -18,7 +16,7 @@ public:
   const std::string name;
 
 protected:
-  Scheduler(std::string aname) : name(aname) {}
+  Scheduler(const std::string _name) : name(_name) {}
 
 public:
 

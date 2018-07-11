@@ -1,12 +1,6 @@
 #pragma once
 
-#ifdef LINKED_TO_CHARM
-
 #include <abstractions/rts_representation.h>
-
-// Charm++ specific includes.
-#include <ckgraph.h>
-#include <CentralLB.h>
 
 BEGIN_NAMESPACE(Abstraction)
 
@@ -16,13 +10,16 @@ BEGIN_NAMESPACE(Abstraction)
  */
 template<>
 struct RTS<RuntimeSystemEnum::Charm> {
+  static constexpr auto SystemVal = RuntimeSystemEnum::Charm;
+  
+  // This inquires that these names have to be declared before including this header into the source file.
   using LDStats = BaseLB::LDStats*;
   
   static LDStats stats;
 };
 
-RTS<RuntimeSystemEnum::Charm>::LDStats RTS<RuntimeSystemEnum::Charm>::stats = nullptr;
-
 END_NAMESPACE
 
-#endif
+BEGIN_NAMESPACE(RTS)
+using Charm = MOGSLib::Abstraction::RTS<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>;
+END_NAMESPACE

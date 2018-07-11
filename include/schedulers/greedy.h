@@ -19,10 +19,11 @@ BEGIN_NAMESPACE(Scheduler)
 template<typename T, typename P = T>
 class Greedy : public Abstraction::Scheduler {
 public:
+  static constexpr auto TypeToken = MOGSLib::SchedulerTypes::Greedy;
   using TaskData = MOGSLib::Concept::TaskData<T>;
   using PEData = MOGSLib::Concept::PEData<P>;
 
-  Greedy() : Scheduler("greedy") {}
+  Greedy() : Scheduler(SchedulerTraits<TypeToken>::name) {}
 
   /**
    * @brief The method to obtain a task map based on a greedy heuristic.
