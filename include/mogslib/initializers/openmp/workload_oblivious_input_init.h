@@ -29,6 +29,8 @@ struct Initializer<RuntimeSystemEnum::OpenMP, Adapter::WorkloadObliviousInput> {
   static void init(ConcreteAdapter *adapter) {
     adapter->tasks = RTS<targetRTS>::ntasks;
     adapter->PEs = RTS<targetRTS>::nPEs;
+
+    std::cout << "WorkloadObliviousInput init with " << RTS<targetRTS>::ntasks << " tasks and " << RTS<targetRTS>::nPEs << " PEs." << std::endl;
   }
 };
 
