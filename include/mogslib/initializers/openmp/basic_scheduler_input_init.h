@@ -14,7 +14,7 @@
 BEGIN_NAMESPACE(Abstraction)
 
 /**
- * @brief Adapter structure that is responsible for initializing a BasicSchedulerInput Adapter in the Charm++ system.
+ * @brief Adapter structure that is responsible for initializing a BasicSchedulerInput Adapter in the OpenMP system.
  */
 template<>
 struct Initializer<RuntimeSystemEnum::OpenMP, Adapter::BasicSchedulerInput> {
@@ -22,24 +22,10 @@ struct Initializer<RuntimeSystemEnum::OpenMP, Adapter::BasicSchedulerInput> {
   using ConcreteAdapter = MOGSLib::Adapter::BasicSchedulerInput;
 
   /**
-   * @var task_loads This data must be informed by the user as the OpenMP has no dynamic data about the tasks load.
-   */
-  static Load *task_loads;
-
-  /**
-   * @var ntasks This data must be informed by the user as the OpenMP has no dynamic data about the tasks load.
-   */
-  static Index ntasks;
-
-  /**
-   * @brief Reads the data informed by the user LBDB on Charm and pushes its data into the Adapter
+   * @brief Reads the data gathered from OpenMP runtime to initialize the BasicSchedulerInput concrete concept.
+   * @details This method currently only works for strategies that are not workload aware. 
    */
   static void init(ConcreteAdapter *adapter);
-
-  /**
-   * @brief This method can be called to clean the static variables in this Initializer.
-   */
-  static void cleanup();
 };
 
 END_NAMESPACE

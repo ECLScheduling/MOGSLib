@@ -9,12 +9,11 @@
 #include <mogslib/binders/round_robin_binder.h>
 
 // MOGSLib Concrete Adapters
-#include <mogslib/initializers/openmp/basic_scheduler_input_init.h>
-#include <mogslib/initializers/openmp/basic_scheduler_input_init.ipp>
+#include <mogslib/initializers/openmp/workload_oblivious_input_init.h>
 
 // #### End of MOGSLib Includes ####
 
-namespace MOGSLibDefinitions {
+struct MOGSLibDefinitions {
   using RTS = MOGSLib::RTS::OpenMP;
   static constexpr auto system = RTS::SystemVal;
 
@@ -24,9 +23,9 @@ namespace MOGSLibDefinitions {
   template<typename T>
   using Binder = MOGSLib::Abstraction::Binder<T>;
 
-  using ConcreteAdapter = MOGSLib::Adapter::BasicSchedulerInput;
+  using ConcreteAdapter = MOGSLib::Adapter::WorkloadObliviousInput;
   using Scheduler = MOGSLib::Scheduler::RoundRobin<ConcreteAdapter>;
-}
+};
 
 /**
  * @brief Set the amount of chunks in the OpenMP RTS datastructure.
@@ -44,6 +43,15 @@ inline void mogslib_call_set_chunksize(unsigned chunksize) {
  */
 inline void mogslib_call_set_nPEs(unsigned nPEs) {
   MOGSLibDefinitions::RTS::set_nPEs(nPEs);
+}
+
+/**
+ * @brief Set the amount of tasks in the OpenMP RTS datastructure.
+ * @details A C++ proxy function to set the ntasks data in OpenMP.
+ * @param ntasks The amount of tasks generated in OpenMP.
+ */
+inline void mogslib_call_set_ntasks(unsigned ntasks) {
+  MOGSLibDefinitions::RTS::set_ntasks(ntasks);
 }
 
 /**
@@ -83,6 +91,14 @@ void mogslib_set_chunksize(unsigned chunksize) {
  */
 void mogslib_set_nPEs(unsigned nPEs) {
   mogslib_call_set_nPEs(nPEs);
+}
+
+/**
+ * @brief A function to interface with MOGSLib to register the amount of tasks in OpenMP.
+ * @details A C function to interface with OpenMP and direct the execution flow back to C++.
+ */
+void mogslib_set_ntasks(unsigned ntasks) {
+  mogslib_call_set_ntasks(ntasks);
 }
 
 /**
