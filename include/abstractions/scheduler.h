@@ -1,9 +1,9 @@
 #pragma once
 
-#include <system/type_definitions.h>
-#include <system/static.h>
+#include <string>
 
-#include "bind.h"
+#include <system/types.h>
+#include <abstractions/binder.h>
 
 BEGIN_NAMESPACE(Abstraction)
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rts_representation.h"
+#include <abstractions/rts.h>
 
 BEGIN_NAMESPACE(Abstraction)
 

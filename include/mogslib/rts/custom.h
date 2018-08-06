@@ -2,7 +2,7 @@
 
 #ifdef LINKED_TO_CUSTOM
 
-#include <abstractions/rts_representation.h>
+#include <abstractions/rts.h>
 
 BEGIN_NAMESPACE(Abstraction)
   

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <abstractions/rts_representation.h>
+#include <abstractions/rts.h>
 
 BEGIN_NAMESPACE(Abstraction)
 
@@ -10,8 +10,6 @@ BEGIN_NAMESPACE(Abstraction)
  */
 template<>
 struct RTS<RuntimeSystemEnum::Charm> {
-  static constexpr auto SystemVal = RuntimeSystemEnum::Charm;
-  
   // This inquires that these names have to be declared before including this header into the source file.
   using LDStats = BaseLB::LDStats*;
   

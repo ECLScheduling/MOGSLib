@@ -1,6 +1,6 @@
 #pragma once
 
-#include <abstractions/rts_representation.h>
+#include <abstractions/rts.h>
 
 BEGIN_NAMESPACE(Abstraction)
 
@@ -10,8 +10,6 @@ BEGIN_NAMESPACE(Abstraction)
  */
 template<>
 struct RTS<RuntimeSystemEnum::OpenMP> {
-  static constexpr auto SystemVal = RuntimeSystemEnum::OpenMP;
-
   static Index chunk_size;
   static Index nPEs;
   static Index ntasks;

@@ -1,36 +1,11 @@
 #pragma once
 
-#include <system/traits.h>
+#include <mogslib/mogslib.h>
 
 namespace MOGSLib {
+  using Index = RuntimeTraits<MOGSLib::Definitions::system>::Index;
+  using Load = RuntimeTraits<MOGSLib::Definitions::system>::Load;
 
-namespace Policy {
-  using TaskEntry = Traits<Policies>::TaskEntry;
-  using TaskMap = Traits<Policies>::TaskMap;
-
-  using Index = Traits<DefaultTypes>::Index;
-  using Load = Traits<DefaultTypes>::Load;
-}
-
-namespace Scheduler {
-  using TaskEntry = Policy::TaskEntry;
-  using TaskMap = Policy::TaskMap;
-
-  using Index = Policy::Index;
-  using Load = Policy::Load;
-}
-
-namespace Abstraction {
-  using TaskEntry = Policy::TaskEntry;
-  using TaskMap = Policy::TaskMap;
-
-  using Index = Policy::Index;
-  using Load = Policy::Load; 
-}
-
-namespace Adapter {
-  using Index = Policy::Index;
-  using Load = Policy::Load;  
-}
-
+  using TaskEntry = Index;
+  using TaskMap = TaskEntry*;
 }

@@ -1,18 +1,8 @@
 #pragma once
 
-#include <system/static.h>
-#include <system/type_definitions.h>
+#include <system/types.h>
 
 BEGIN_NAMESPACE(Abstraction)
-
-/**
- * @brief An enumerate of all the supported runtime systems for MOGSLib schedulers.
- */
-enum RuntimeSystemEnum {
-  Custom,
-  Charm,
-  OpenMP
-};
 
 /**
  * @brief The declaration of a generic data structure to represent a runtime system.
