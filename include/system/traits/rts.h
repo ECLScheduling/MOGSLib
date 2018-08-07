@@ -24,7 +24,7 @@ struct RuntimeTraits {
 };
 
 template<>
-struct RuntimeTraits<Abstractions::RuntimeSystemEnum::charm> {
+struct RuntimeTraits<Abstractions::RuntimeSystemEnum::Charm> {
   /**
    * @brief The type definition that will serve as index in MOGSLib when used in Charm++.
    */
@@ -37,7 +37,7 @@ struct RuntimeTraits<Abstractions::RuntimeSystemEnum::charm> {
 };
 
 template<>
-struct RuntimeTraits<Abstractions::RuntimeSystemEnum::openmp> {
+struct RuntimeTraits<Abstractions::RuntimeSystemEnum::OpenMP> {
   /**
    * @brief The type definition that will serve as index in MOGSLib when used in OpenMP.
    */

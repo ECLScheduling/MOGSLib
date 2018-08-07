@@ -5,9 +5,7 @@
 #include <abstractions/initializer.h>
 #include <abstractions/binder.h>
 
-#include <mogslib/rts/charm.h>
-#include <mogslib/rts/charm.ipp>
-
+@RTS_INCLUDES@
 @SCHED_INCLUDES@
 
 namespace MOGSLib {

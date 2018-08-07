@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import argparse
 
@@ -25,3 +25,10 @@ parser.add_argument('-rts', metavar='RTS', type=str, help='MOGSLib target RTS')
 parser.add_argument('-sched', '--scheduler', dest='scheds', nargs="+", type=str, action=SchedulerAction, help='Set up a MOGSLib scheduler along with its concepts')
 
 args = parser.parse_args()
+
+### Declaration of the RTS to lambda map ###
+from rts_configuration import *
+
+generate_defs_for_rts(args.rts)
+
+###
