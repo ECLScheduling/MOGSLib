@@ -1,10 +1,9 @@
 #pragma once
 
-#include <abstractions/bind.h>
+#include <system/static.h>
+#include <abstractions/binder.h>
 
 #include <schedulers/round_robin.h>
-
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Abstraction)
 

@@ -4,8 +4,8 @@
 
 #include <policies/greedy.h>
 
-#include <concepts/pe_data.h>
-#include <concepts/task_data.h>
+#include <concepts/abstract/pe_data.h>
+#include <concepts/abstract/task_data.h>
 
 #include <system/static.h>
 
@@ -19,6 +19,10 @@ BEGIN_NAMESPACE(Scheduler)
 template<typename T, typename P = T>
 class Greedy : public Abstraction::Scheduler {
 public:
+  using Index = MOGSLib::Index;
+  using TaskMap = MOGSLib::TaskMap;
+  using Load = MOGSLib::Load;
+
   static constexpr auto TypeToken = MOGSLib::SchedulerTypes::Greedy;
   using TaskData = MOGSLib::Concept::TaskData<T>;
   using PEData = MOGSLib::Concept::PEData<P>;

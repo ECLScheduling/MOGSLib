@@ -2,10 +2,10 @@
 
 #include <policies/greedy.h>
 
-using Index = MOGSLib::Policy::Index;
-using Load = MOGSLib::Policy::Load;
-using TaskMap = MOGSLib::Policy::TaskMap;
-using TaskEntry = MOGSLib::Policy::TaskEntry;
+using Index = MOGSLib::Index;
+using Load = MOGSLib::Load;
+using TaskMap = MOGSLib::TaskMap;
+using TaskEntry = MOGSLib::TaskEntry;
 
 using SchedulingPolicy = MOGSLib::Policy::Greedy<>;
 

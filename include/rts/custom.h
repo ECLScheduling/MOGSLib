@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef LINKED_TO_CUSTOM
-
 #include <abstractions/rts.h>
 
 BEGIN_NAMESPACE(Abstraction)
@@ -14,5 +12,3 @@ template<>
 struct RTS<RuntimeSystemEnum::Custom> {};
 
 END_NAMESPACE
-
-#endif

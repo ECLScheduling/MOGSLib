@@ -1,7 +1,6 @@
 #pragma once
 
 #include <system/type_definitions.h>
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Policy)
 
@@ -11,6 +10,9 @@ BEGIN_NAMESPACE(Policy)
  */
 class TaskPack {
 public:
+  using Index = MOGSLib::Index;
+  using TaskMap = MOGSLib::TaskMap;
+
   static void map(TaskMap &map, const Index &ntasks, const Index &nPEs, const Index &npacks) {
     auto pack_size = ntasks/npacks;
     auto left_over = ntasks%npacks;

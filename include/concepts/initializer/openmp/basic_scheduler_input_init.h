@@ -1,15 +1,14 @@
 #pragma once
 
-#include <abstractions/initializer.h>
-
 #include <cassert>
 #include <cstring>
 
-#include <mogslib/rts/openmp.h>
+#include <system/static.h>
+#include <abstractions/initializer.h>
+
+#include <rts/openmp.h>
 
 #include <concepts/concrete/basic_scheduler_input.h>
-
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Abstraction)
 

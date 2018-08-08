@@ -1,15 +1,14 @@
 #pragma once
 
-#include <abstractions/initializer.h>
-
 #include <cassert>
 #include <cstring>
 
-#include <mogslib/rts/charm.h>
+#include <system/static.h>
+#include <abstractions/initializer.h>
+
+#include <rts/charm.h>
 
 #include <concepts/concrete/workload_oblivious_input.h>
-
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Abstraction)
 

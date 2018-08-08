@@ -1,17 +1,14 @@
 #pragma once
 
-#include <abstractions/initializer.h>
-
 #include <cassert>
 #include <cstring>
 
-#include <mogslib/rts/openmp.h>
+#include <system/static.h>
+#include <abstractions/initializer.h>
+
+#include <rts/openmp.h>
 
 #include <concepts/concrete/workload_oblivious_input.h>
-
-#include <system/static.h>
-
-#include <iostream>
 
 BEGIN_NAMESPACE(Abstraction)
 
@@ -29,8 +26,6 @@ struct Initializer<RuntimeSystemEnum::OpenMP, Adapter::WorkloadObliviousInput> {
   static void init(ConcreteAdapter *adapter) {
     adapter->tasks = RTS<targetRTS>::ntasks;
     adapter->PEs = RTS<targetRTS>::nPEs;
-
-    std::cout << "WorkloadObliviousInput init with " << RTS<targetRTS>::ntasks << " tasks and " << RTS<targetRTS>::nPEs << " PEs." << std::endl;
   }
 };
 

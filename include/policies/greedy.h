@@ -1,10 +1,9 @@
 #pragma once
 
-#include <system/type_definitions.h>
 #include <vector>
 #include <algorithm>
 
-#include <system/static.h>
+#include <system/type_definitions.h>
 
 BEGIN_NAMESPACE(Policy)
 
@@ -12,9 +11,11 @@ BEGIN_NAMESPACE(Policy)
  * @brief A workload aware policy that iteratively assigns the heavier load to the most underloaded processor.
  * @type _Load The type of load to be ordered. It has to be a numeric type.
  */
-template<typename _Load = Load>
+template<typename _Load = MOGSLib::Load>
 class Greedy {
 protected:
+  using Index = MOGSLib::Index;
+  using TaskMap = MOGSLib::TaskMap;
 
   struct LoadContainer {
     _Load load;

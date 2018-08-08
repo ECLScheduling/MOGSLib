@@ -1,6 +1,7 @@
 #pragma once
 
 #include <abstractions/rts.h>
+#include <system/type_definitions.h>
 
 BEGIN_NAMESPACE(Abstraction)
 
@@ -10,6 +11,8 @@ BEGIN_NAMESPACE(Abstraction)
  */
 template<>
 struct RTS<RuntimeSystemEnum::OpenMP> {
+  using Index = MOGSLib::Index;
+
   static Index chunk_size;
   static Index nPEs;
   static Index ntasks;
@@ -34,8 +37,4 @@ struct RTS<RuntimeSystemEnum::OpenMP> {
 
 };
 
-END_NAMESPACE
-
-BEGIN_NAMESPACE(RTS)
-using OpenMP = MOGSLib::Abstraction::RTS<MOGSLib::Abstraction::RuntimeSystemEnum::OpenMP>;
 END_NAMESPACE

@@ -4,8 +4,8 @@
 
 #include <policies/task_pack.h>
 
-#include <concepts/pe_data.h>
-#include <concepts/task_data.h>
+#include <concepts/abstract/pe_data.h>
+#include <concepts/abstract/task_data.h>
 
 #include <system/static.h>
 
@@ -17,6 +17,9 @@ BEGIN_NAMESPACE(Scheduler)
 template<typename T, typename P = T>
 class TaskPack : public Abstraction::Scheduler {
 public:
+  using Index = MOGSLib::Index;
+  using TaskMap = MOGSLib::TaskMap;
+  
   static constexpr auto TypeToken = MOGSLib::SchedulerTypes::TaskPack;
 
   using TaskData = Concept::TaskData<T>;

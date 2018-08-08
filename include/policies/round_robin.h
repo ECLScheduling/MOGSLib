@@ -1,7 +1,6 @@
 #pragma once
 
 #include <system/type_definitions.h>
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Policy)
 
@@ -10,6 +9,9 @@ BEGIN_NAMESPACE(Policy)
  */
 class RoundRobin {
 public:
+  using Index = MOGSLib::Index;
+  using TaskMap = MOGSLib::TaskMap;
+
   static void map(TaskMap &map, const Index &ntasks, const Index &nPEs) {
     for(Index i = 0; i < ntasks; ++i)
       map[i] = i%nPEs;

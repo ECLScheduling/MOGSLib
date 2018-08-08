@@ -5,10 +5,15 @@
 #include <abstractions/initializer.h>
 #include <abstractions/binder.h>
 
-#include <mogslib/rts/charm.h>
-#include <mogslib/rts/charm.ipp>
+#include <mogslib/rts/openmp.h>
+#include <mogslib/rts/openmp.ipp>
 
-@SCHED_INCLUDES@
+#include <schedulers/greedy.h>
+
+#include <concepts/initializer/openmp/basic_scheduler_input_init.h>
+#include <concepts/initializer/openmp/basic_scheduler_input_init.ipp>
+#include <concepts/initializer/openmp/workload_oblivious_input_init.h>
+#include <concepts/initializer/openmp/workload_oblivious_input_init.ipp>
 
 namespace MOGSLib {
 
@@ -24,6 +29,29 @@ struct Definitions {
 
   template<typename T>
   using Binder = MOGSLib::Abstraction::Binder<T>;
+
+  using Scheduler = MOGSLib::Scheduler::Greedy<MOGSLib::Adapter::BasicSchedulerInput, MOGSLib::Adapter::WorkloadObliviousInput>;
+	using Adapter0 = MOGSLib::Adapter::BasicSchedulerInput;
+	using Adapter1 = MOGSLib::Adapter::WorkloadObliviousInput;
 };
+
+/*
+struct Schedulers {
+  using SchedulerPtr = Abstraction::Scheduler*;
+  
+  static std::vector<SchedulerPtr> list;
+
+  static inline Optional::Option<SchedulerPtr>* get_by_name(const std::string &name) {
+    for(auto sched : list)
+      if(sched->name.compare(name) == 0)
+        return new Optional::Some<SchedulerPtr>(sched);
+    return new Optional::None<SchedulerPtr>();
+  }
+};
+
+std::vector<Schedulers::SchedulerPtr> Schedulers::list = { new Scheduler::RoundRobin<Adapter::BasicSchedulerInput>() };
+
+}
+*/
 
 }

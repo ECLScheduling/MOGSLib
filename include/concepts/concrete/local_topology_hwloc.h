@@ -11,7 +11,7 @@ BEGIN_NAMESPACE(Adapter)
 /**
  * @brief This class implements the concept of gathering topology data through the hwloc library.
  */
-class LocalTopologyHwloc {
+struct LocalTopologyHwloc {
 protected:
   hwloc_topology_t topology;
   const bool cascade_delete;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <system/type_definitions.h>
 #include <vector>
 
+#include <system/type_definitions.h>
 #include <system/static.h>
 
 BEGIN_NAMESPACE(Adapter)
@@ -12,6 +12,8 @@ BEGIN_NAMESPACE(Adapter)
  * @details This Adapter is the most efficient implementation of the concepts but can only be used in strategies that are not workload aware.
  */
 struct WorkloadObliviousInput {
+  using Index = MOGSLib::Index;
+  
   Index tasks, PEs;
 
   /**

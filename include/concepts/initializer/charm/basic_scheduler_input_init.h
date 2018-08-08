@@ -1,13 +1,13 @@
 #pragma once
 
-#include <abstractions/initializer.h>
 #include <cassert>
 
-#include <mogslib/rts/charm.h>
+#include <abstractions/initializer.h>
+#include <system/static.h>
+
+#include <rts/charm.h>
 
 #include <concepts/concrete/basic_scheduler_input.h>
-
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Abstraction)
 

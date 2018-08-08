@@ -1,12 +1,7 @@
 #!/usr/bin/python3
 
 import argparse
-
-### Scheduler class that contains all the data needed to express a scheduler in MOGSLib ###
-class Scheduler:
-  def __init__(self, name, concepts):
-    self.name = name
-    self.concepts = concepts
+from mogslib_utils import Scheduler
 
 ### Action for consolidating a scheduler data into an intermediary python object ###
 class SchedulerAction(argparse.Action):
@@ -26,9 +21,12 @@ parser.add_argument('-sched', '--scheduler', dest='scheds', nargs="+", type=str,
 
 args = parser.parse_args()
 
-### Declaration of the RTS to lambda map ###
+### Declaration of the RTS configuration functions ###
 from rts_configuration import *
 
-generate_defs_for_rts(args.rts)
+### Declaration of the Scheduler configuration functions ###
+from sched_configuration import *
 
-###
+
+generate_defs_for_rts(args.rts)
+configure_schedulers(args.scheds, args.rts)

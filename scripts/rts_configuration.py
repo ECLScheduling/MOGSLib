@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
-import os
-import shutil
-import re
+from mogslib_utils import *
 
 ### Define the creation of a map of attributes that will aid the configuration of the RTS data in MOGSLib ###
 def rts_custom():
@@ -50,16 +48,13 @@ def pre_custom(dict):
   exit()
 
 def pre_default(dict):
-  include_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'include')
-  system_dir = os.path.join(include_dir, 'system')
-  stub_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'stubs')
-  mogslib_dir = os.path.join(include_dir, 'mogslib')
-
+  folders = get_folder_map()
+  
   print('Preparing MOGSLib for the ' + dict['RTS_ENUM_VAL'] + ' Runtime System')
   print('\tDefining RTS traits in system/type_definitions.h')
   
-  file = os.path.join(system_dir, 'type_definitions.h')
-  shutil.copyfile(os.path.join(stub_dir, 'type_definitions.in.h'), file)
+  file = os.path.join(folders['system'], 'type_definitions.h')
+  shutil.copyfile(os.path.join(folders['stub'], 'type_definitions.in.h'), file)
   with open(file, 'r+') as infile:
     filedata = infile.read()
     filedata = filedata.replace('@RTS_ENUM_VAL@', dict['RTS_ENUM_VAL'])
@@ -69,8 +64,8 @@ def pre_default(dict):
 
   print('\tDefining RTS abstraction for MOGSLib components in mogslib/mogslib.h')
 
-  file = os.path.join(mogslib_dir, 'mogslib.h')
-  shutil.copyfile(os.path.join(stub_dir, 'mogslib.in.h'), file)
+  file = os.path.join(folders['mogslib'], 'mogslib.h')
+  shutil.copyfile(os.path.join(folders['stub'], 'mogslib.in.h'), file)
   include_string = ''
   for rts_include in dict['RTS_INCLUDES']:
     include_string += '#include <' + rts_include + '>\n'

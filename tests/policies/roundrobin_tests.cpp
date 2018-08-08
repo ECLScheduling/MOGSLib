@@ -3,9 +3,9 @@
 #include <policies/round_robin.h>
 
 using SchedulingPolicy = MOGSLib::Policy::RoundRobin;
-using Index = MOGSLib::Policy::Index;
-using TaskMap = MOGSLib::Policy::TaskMap;
-using TaskEntry = MOGSLib::Policy::TaskEntry;
+using Index = MOGSLib::Index;
+using TaskMap = MOGSLib::TaskMap;
+using TaskEntry = MOGSLib::TaskEntry;
 
 class RoundRobinTests : public ::testing::Test {
 public:

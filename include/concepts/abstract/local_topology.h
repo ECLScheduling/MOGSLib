@@ -9,7 +9,7 @@ BEGIN_NAMESPACE(Concept)
  */
 template<typename Concrete>
 class LocalTopology {
-  static Concrete *c;
+  static Concrete *concrete;
 
 public:
   /**
@@ -22,5 +22,8 @@ public:
    */
   static inline decltype(c->objcount_in_depth(0)) objcount_in_depth(const int &depth) { return _c->objcount_in_depth(depth); }
 };
+
+template <typename Concrete>
+Concrete* LocalTopology<Concrete>::concrete = nullptr;
 
 END_NAMESPACE

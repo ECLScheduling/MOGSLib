@@ -1,8 +1,8 @@
 #pragma once
 
-#include <system/type_definitions.h>
 #include <vector>
 
+#include <system/type_definitions.h>
 #include <system/static.h>
 
 BEGIN_NAMESPACE(Adapter)
@@ -11,6 +11,9 @@ BEGIN_NAMESPACE(Adapter)
  * @brief A concrete concept that fulfills both PEData and TaskData concepts.
  */
 struct BasicSchedulerInput {
+  using Index = MOGSLib::Index;
+  using Load = MOGSLib::Load;
+
   std::vector<Index> task_ids;
   std::vector<Index> PE_ids;
 

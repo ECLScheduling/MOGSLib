@@ -1,8 +1,9 @@
 #pragma once
 
-#include <schedulers/greedy.h>
-
 #include <system/static.h>
+#include <abstractions/binder.h>
+
+#include <schedulers/greedy.h>
 
 BEGIN_NAMESPACE(Abstraction)
 

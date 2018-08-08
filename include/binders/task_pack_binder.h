@@ -1,10 +1,9 @@
 #pragma once
 
-#include <abstractions/bind.h>
+#include <system/static.h>
+#include <abstractions/binder.h>
 
 #include <schedulers/task_pack.h>
-
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Abstraction)
 
