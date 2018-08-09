@@ -3,7 +3,6 @@
 #include <vector>
 
 #include <system/type_definitions.h>
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Adapter)
 

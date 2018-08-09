@@ -23,11 +23,10 @@ public:
   using TaskMap = MOGSLib::TaskMap;
   using Load = MOGSLib::Load;
 
-  static constexpr auto TypeToken = MOGSLib::SchedulerTypes::Greedy;
   using TaskData = MOGSLib::Concept::TaskData<T>;
   using PEData = MOGSLib::Concept::PEData<P>;
 
-  Greedy() : Scheduler(SchedulerTraits<TypeToken>::name) {}
+  Greedy() : Scheduler(SchedulerTraits<MOGSLib::Abstraction::greedy>::name) {}
 
   /**
    * @brief The method to obtain a task map based on a greedy heuristic.

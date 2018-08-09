@@ -7,8 +7,6 @@
 #include <concepts/abstract/pe_data.h>
 #include <concepts/abstract/task_data.h>
 
-#include <system/static.h>
-
 BEGIN_NAMESPACE(Scheduler)
 
 /**
@@ -20,12 +18,10 @@ public:
   using Index = MOGSLib::Index;
   using TaskMap = MOGSLib::TaskMap;
 
-  static constexpr auto TypeToken = MOGSLib::SchedulerTypes::RoundRobin;
-
   using TaskData = Concept::TaskData<T>;
   using PEData = Concept::PEData<P>;
 
-  RoundRobin() : Scheduler(SchedulerTraits<TypeToken>::name) {}
+  RoundRobin() : Scheduler(SchedulerTraits<MOGSLib::Abstraction::round_robin>::name) {}
 
   /**
    * @brief The method to obtain a task map based on a roundrobin heuristic.

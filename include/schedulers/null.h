@@ -1,6 +1,6 @@
 #pragma once
 
-#include <system/static.h>
+#include <abstractions/scheduler.h>
 
 BEGIN_NAMESPACE(Scheduler)
 
@@ -9,9 +9,7 @@ BEGIN_NAMESPACE(Scheduler)
  */
 class Null : public Abstraction::Scheduler {
 public:
-  static constexpr auto TypeToken = MOGSLib::SchedulerTypes::Null;
-
-  Null() : Scheduler(SchedulerTraits<TypeToken>::name) {}
+  Null() : Scheduler(SchedulerTraits<MOGSLib::Abstraction::null>::name) {}
   virtual ~Null() {}
 };
 

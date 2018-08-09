@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/round_robin.h>
+#include <schedulers/compact.h>
 
 using Index = MOGSLib::Index;
 using Load = MOGSLib::Load;
@@ -36,11 +36,11 @@ struct DataDummyContainer {
   }
 };
 
-using TestScheduler = MOGSLib::Scheduler::RoundRobin<DataDummyContainer, DataDummyContainer>;
+using TestScheduler = MOGSLib::Scheduler::Compact<DataDummyContainer, DataDummyContainer>;
 using TaskData = typename TestScheduler::TaskData;
 using PEData = typename TestScheduler::PEData;
 
-class RoundRobinSchedTests : public ::testing::Test {
+class CompactSchedTests : public ::testing::Test {
 public:
   TestScheduler scheduler;
   DataDummyContainer data;
@@ -78,7 +78,7 @@ public:
   }
 };
 
-TEST_F(RoundRobinSchedTests, single_task) {
+TEST_F(CompactSchedTests, single_task) {
   setTask(1);
   setPE(1);
 
@@ -86,7 +86,7 @@ TEST_F(RoundRobinSchedTests, single_task) {
   ASSERT_EQ(0, map[0]);
 }
 
-TEST_F(RoundRobinSchedTests, two_tasks) {
+TEST_F(CompactSchedTests, two_tasks_two_PEs) {
   setTask(2);
   setPE(2);
 
@@ -95,7 +95,7 @@ TEST_F(RoundRobinSchedTests, two_tasks) {
   ASSERT_EQ(1, map[1]);
 }
 
-TEST_F(RoundRobinSchedTests, two_tasks_one_PE) {
+TEST_F(CompactSchedTests, two_tasks_one_PE) {
   setTask(2);
   setPE(1);
 
@@ -104,12 +104,16 @@ TEST_F(RoundRobinSchedTests, two_tasks_one_PE) {
   ASSERT_EQ(0, map[1]);
 }
 
-TEST_F(RoundRobinSchedTests, n_tasks) {
-  auto n = 3;
+TEST_F(CompactSchedTests, n_tasks) {
+  Index n = 6;
+  Index nPEs = 2;
+  
   setTask(n);
-  setPE(n-1);
+  setPE(nPEs);
 
   execute_scheduler();
-  ASSERT_EQ(0, map[0]);
-  ASSERT_EQ(0, map[n-1]);
+  auto s = n/nPEs;
+  for(Index j = 0; j < n/s; ++j)
+    for(Index i = 0; i < s; ++i)
+      ASSERT_EQ(j, map[j*s + i]);
 }

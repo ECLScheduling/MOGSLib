@@ -2,6 +2,8 @@
 
 #include <system/type_definitions.h>
 
+#include <cstring>
+
 BEGIN_NAMESPACE(Policy)
 
 /**
@@ -14,8 +16,13 @@ public:
   using TaskMap = MOGSLib::TaskMap;
 
   static void map(TaskMap &map, const Index &ntasks, const Index &nPEs) {
-    for(Index i = 0; i < ntasks; ++i)
-      map[i] = i/nPEs;
+    auto size = ntasks/nPEs;
+    Index j = 0;
+    for(Index i = 0; i < ntasks; i += size){
+      for(Index s = 0; s < size; ++s)
+        map[i+s] = j;
+      ++j;
+    }
   }
 };
 

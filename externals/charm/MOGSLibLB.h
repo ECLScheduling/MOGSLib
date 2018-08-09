@@ -14,7 +14,7 @@
 #include "ckgraph.h"
 #include <cassert>
 
-#include <mogslib/schedulers/schedulers.h>
+#include <mogslib/mogslib.h>
 
 void CreateMOGSLibLB();
 

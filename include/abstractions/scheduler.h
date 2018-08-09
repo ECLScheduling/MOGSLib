@@ -2,8 +2,7 @@
 
 #include <string>
 
-#include <system/types.h>
-#include <abstractions/binder.h>
+#include <system/type_definitions.h>
 
 BEGIN_NAMESPACE(Abstraction)
 

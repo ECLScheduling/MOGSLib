@@ -1,31 +1,6 @@
 // #### MOGSLib Includes ####
-
-// MOGSLib RTS data
-#include <mogslib/rts/openmp.h>
-#include <mogslib/rts/openmp.ipp>
-
-// MOGSLib Scheduling Strategies
-#include <schedulers/round_robin.h>
-#include <mogslib/binders/round_robin_binder.h>
-
-// MOGSLib Concrete Adapters
-#include <mogslib/initializers/openmp/workload_oblivious_input_init.h>
-
+#include <mogslib/mogslib.h>
 // #### End of MOGSLib Includes ####
-
-struct MOGSLibDefinitions {
-  using RTS = MOGSLib::RTS::OpenMP;
-  static constexpr auto system = RTS::SystemVal;
-
-  template<typename T>
-  using Initializer = MOGSLib::Abstraction::Initializer<system, T>;
-
-  template<typename T>
-  using Binder = MOGSLib::Abstraction::Binder<T>;
-
-  using ConcreteAdapter = MOGSLib::Adapter::WorkloadObliviousInput;
-  using Scheduler = MOGSLib::Scheduler::RoundRobin<ConcreteAdapter>;
-};
 
 /**
  * @brief Set the amount of chunks in the OpenMP RTS datastructure.
@@ -33,7 +8,7 @@ struct MOGSLibDefinitions {
  * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_chunksize(unsigned chunksize) {
-  MOGSLibDefinitions::RTS::set_chunk_size(chunksize);
+  MOGSLib::Definitions::RTS::set_chunk_size(chunksize);
 }
 
 /**
@@ -42,7 +17,7 @@ inline void mogslib_call_set_chunksize(unsigned chunksize) {
  * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_nPEs(unsigned nPEs) {
-  MOGSLibDefinitions::RTS::set_nPEs(nPEs);
+  MOGSLib::Definitions::RTS::set_nPEs(nPEs);
 }
 
 /**
@@ -51,7 +26,7 @@ inline void mogslib_call_set_nPEs(unsigned nPEs) {
  * @param ntasks The amount of tasks generated in OpenMP.
  */
 inline void mogslib_call_set_ntasks(unsigned ntasks) {
-  MOGSLibDefinitions::RTS::set_ntasks(ntasks);
+  MOGSLib::Definitions::RTS::set_ntasks(ntasks);
 }
 
 /**
@@ -61,18 +36,22 @@ inline void mogslib_call_set_ntasks(unsigned ntasks) {
  */
 inline unsigned *mogslib_call_strategy_map() {
   // Declare scheduler
-  MOGSLibDefinitions::Scheduler scheduler;
+  MOGSLib::Definitions::Scheduler scheduler;
 
   // Declare and instantiate concrete adapters
-  auto basic_input = new MOGSLibDefinitions::ConcreteAdapter();
+  auto adapter0 = new MOGSLib::Definitions::Adapter0();
 
   // Initialize concrete adapters
-  MOGSLibDefinitions::Initializer<MOGSLibDefinitions::ConcreteAdapter>::init(basic_input);
+  MOGSLib::Definitions::Initializer<MOGSLib::Definitions::Adapter0>::init(adapter0);
 
   // Bind concrete adapters to concepts.
-  MOGSLibDefinitions::Binder<MOGSLibDefinitions::Scheduler>::bind(basic_input, basic_input);
+  MOGSLib::Definitions::Binder::bind(adapter0, adapter0);
 
-  return scheduler.work();
+  auto map = scheduler.work();
+
+  delete adapter0;
+
+  return map;
 }
 
 extern "C" {

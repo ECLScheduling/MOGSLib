@@ -20,9 +20,9 @@ public:
     for(Index i = 0; i < left_over; ++i)
       map[i] = 0;
 
-    for(Index i = left_over; i < npacks; ++i)
-      for(Index j = i; j < ntasks; ++j)
-        map[i*pack_size + left_over] = i;
+    for(Index i = 0; i < npacks; ++i)
+      for(Index j = 0; j < pack_size; ++j)
+        map[i*pack_size + j + left_over] = i%nPEs;
   }
 };
 

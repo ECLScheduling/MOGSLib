@@ -8,7 +8,7 @@ namespace MOGSLib {
  * @brief This structure holds reference to datatypes and useful information about a specific RTS.
  * @details The only required traits in these structures are Index and Load which are used in the majority of schedulers and concepts.
  */
-template<Abstractions::RuntimeSystemEnum T>
+template<Abstraction::RuntimeSystemEnum T>
 struct RuntimeTraits {
 
   /**
@@ -24,7 +24,7 @@ struct RuntimeTraits {
 };
 
 template<>
-struct RuntimeTraits<Abstractions::RuntimeSystemEnum::Charm> {
+struct RuntimeTraits<Abstraction::RuntimeSystemEnum::Charm> {
   /**
    * @brief The type definition that will serve as index in MOGSLib when used in Charm++.
    */
@@ -37,7 +37,7 @@ struct RuntimeTraits<Abstractions::RuntimeSystemEnum::Charm> {
 };
 
 template<>
-struct RuntimeTraits<Abstractions::RuntimeSystemEnum::OpenMP> {
+struct RuntimeTraits<Abstraction::RuntimeSystemEnum::OpenMP> {
   /**
    * @brief The type definition that will serve as index in MOGSLib when used in OpenMP.
    */

@@ -2,7 +2,7 @@
 
 #include <system/static.h>
 
-BEGIN_NAMESPACE(Abstractions)
+BEGIN_NAMESPACE(Abstraction)
 
 /**
  * @brief An enumerate of all the supported runtime systems for MOGSLib schedulers.

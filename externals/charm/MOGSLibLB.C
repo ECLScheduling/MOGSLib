@@ -22,15 +22,25 @@ bool MOGSLibLB::QueryBalanceNow(int _step)
 }
 
 void MOGSLibLB::work(LDStats* stats) {
-  MOGSLib::RTS::Charm::stats = stats;
+  MOGSLib::Definitions::RTS::stats = stats;
 
-  auto map = MOGSLib::Schedulers::map("greedy");
-  auto adapter = MOGSLib::Concept::TaskData<MOGSLib::Adapter::BasicSchedulerInput>::concrete;
-  
+  // Declare scheduler
+  MOGSLib::Definitions::Scheduler scheduler;
+
+  // Declare and instantiate concrete adapters
+  auto adapter0 = new MOGSLib::Definitions::Adapter0();
+
+  // Initialize concrete adapters
+  MOGSLib::Definitions::Initializer<MOGSLib::Definitions::Adapter0>::init(adapter0);
+
+  // Bind concrete adapters to concepts.
+  MOGSLib::Definitions::Binder::bind(adapter0, adapter0);
+
+  auto map = scheduler.work();
   for(auto i = 0; i < adapter->ntasks(); ++i)
     CkPrintf("Task %d in PE %d.\n",adapter->task_ids[i], adapter->PE_ids[map[i]]);
-  
-  //TODO: Free the memory
+
+  delete adapter0;
 }
 
 

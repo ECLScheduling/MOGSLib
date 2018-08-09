@@ -5,15 +5,13 @@
 #include <abstractions/initializer.h>
 #include <abstractions/binder.h>
 
-#include <mogslib/rts/openmp.h>
-#include <mogslib/rts/openmp.ipp>
+#include <mogslib/rts/charm.h>
+#include <mogslib/rts/charm.ipp>
 
 #include <schedulers/greedy.h>
 
-#include <concepts/initializer/openmp/basic_scheduler_input_init.h>
-#include <concepts/initializer/openmp/basic_scheduler_input_init.ipp>
-#include <concepts/initializer/openmp/workload_oblivious_input_init.h>
-#include <concepts/initializer/openmp/workload_oblivious_input_init.ipp>
+#include <concepts/initializer/charm/basic_scheduler_input_init.h>
+#include <concepts/initializer/charm/basic_scheduler_input_init.ipp>
 
 namespace MOGSLib {
 
@@ -27,12 +25,10 @@ struct Definitions {
   template<typename T>
   using Initializer = MOGSLib::Abstraction::Initializer<system, T>;
 
-  template<typename T>
-  using Binder = MOGSLib::Abstraction::Binder<T>;
-
-  using Scheduler = MOGSLib::Scheduler::Greedy<MOGSLib::Adapter::BasicSchedulerInput, MOGSLib::Adapter::WorkloadObliviousInput>;
 	using Adapter0 = MOGSLib::Adapter::BasicSchedulerInput;
-	using Adapter1 = MOGSLib::Adapter::WorkloadObliviousInput;
+  using Scheduler = MOGSLib::Scheduler::Greedy<MOGSLib::Adapter::BasicSchedulerInput>;
+
+  using Binder = MOGSLib::Abstraction::Binder<Scheduler>;
 };
 
 /*
