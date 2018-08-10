@@ -5,7 +5,7 @@
 
 #include "MOGSLibLB.h"
 
-CreateLBFunc_Def(MOGSLibLB, "Dummy load balancer, like a normal one but with empty strategy")
+CreateLBFunc_Def(MOGSLibLB, "A strategy that calls MOGSLib to execute its chosen global scheduler.")
 
 #include "MOGSLibLB.def.h"
 
@@ -37,8 +37,8 @@ void MOGSLibLB::work(LDStats* stats) {
   MOGSLib::Definitions::Binder::bind(adapter0, adapter0);
 
   auto map = scheduler.work();
-  for(auto i = 0; i < adapter->ntasks(); ++i)
-    CkPrintf("Task %d in PE %d.\n",adapter->task_ids[i], adapter->PE_ids[map[i]]);
+  for(auto i = 0; i < adapter0->ntasks(); ++i)
+    CkPrintf("Task %d in PE %d.\n",adapter0->task_ids[i], adapter0->PE_ids[map[i]]);
 
   delete adapter0;
 }

@@ -10,6 +10,8 @@ BEGIN_NAMESPACE(Abstraction)
  */
 template<>
 struct RTS<RuntimeSystemEnum::Charm> {
+  static constexpr auto id = RuntimeSystemEnum::Charm;
+  
   // This inquires that these names have to be declared before including this header into the source file.
   using LDStats = BaseLB::LDStats*;
   

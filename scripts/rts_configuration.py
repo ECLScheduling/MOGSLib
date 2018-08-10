@@ -11,8 +11,8 @@ def rts_charm():
   return {
     'RTS_ENUM_VAL': 'Charm',
     'RTS_INCLUDES': (
-      'mogslib/rts/charm.h',
-      'mogslib/rts/charm.ipp'
+      'rts/charm.h',
+      'rts/charm.ipp'
       )
   }
 
@@ -20,8 +20,8 @@ def rts_openmp():
   return {
     'RTS_ENUM_VAL': 'OpenMP',
     'RTS_INCLUDES': (
-      'mogslib/rts/openmp.h',
-      'mogslib/rts/openmp.ipp'
+      'rts/openmp.h',
+      'rts/openmp.ipp'
       )
   }
 

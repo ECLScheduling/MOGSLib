@@ -1,6 +1,7 @@
 #pragma once
 
 #include <system/types.h>
+#include <cstdint>
 
 namespace MOGSLib {
 

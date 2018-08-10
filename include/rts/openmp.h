@@ -11,6 +11,8 @@ BEGIN_NAMESPACE(Abstraction)
  */
 template<>
 struct RTS<RuntimeSystemEnum::OpenMP> {
+  static constexpr auto id = RuntimeSystemEnum::OpenMP;
+
   using Index = MOGSLib::Index;
 
   static Index chunk_size;

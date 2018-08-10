@@ -9,8 +9,6 @@
 #include "CentralLB.h"
 #include "MOGSLibLB.decl.h"
 
-#include <iostream>
-
 #include "ckgraph.h"
 #include <cassert>
 

@@ -62,6 +62,7 @@ def configure_schedulers(scheds, rts_name):
   for sched in scheds:
     print('\nConfiguring Scheduler \'' + sched.name + '\' to work within \'' + rts_name + '\' Runtime System.')
     sched_includes += '#include <schedulers/' + sched.name + '.h>\n'
+    sched_includes += '#include <binders/' + sched.name + '_binder.h>\n'
 
     sched_names.append(find_sched_class_name(sched.name))
     sched_adapters.append(find_adapters_class_names(sched.concepts))
