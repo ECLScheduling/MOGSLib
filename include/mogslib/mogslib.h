@@ -1,17 +1,12 @@
 #pragma once
 
-#include <system/type_definitions.h>
-
-#include <abstractions/initializer.h>
-#include <abstractions/binder.h>
-
 #include <mogslib/rts/charm.h>
 #include <mogslib/rts/charm.ipp>
 
 #include <schedulers/greedy.h>
 
-#include <concepts/initializer/charm/basic_scheduler_input_init.h>
-#include <concepts/initializer/charm/basic_scheduler_input_init.ipp>
+#include <concepts/concrete/basic_scheduler_input.h>
+#include <concepts/init/charm/basic_scheduler_input.ipp>
 
 namespace MOGSLib {
 
@@ -21,14 +16,8 @@ namespace MOGSLib {
  */
 struct Definitions {
   using RTS = MOGSLib::Abstraction::RTS<MOGSLib::TargetSystem>;
-
-  template<typename T>
-  using Initializer = MOGSLib::Abstraction::Initializer<system, T>;
-
-	using Adapter0 = MOGSLib::Adapter::BasicSchedulerInput;
-  using Scheduler = MOGSLib::Scheduler::Greedy<MOGSLib::Adapter::BasicSchedulerInput>;
-
-  using Binder = MOGSLib::Abstraction::Binder<Scheduler>;
+	using Adapter0 = MOGSLib::Concept::BasicSchedulerInput;
+  using Scheduler = MOGSLib::Scheduler::Greedy<MOGSLib::Concept::BasicSchedulerInput>;
 };
 
 /*

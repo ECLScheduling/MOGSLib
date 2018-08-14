@@ -15,7 +15,7 @@ def find_sched_class_name(sched_name):
     exit()
 
   with open(file, 'r') as infile:
-    p = re.compile('class\s+(\w+)\s+[:{]')
+    p = re.compile('class\s+(\w+)\s+:\s+public\s+Abstraction::Scheduler')
     for line in infile:
       match = p.match(line)
       if match is not None:
@@ -35,11 +35,11 @@ def find_adapters_class_names(concepts):
       exit()
 
     with open(file, 'r') as infile:
-      p = re.compile('struct\s+(\w+)\s+[:{]')
+      p = re.compile('class\s+(\w+)\s+:\s+public\s+Abstraction::Concept')
       for line in infile:
         match = p.match(line)
         if match is not None:
-          concept_classes.append('MOGSLib::Adapter::' + match.group(1))
+          concept_classes.append('MOGSLib::Concept::' + match.group(1))
           break
   return concept_classes
 
@@ -69,9 +69,8 @@ def configure_schedulers(scheds, rts_name):
     for concept in sched.concepts:
       if concept not in included_concepts:
         print('\tImporting \'' + concept + '\' Concept to MOGSLib definitions.')
-        concept_includes += '#include <concepts/initializer/' + rts_name + '/' + concept + '_init.h>\n'
-        if os.path.isfile(os.path.join(folders['initializers'], rts_name, concept + '_init.h')):
-          concept_includes += '#include <concepts/initializer/' + rts_name + '/' + concept + '_init.ipp>\n'
+        concept_includes += '#include <concepts/concrete/' + concept + '.h>\n'
+        concept_includes += '#include <concepts/init/' + rts_name + '/' + concept + '.ipp>\n'
         included_concepts.append(concept)
 
   with open(file, 'r+') as infile:

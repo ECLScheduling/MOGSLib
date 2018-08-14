@@ -1,34 +1,33 @@
 #pragma once
 
 #include <abstractions/scheduler.h>
-
 #include <policies/round_robin.h>
-
-#include <concepts/abstract/pe_data.h>
-#include <concepts/abstract/task_data.h>
 
 BEGIN_NAMESPACE(Scheduler)
 
 /**
  * @brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
  **/
-template<typename T, typename P = T>
-class RoundRobin : public Abstraction::Scheduler {
+template<typename ... _Concepts>
+class RoundRobin : public Abstraction::Scheduler<Abstraction::SchedulerEnum::round_robin> {
 public:
-  using Index = MOGSLib::Index;
-  using TaskMap = MOGSLib::TaskMap;
 
-  using TaskData = Concept::TaskData<T>;
-  using PEData = Concept::PEData<P>;
+  using Concepts = typename MOGSLib::SchedulerTraits<SchedulerType>::Dependencies<_Concepts...>;
+  std::unique_ptr<Concepts> concepts;
 
-  RoundRobin() : Scheduler(SchedulerTraits<MOGSLib::Abstraction::round_robin>::name) {}
+  /**
+   * @brief The method that will initialize the references to the concrete concepts used by the scheduler.
+   */
+  void init(_Concepts *... ref) {
+    concepts = std::make_unique<Concepts>(std::make_tuple(ref...));
+  }
 
   /**
    * @brief The method to obtain a task map based on a roundrobin heuristic.
    **/
   TaskMap work() override {
-    auto ntasks = TaskData::ntasks();
-    auto nPEs = PEData::nPEs();
+    auto ntasks = concepts->task_data->ntasks();
+    auto nPEs = concepts->PE_data->nPEs();
 
     auto map = new Index[ntasks]();
     Policy::RoundRobin::map(map, ntasks, nPEs);

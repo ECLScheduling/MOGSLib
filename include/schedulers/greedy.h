@@ -1,41 +1,34 @@
 #pragma once
 
 #include <abstractions/scheduler.h>
-
 #include <policies/greedy.h>
-
-#include <concepts/abstract/pe_data.h>
-#include <concepts/abstract/task_data.h>
-
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Scheduler)
 
 /**
  * @brief Class that represents a scheduler which utilizes a greedy heuristic to output a task map.
- * @type T A concrete type that fulfills the TaskData concept.
- * @type P A concrete type that fulfills the PEData concept.
  **/
-template<typename T, typename P = T>
-class Greedy : public Abstraction::Scheduler {
+template<typename ... _Concepts>
+class Greedy : public Abstraction::Scheduler<Abstraction::SchedulerEnum::greedy> {
 public:
-  using Index = MOGSLib::Index;
-  using TaskMap = MOGSLib::TaskMap;
-  using Load = MOGSLib::Load;
+  using Concepts = typename MOGSLib::SchedulerTraits<SchedulerType>::Dependencies<_Concepts...>;
+  std::unique_ptr<Concepts> concepts;
 
-  using TaskData = MOGSLib::Concept::TaskData<T>;
-  using PEData = MOGSLib::Concept::PEData<P>;
-
-  Greedy() : Scheduler(SchedulerTraits<MOGSLib::Abstraction::greedy>::name) {}
+  /**
+   * @brief The method that will initialize the references to the concrete concepts used by the scheduler.
+   */
+  void init(_Concepts *... ref) {
+    concepts = std::make_unique<Concepts>(std::make_tuple(ref...));
+  }
 
   /**
    * @brief The method to obtain a task map based on a greedy heuristic.
    **/
   TaskMap work() override {
-    auto ntasks = TaskData::ntasks();
+    auto ntasks = concepts->task_data->ntasks();
 
     auto map = new Index[ntasks]();
-    Policy::Greedy<>::map(map, ntasks, TaskData::tasks_workloads(), PEData::nPEs(), PEData::PEs_workloads());
+    Policy::Greedy<>::map(map, ntasks, concepts->task_data->tasks_workloads(), concepts->PE_data->nPEs(), concepts->PE_data->PEs_workloads());
     return map;
   }
 };

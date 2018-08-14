@@ -1,18 +1,18 @@
-// #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 
-// #include <iostream>
-// #include <autogen/schedulers.h>
+#include <iostream>
 
-// #define LINKED_TO_CHARM
-// namespace BaseLB {
-//   struct LDStats {};
-// }
+#include <tuple>
 
-// #include <mogslib/rts/charm.h>
+class TestingRandomStuff : public ::testing::Test {
 
-// class TestingRandomStuff : public ::testing::Test {
+};
 
-// };
+TEST_F(TestingRandomStuff, tuple_size) {
+  std::tuple<int,int> t;
+  std::cout << sizeof t << std::endl;
+  std::cout << sizeof(int) << std::endl;
+}
 
 // // TEST_F(TestingRandomStuff, option_test) {
 // //   auto sched = MOGSLib::Schedulers::get_by_name("roundrobin");

@@ -55,9 +55,8 @@ struct DataDummyContainer {
 };
 
 using TestScheduler = MOGSLib::Scheduler::Greedy<DataDummyContainer, DataDummyContainer>;
-using TaskData = typename TestScheduler::TaskData;
-using PEData = typename TestScheduler::PEData;
 
+//TODO: This code is very similar to the roundrobin and compact tests. Tests needs refactoring.
 class GreedySchedTests : public ::testing::Test {
 public:
   TestScheduler scheduler;
@@ -78,13 +77,10 @@ public:
   }
 
   void SetUp() {
-    TaskData::concrete = &data;
-    PEData::concrete = &data;
+    scheduler.init(&data, &data);
   }
 
   void TearDown() {
-    TaskData::concrete = nullptr;
-    PEData::concrete = nullptr;
   }
 
 };

@@ -8,6 +8,7 @@ BEGIN_NAMESPACE(Abstraction)
  * @brief An enumerate of all the supported runtime systems for MOGSLib schedulers.
  */
 enum RuntimeSystemEnum {
+  Testing,
   Custom,
   Charm,
   OpenMP
