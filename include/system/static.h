@@ -35,9 +35,6 @@ struct TemplateName \
 //#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<MOGSLib::Scheduler::SchedName __VA_OPT__(,) __VA_ARGS__>
 #define SchedulerTupleDef(SchedName, ...) CompleteScheduler<SchedulerDecl(SchedName), ##__VA_ARGS__>
 
-#define ScheduleSnippet(SchedId) \
-if(scheduler_name.compare(SchedulerTraits<typename std::tuple_element<SchedId, SchedulerTuple>::type::SchedulerType)>::name) {\
-  if(init)\
-    return std::get<SchedId>(schedulers).init_and_work();\
-  return std::get<SchedId>(schedulers).work();\
-}
+#define ScheduleSnippet(SchedId, NConcepts, ...) \
+if(scheduler_name.compare(SchedulerTraits<typename std::tuple_element<SchedId, SchedulerTuple>::type::SchedulerType)>::name)
+    return std::get<SchedId>(schedulers).init_and_work();
