@@ -44,7 +44,22 @@ def find_adapters_class_names(concepts):
   return concept_classes
 
 def generate_scheduler_tuple_code(names, concepts):
-  for()
+  ret = ''
+  for i in range(0, len(names)):
+    ret += 'SchedulerTupleDef(' + names[i]
+    if concepts[i]:
+      ret += ', '
+      for concept in concepts[i]:
+        ret += concept + ','
+      ret = ret[:-1]
+    ret += '),'
+  return ret[:-1]
+
+def generate_schedule_function_code(n):
+  ret = ''
+  for i in range(0, n):
+    ret += '\t\tScheduleSnippet(' + str(i) + ')\n'
+  return ret[:-1]
 
 def configure_schedulers(scheds, rts_name):
   folders = get_folder_map()
@@ -74,6 +89,8 @@ def configure_schedulers(scheds, rts_name):
     filedata = filedata.replace('@CONCEPT_INCLUDES@', concept_includes)
 
     filedata = filedata.replace('$SCHEDULER_TUPLE$', generate_scheduler_tuple_code(sched_names, sched_adapters))
+    filedata = filedata.replace('$SCHEDULE_SNIPPET$', generate_schedule_function_code(len(sched_names)))
+
     infile.seek(0)
     infile.truncate()
     infile.write(filedata)

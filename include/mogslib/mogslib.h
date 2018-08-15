@@ -4,6 +4,7 @@
 #include <rts/charm.ipp>
 
 #include <schedulers/greedy.h>
+#include <schedulers/round_robin.h>
 
 #include <concepts/concrete/basic_scheduler_input.h>
 #include <concepts/init/charm/basic_scheduler_input.ipp>
@@ -33,22 +34,16 @@ struct SchedulerCollection {
     }
   };
 
-  using SchedulerTuple = std::tuple<$SCHEDULER_TUPLE$>;
-  SchedulerTuple schedulers;
+  using SchedulerTuple = std::tuple<SchedulerTupleDef(Greedy, ConceptDecl(BasicSchedulerInput)),SchedulerTupleDef(RoundRobin, ConceptDecl(BasicSchedulerInput))>;
+  static SchedulerTuple schedulers;
 
-  void TaskMap schedule(std:string &scheduler_name) {
-  $SCHEDULE_SNIPPET$
+  static void TaskMap schedule(const std:string &scheduler_name, const bool &init = true) {
+		ScheduleSnippet(0)
+		ScheduleSnippet(1)
     return nullptr;
   }
 };
 
-#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<MOGSLib::Scheduler::SchedName __VA_OPT__(,) __VA_ARGS__>
-
-#define ScheduleSnippet(SchedId) \
-if(scheduler_name.compare(SchedulerTraits<typename std::tuple_element<SchedId, SchedulerTuple>::type::SchedulerType)>::name) {\
-  if(init)\
-    return std::get<SchedId>(schedulers).init_and_work();\
-  return std::get<SchedId>(schedulers).work();\
-}
+decltype(SchedulerCollection::schedulers) SchedulerCollection::schedulers;
 
 }

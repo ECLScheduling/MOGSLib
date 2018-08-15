@@ -35,23 +35,8 @@ inline void mogslib_call_set_ntasks(unsigned ntasks) {
  * @return The task map represented as an array to where the task should execute.
  */
 inline unsigned *mogslib_call_strategy_map() {
-  // Declare scheduler
-  MOGSLib::Definitions::Scheduler scheduler;
-
-  // Declare and instantiate concrete adapters
-  auto adapter0 = new MOGSLib::Definitions::Adapter0();
-
-  // Initialize concrete adapters
-  MOGSLib::Definitions::Initializer<MOGSLib::Definitions::Adapter0>::init(adapter0);
-
-  // Bind concrete adapters to concepts.
-  MOGSLib::Definitions::Binder::bind(adapter0, adapter0);
-
-  auto map = scheduler.work();
-
-  delete adapter0;
-
-  return map;
+  //TODO: lacking the creation of concepts.
+  return MOGSLib::SchedulerCollection::schedule("greedy");
 }
 
 extern "C" {
