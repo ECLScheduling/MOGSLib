@@ -42,9 +42,6 @@ struct DataDummyContainer {
 };
 
 using TestScheduler = MOGSLib::Scheduler::TaskPack<DataDummyContainer, DataDummyContainer, DataDummyContainer>;
-using TaskData = typename TestScheduler::TaskData;
-using PEData = typename TestScheduler::PEData;
-using KData = typename TestScheduler::KData;
 
 class TaskPackSchedTests : public ::testing::Test {
 public:
@@ -72,15 +69,12 @@ public:
     data._ntasks = 0;
     data._nPEs = 0;
 
-    TaskData::concrete = &data;
-    PEData::concrete = &data;
-    KData::concrete = &data;
+    scheduler.init(&data,&data,&data);
+
     map = nullptr;
   }
 
   void TearDown() {
-    TaskData::concrete = nullptr;
-    PEData::concrete = nullptr;
     if(map != nullptr) {
       delete [] map;
       map = nullptr;  

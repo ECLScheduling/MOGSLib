@@ -2,14 +2,15 @@
 
 #include <vector>
 
-#include <system/type_definitions.h>
+#include <abstractions/concept.h>
 
-BEGIN_NAMESPACE(Adapter)
+BEGIN_NAMESPACE(Concept)
 
 /**
  * @brief A concrete concept that fulfills both PEData and TaskData concepts.
  */
-struct BasicSchedulerInput {
+class BasicSchedulerInput : public Abstraction::Concept {
+public:
   using Index = MOGSLib::Index;
   using Load = MOGSLib::Load;
 
@@ -62,6 +63,13 @@ struct BasicSchedulerInput {
   inline Load* PEs_workloads() {
     return PEs.data();
   }
+
+  /**
+   * @brief A function to initialize all the concepts values and references to be used by the scheduler.
+   * @details The init method will be called by MOGSLib before invoking the scheduler and after all the RTS data is set-up.
+   */
+  template<MOGSLib::Abstraction::RuntimeSystemEnum T>
+  void init() {}
 };
 
 END_NAMESPACE

@@ -1,7 +1,8 @@
-BEGIN_NAMESPACE(Abstraction)
+BEGIN_NAMESPACE(Concept)
 
-void Initializer<RuntimeSystemEnum::Charm, MOGSLib::Adapter::BasicSchedulerInput>::init(Initializer<RuntimeSystemEnum::Charm, MOGSLib::Adapter::BasicSchedulerInput>::ConcreteAdapter *adapter) {
-  auto input = RTS<targetRTS>::stats;
+template<>
+void BasicSchedulerInput::init<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>() {
+  auto input = MOGSLib::RTS::Charm::stats;
 
   auto nPEs = input->nprocs();
   auto nTasks = input->n_objs;
@@ -12,10 +13,10 @@ void Initializer<RuntimeSystemEnum::Charm, MOGSLib::Adapter::BasicSchedulerInput
   for(auto pe = 0; pe < nPEs; ++pe) {
     map[pe] = -1;
     if(input->procs[pe].available) {
-      map[pe] = adapter->PE_ids.size();
+      map[pe] = PE_ids.size();
 
-      adapter->PE_ids.push_back(pe);
-      adapter->PEs.push_back(input->procs[pe].bg_walltime);
+      PE_ids.push_back(pe);
+      PEs.push_back(input->procs[pe].bg_walltime);
     }
   }
 
@@ -26,14 +27,14 @@ void Initializer<RuntimeSystemEnum::Charm, MOGSLib::Adapter::BasicSchedulerInput
       
     if(taskData.migratable) {
       const auto load = taskData.wallTime * input->procs[pe].pe_speed; // Calculate the load of a Task.
-      adapter->tasks.push_back(taskData.wallTime * input->procs[pe].pe_speed);// Add the task load to the data array.
-      adapter->task_ids.push_back(task);// Add the task id to the data array.
+      tasks.push_back(taskData.wallTime * input->procs[pe].pe_speed);// Add the task load to the data array.
+      task_ids.push_back(task);// Add the task id to the data array.
     } else {
       pe = map[pe];
 
       assert(pe != -1); // Nonmigrateable task on an unavailable processor.
 
-      adapter->PEs[pe] += taskData.wallTime; //_PEVector[pe].totalLoad() += taskData.wallTime;
+      PEs[pe] += taskData.wallTime; //_PEVector[pe].totalLoad() += taskData.wallTime;
     }
   }
 

@@ -3,41 +3,52 @@
 @RTS_INCLUDES@
 @SCHED_INCLUDES@
 @CONCEPT_INCLUDES@
+
+#define SchedulerDecl(Name) MOGSLib::Scheduler::Name
+#define ConceptDecl(Name) MOGSLib::Concept::Name
+/** TODO: The next line is unsupported by some compilers. More study in this might make it more portable. As of now ## does the trick. **/
+//#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<MOGSLib::Scheduler::SchedName __VA_OPT__(,) __VA_ARGS__>
+#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<SchedulerDecl(SchedName), ##__VA_ARGS__>
+
+#define ScheduleSnippet(SchedId) \
+if(scheduler_name.compare(SchedulerTraits<typename std::tuple_element<SchedId, SchedulerTuple>::type::SchedulerType)>::name) {\
+  if(init)\
+    return std::get<SchedId>(schedulers).init_and_work();\
+  return std::get<SchedId>(schedulers).work();\
+}
+
 namespace MOGSLib {
 
 /**
- * @brief This structure defines concrete concepts, schedulers and the other specifications such as the target system where the library will be attached to.
+ * @brief This structure assembles MOGSLibs components into a Scheduler collection that can be use within a selected RTS.
  * @details These definitions are generated automatically when executing scripts/configure.py with proper parameters
  */
-struct Definitions {
+struct SchedulerCollection {
   using RTS = MOGSLib::Abstraction::RTS<MOGSLib::TargetSystem>;
 
-  template<typename T>
-  using Initializer = MOGSLib::Abstraction::Initializer<RTS::id, T>;
+  template<template<typename ... Concepts> typename Sched, typename ... Concepts>
+  struct CompleteScheduler {
+    using T = Sched<Concepts...>;
 
-@ADAPTERS_TYPEDEFS@
-  using Scheduler = MOGSLib::Scheduler::@SCHED_NAME@<@SCHED_ADAPTERS@>;
+    std::unique_pointer<T> scheduler;
 
-  using Binder = MOGSLib::Abstraction::Binder<Scheduler>;
-};
+    TaskMap init_and_work(Concepts *... concepts) {
+      sched.init(std::make_tuple<Concepts *...>(concepts...));
+      return sched.work();
+    }
 
-/*
-struct Schedulers {
-  using SchedulerPtr = Abstraction::Scheduler*;
-  
-  static std::vector<SchedulerPtr> list;
+    TaskMap work() {
+      return sched.work();
+    }
+  };
 
-  static inline Optional::Option<SchedulerPtr>* get_by_name(const std::string &name) {
-    for(auto sched : list)
-      if(sched->name.compare(name) == 0)
-        return new Optional::Some<SchedulerPtr>(sched);
-    return new Optional::None<SchedulerPtr>();
+  using SchedulerTuple = std::tuple<$SCHEDULER_TUPLE$>;
+  SchedulerTuple schedulers;
+
+  void TaskMap schedule(std:string &scheduler_name) {
+  $SCHEDULE_SNIPPET$
+    return nullptr;
   }
 };
-
-std::vector<Schedulers::SchedulerPtr> Schedulers::list = { new Scheduler::RoundRobin<Adapter::BasicSchedulerInput>() };
-
-}
-*/
 
 }

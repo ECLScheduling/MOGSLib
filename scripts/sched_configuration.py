@@ -15,7 +15,7 @@ def find_sched_class_name(sched_name):
     exit()
 
   with open(file, 'r') as infile:
-    p = re.compile('class\s+(\w+)\s+[:{]')
+    p = re.compile('class\s+(\w+)\s+:\s+public\s+Abstraction::Scheduler')
     for line in infile:
       match = p.match(line)
       if match is not None:
@@ -35,21 +35,16 @@ def find_adapters_class_names(concepts):
       exit()
 
     with open(file, 'r') as infile:
-      p = re.compile('struct\s+(\w+)\s+[:{]')
+      p = re.compile('class\s+(\w+)\s+:\s+public\s+Abstraction::Concept')
       for line in infile:
         match = p.match(line)
         if match is not None:
-          concept_classes.append('MOGSLib::Adapter::' + match.group(1))
+          concept_classes.append('ConceptDecl(' + match.group(1) + ')')
           break
   return concept_classes
 
-def create_adapters_typedefs(adapter_list):
-  typedefs = []
-  c = 0
-  for adapter in adapter_list:
-    typedefs.append('\tusing Adapter' + str(c) + ' = ' + adapter + ';')
-    c += 1
-  return '\n'.join(typedefs)
+def generate_scheduler_tuple_code(names, concepts):
+  for()
 
 def configure_schedulers(scheds, rts_name):
   folders = get_folder_map()
@@ -62,7 +57,6 @@ def configure_schedulers(scheds, rts_name):
   for sched in scheds:
     print('\nConfiguring Scheduler \'' + sched.name + '\' to work within \'' + rts_name + '\' Runtime System.')
     sched_includes += '#include <schedulers/' + sched.name + '.h>\n'
-    sched_includes += '#include <binders/' + sched.name + '_binder.h>\n'
 
     sched_names.append(find_sched_class_name(sched.name))
     sched_adapters.append(find_adapters_class_names(sched.concepts))
@@ -70,18 +64,16 @@ def configure_schedulers(scheds, rts_name):
     for concept in sched.concepts:
       if concept not in included_concepts:
         print('\tImporting \'' + concept + '\' Concept to MOGSLib definitions.')
-        concept_includes += '#include <concepts/initializer/' + rts_name + '/' + concept + '_init.h>\n'
-        if os.path.isfile(os.path.join(folders['initializers'], rts_name, concept + '_init.h')):
-          concept_includes += '#include <concepts/initializer/' + rts_name + '/' + concept + '_init.ipp>\n'
+        concept_includes += '#include <concepts/concrete/' + concept + '.h>\n'
+        concept_includes += '#include <concepts/init/' + rts_name + '/' + concept + '.ipp>\n'
         included_concepts.append(concept)
 
   with open(file, 'r+') as infile:
     filedata = infile.read()
     filedata = filedata.replace('@SCHED_INCLUDES@', sched_includes)
     filedata = filedata.replace('@CONCEPT_INCLUDES@', concept_includes)
-    filedata = filedata.replace('@SCHED_NAME@', sched_names[0])
-    filedata = filedata.replace('@SCHED_ADAPTERS@', ', '.join(sched_adapters[0]))
-    filedata = filedata.replace('@ADAPTERS_TYPEDEFS@', create_adapters_typedefs(sched_adapters[0]))
+
+    filedata = filedata.replace('$SCHEDULER_TUPLE$', generate_scheduler_tuple_code(sched_names, sched_adapters))
     infile.seek(0)
     infile.truncate()
     infile.write(filedata)

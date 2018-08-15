@@ -1,39 +1,34 @@
 #pragma once
 
 #include <abstractions/scheduler.h>
-
 #include <policies/task_pack.h>
-
-#include <concepts/abstract/pe_data.h>
-#include <concepts/abstract/task_data.h>
-#include <concepts/abstract/k_data.h>
-
-#include <system/static.h>
 
 BEGIN_NAMESPACE(Scheduler)
 
 /**
  * @brief Class that represents a scheduler which utilizes the compact policy to output a task map.
  **/
-template<typename T, typename P = T, typename K = T>
-class TaskPack : public Abstraction::Scheduler {
+template<typename ... _Concepts>
+class TaskPack : public Abstraction::Scheduler<Abstraction::SchedulerEnum::task_pack> {
 public:
-  using Index = MOGSLib::Index;
-  using TaskMap = MOGSLib::TaskMap;
 
-  using TaskData = Concept::TaskData<T>;
-  using PEData = Concept::PEData<P>;
-  using KData = Concept::KData<P>;
+  using Concepts = typename MOGSLib::SchedulerTraits<SchedulerType>::Dependencies<_Concepts...>;
+  std::unique_ptr<Concepts> concepts;
 
-  TaskPack() : Scheduler(SchedulerTraits<MOGSLib::Abstraction::task_pack>::name) {}
+  /**
+   * @brief The method that will initialize the references to the concrete concepts used by the scheduler.
+   */
+  void init(_Concepts *... ref) {
+    concepts = std::make_unique<Concepts>(std::make_tuple(ref...));
+  }
 
   /**
    * @brief The method to obtain a task map based on a compact policy.
    **/
   TaskMap work() override {
-    auto ntasks = TaskData::ntasks();
-    auto nPEs = PEData::nPEs();
-    auto npacks = KData::k();
+    auto ntasks = concepts->task_data->ntasks();
+    auto nPEs = concepts->PE_data->nPEs();
+    auto npacks = concepts->k_data->k();
 
     auto map = new Index[ntasks]();
     Policy::TaskPack::map(map, ntasks, nPEs, npacks);

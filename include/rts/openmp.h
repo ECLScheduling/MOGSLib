@@ -40,3 +40,7 @@ struct RTS<RuntimeSystemEnum::OpenMP> {
 };
 
 END_NAMESPACE
+
+BEGIN_NAMESPACE(RTS)
+using OpenMP = MOGSLib::Abstraction::RTS<RuntimeSystemEnum::OpenMP>;
+END_NAMESPACE

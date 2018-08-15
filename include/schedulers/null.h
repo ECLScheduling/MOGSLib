@@ -7,10 +7,6 @@ BEGIN_NAMESPACE(Scheduler)
 /**
  * @brief A scheduler that makes nothing.
  */
-class Null : public Abstraction::Scheduler {
-public:
-  Null() : Scheduler(SchedulerTraits<MOGSLib::Abstraction::null>::name) {}
-  virtual ~Null() {}
-};
+class Null : public Abstraction::Scheduler<MOGSLib::Abstraction::null> {};
 
 END_NAMESPACE

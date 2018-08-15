@@ -1,29 +1,33 @@
-// #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 
-// #include <iostream>
-// #include <autogen/schedulers.h>
+#include <string>
+#include <iostream>
 
-// #define LINKED_TO_CHARM
-// namespace BaseLB {
-//   struct LDStats {};
-// }
+class TestingRandomStuff : public ::testing::Test {
+public:
+  std::string *test_obj;
 
-// #include <mogslib/rts/charm.h>
+  // Executed always before test case
+  void SetUp() {
+    test_obj = nullptr;
+  }
 
-// class TestingRandomStuff : public ::testing::Test {
+  // Executed always after test case
+  void TearDown() {
+    if(test_obj != nullptr)
+      delete test_obj;
+  }
+};
 
-// };
+TEST_F(TestingRandomStuff, string_size) {
+  auto size = 2;
 
-// // TEST_F(TestingRandomStuff, option_test) {
-// //   auto sched = MOGSLib::Schedulers::get_by_name("roundrobin");
+  test_obj = new std::string();
+  for(auto i = 0; i < size; ++i)
+    test_obj->append("a");
 
-// //   if(sched->has){
-// //     auto schedptr = MOGSLib::Optional::get_value<MOGSLib::Schedulers::SchedulerPtr>(sched);
-// //     std::cout << schedptr->name << std::endl;
-// //     //schedptr->work();
-// //   }
-// // }
-
-// TEST_F(TestingRandomStuff, charm_link) {
-//   MOGSLib::RTS::Charm::stats = new BaseLB::LDStats();
-// }
+  EXPECT_EQ(test_obj->size(), size+1); // If this fails, the test case continues.
+  ASSERT_EQ(0, test_obj->compare("aa")); // If this fails, the test case ends
+  ASSERT_TRUE(test_obj->compare("aa")); // If this fails, the test case ends
+  ASSERT_EQ(test_obj->size(), size); // If this fails, the test case continues.
+}
