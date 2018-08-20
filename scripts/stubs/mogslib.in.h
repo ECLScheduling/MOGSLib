@@ -6,35 +6,33 @@
 
 namespace MOGSLib {
 
-template<typename Tuple, unsigned Index>
+template<typename Tuple, unsigned Index, unsigned ... Indexes>
 struct ConceptInitializer {
-  static void init(Tuple &t) {
-    auto ref = std::get<Index>(t);
-    ref = new typename std::decay<typename std::tuple_element<Index, Tuple>::type>::type();
-
-    ref->init();
-    ConceptInitializer<Tuple, Index-1>::init(t);
-  }
-
-  static void clean(Tuple &t) {
-    delete std::get<Index>(t);
-    ConceptInitializer<Tuple, Index-1>::init(t); 
+  static void tuple_init(Tuple &tuple) {
+    ConceptInitializer<Tuple, Index>::tuple_init(tuple);
+    ConceptInitializer<Tuple, Indexes...>::tuple_init(tuple);
   }
 };
 
-template<typename Tuple>
-struct ConceptInitializer<Tuple, 1> {
-  static void init(Tuple &t) {
-    auto ref = std::get<0>(t);
-    ref = new typename std::decay<typename std::tuple_element<Index, Tuple>::type>::type();
-
-    ref->init();
-  }
-
-  static void clean(Tuple &t) {
-    delete std::get<Index>(t);
+template<typename Tuple, unsigned Index>
+struct ConceptInitializer<Tuple, Index> {
+  static bool initialized;
+  static void tuple_init(Tuple &tuple) {
+    if(!initialized)
+      std::get<Index>(tuple).init();
+    initialized = true;
   }
 };
+
+template<typename Tuple, typename Target, unsigned Index, unsigned ... Indexes>
+struct Unfold {
+  static Target unfold(Tuple &tuple) {
+    return std::tuple_cat(std::make_tuple(std::get<Index>(tuple)), Unfold<Tuple, , Indexes...>::unfold(tuple));
+  }
+};
+
+template<typename Tuple, unsigned Index>
+bool ConceptInitializer<Tuple, Index>::initialized;
 
 /**
  * @brief This structure assembles MOGSLibs components into a Scheduler collection that can be use within a selected RTS.
@@ -46,20 +44,17 @@ struct SchedulerCollection {
   template<template<typename ... Concepts> typename Sched, typename ... Concepts>
   struct CompleteScheduler {
     using Scheduler = Sched<Concepts...>;
-    using ConceptTuple = std::tuple<Concepts *...>
 
     std::unique_pointer<Scheduler> scheduler;
-    std::unique_pointer<ConceptTuple> concepts;
 
-    TaskMap init_and_work() {
-      ConceptInitializer<ConceptTuple, std::tuple_elements<ConceptTuple>::value>::init(concepts);
-      sched.init(concepts);
-
-      return sched.work();
+    TaskMap init_and_work(Concepts *... concepts) {
+      scheduler = std::make_unique<Scheduler>();
+      scheduler->init(concepts...);
+      return scheduler->work();
     }
 
     TaskMap work() {
-      return sched.work();
+      return scheduler->work();
     }
 
     void clean() {
@@ -68,7 +63,7 @@ struct SchedulerCollection {
   };
 
   using SchedulerTuple = std::tuple<$SCHEDULER_TUPLE$>;
-  using ConceptTuple = std::tuple<$CONCEPT_TUPLE$>
+  using ConceptTuple = std::tuple<$CONCEPT_TUPLE$>;
 
   SchedulerTuple schedulers;
   ConceptTuple concepts;

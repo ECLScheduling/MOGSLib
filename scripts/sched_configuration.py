@@ -3,7 +3,8 @@
 from mogslib_utils import *
 import re
 
-included_concepts = []
+included_concepts = dict()
+sched_concepts = {}
 
 def find_sched_class_name(sched_name):
   folders = get_folder_map()
@@ -50,10 +51,10 @@ def generate_scheduler_tuple_code(names, concepts):
     if concepts[i]:
       ret += ', '
       for concept in concepts[i]:
-        ret += concept + ','
-      ret = ret[:-1]
-    ret += '),'
-  return ret[:-1]
+        ret += concept + ', '
+      ret = ret[:-2]
+    ret += '), '
+  return ret[:-2]
 
 def generate_schedule_function_code(n):
   ret = ''
@@ -70,6 +71,7 @@ def configure_schedulers(scheds, rts_name):
   sched_names = []
   sched_adapters = []
   for sched in scheds:
+    sched_concepts[sched] = []
     print('\nConfiguring Scheduler \'' + sched.name + '\' to work within \'' + rts_name + '\' Runtime System.')
     sched_includes += '#include <schedulers/' + sched.name + '.h>\n'
 
@@ -77,11 +79,14 @@ def configure_schedulers(scheds, rts_name):
     sched_adapters.append(find_adapters_class_names(sched.concepts))
 
     for concept in sched.concepts:
+      concept_index = 0
       if concept not in included_concepts:
         print('\tImporting \'' + concept + '\' Concept to MOGSLib definitions.')
         concept_includes += '#include <concepts/concrete/' + concept + '.h>\n'
         concept_includes += '#include <concepts/init/' + rts_name + '/' + concept + '.ipp>\n'
-        included_concepts.append(concept)
+        included_concepts[concept] = concept_index
+      sched_concepts[sched].append(included_concepts[concept])
+      print(sched_concepts)
 
   with open(file, 'r+') as infile:
     filedata = infile.read()
@@ -90,6 +95,7 @@ def configure_schedulers(scheds, rts_name):
 
     filedata = filedata.replace('$SCHEDULER_TUPLE$', generate_scheduler_tuple_code(sched_names, sched_adapters))
     filedata = filedata.replace('$SCHEDULE_SNIPPET$', generate_schedule_function_code(len(sched_names)))
+    filedata = filedata.replace('$CONCEPT_TUPLE$', ', '.join(find_adapters_class_names(included_concepts.keys())))
 
     infile.seek(0)
     infile.truncate()
