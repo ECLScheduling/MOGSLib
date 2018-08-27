@@ -18,8 +18,8 @@ public:
   /**
    * @brief The method that will initialize the references to the concrete concepts used by the scheduler.
    */
-  void init(_Concepts *... ref) {
-    concepts = std::make_unique<Concepts>(std::make_tuple(ref...));
+  void init(std::tuple<Concepts *...> ref) {
+    concepts = std::make_unique<Concepts>(ref);
   }
 
   /**

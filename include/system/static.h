@@ -36,6 +36,12 @@ struct TemplateName \
 #define SchedulerTupleDef(SchedName, ...) CompleteScheduler<SchedulerDecl(SchedName), ##__VA_ARGS__>
 
 #define ScheduleSnippet(SchedId, ...) \
-if(scheduler_name.compare(SchedulerTraits<typename std::tuple_element<SchedId, SchedulerTuple>::type::SchedulerType)>::name) \
-    ConceptInitializer<ConceptTuple, ##__VA_ARGS__>::tuple_init(concepts);
-    return std::get<SchedId>(schedulers).init_and_work();
+if(scheduler_name.compare(SchedulerTraits<typename std::tuple_element<SchedId, SchedulerTuple>::type::SchedulerType)>::name)\
+    ConceptInitializer<ConceptTuple, ##__VA_ARGS__>::tuple_init(concepts);\
+    return std::get<SchedId>(schedulers).init_and_work(std::tie());
+
+#define TupleGetSnippet(ConceptName, ConceptIndex) \
+template<bool spec>\
+struct TupleGet<ConceptDecl(ConceptName), spec> {\
+  static A* get() { return &std::get<ConceptIndex>(concepts); }\
+};

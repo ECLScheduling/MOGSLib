@@ -19,8 +19,8 @@ public:
    * @brief The method that will initialize the references to the concrete concepts used by the scheduler.
    * @param refs A tuple of concrete concept pointers that will be be used to construct the scheduler's dependency structure.
    **/
-  void init(std::tuple<_Concepts *...> refs) {
-    concepts = std::make_unique<Concepts>(refs);
+  void init(std::tuple<Concepts *...> ref) {
+    concepts = std::make_unique<Concepts>(ref);
   }
 
   /**
