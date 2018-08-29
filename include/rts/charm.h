@@ -21,5 +21,5 @@ struct RTS<RuntimeSystemEnum::Charm> {
 END_NAMESPACE
 
 BEGIN_NAMESPACE(RTS)
-using Charm = MOGSLib::Abstraction::RTS<RuntimeSystemEnum::Charm>;
+using Charm = MOGSLib::Abstraction::RTS<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>;
 END_NAMESPACE

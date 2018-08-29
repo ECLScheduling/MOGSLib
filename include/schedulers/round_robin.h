@@ -12,7 +12,7 @@ template<typename ... _Concepts>
 class RoundRobin : public Abstraction::Scheduler<Abstraction::SchedulerEnum::round_robin> {
 public:
 
-  using Concepts = typename MOGSLib::SchedulerTraits<SchedulerType>::Dependencies<_Concepts...>;
+  using Concepts = typename MOGSLib::SchedulerTraits<Abstraction::SchedulerEnum::round_robin>::Dependencies<_Concepts...>;
   std::unique_ptr<Concepts> concepts;
 
   /**

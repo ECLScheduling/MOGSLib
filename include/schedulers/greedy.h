@@ -11,13 +11,13 @@ BEGIN_NAMESPACE(Scheduler)
 template<typename ... _Concepts>
 class Greedy : public Abstraction::Scheduler<Abstraction::SchedulerEnum::greedy> {
 public:
-  using Concepts = typename MOGSLib::SchedulerTraits<SchedulerType>::Dependencies<_Concepts...>;
+  using Concepts = typename MOGSLib::SchedulerTraits<Abstraction::SchedulerEnum::greedy>::Dependencies<_Concepts...>;
   std::unique_ptr<Concepts> concepts;
 
   /**
    * @brief The method that will initialize the references to the concrete concepts used by the scheduler.
    */
-  void init(std::tuple<Concepts *...> ref) {
+  void init(std::tuple<_Concepts *...> ref) {
     concepts = std::make_unique<Concepts>(ref);
   }
 

@@ -12,7 +12,7 @@ namespace MOGSLib {
  */
 template<Abstraction::SchedulerEnum T>
 struct SchedulerTraits {
-  static constexpr auto name = "null";
+  static std::string name() { return "null"; }
 
   template<typename ... Concepts>
   struct Dependencies {};
@@ -20,7 +20,7 @@ struct SchedulerTraits {
 
 template<>
 struct SchedulerTraits<Abstraction::SchedulerEnum::round_robin> {
-  static constexpr auto name = "roundrobin";
+  static std::string name() { return "roundrobin"; }
 
   template<typename ... Concepts>
   using Dependencies = Dependency::WorkloadAware<Concepts...>;
@@ -28,7 +28,7 @@ struct SchedulerTraits<Abstraction::SchedulerEnum::round_robin> {
 
 template<>
 struct SchedulerTraits<Abstraction::SchedulerEnum::compact> {
-  static constexpr auto name = "compact";
+  static std::string name() { return "compact"; }
 
   template<typename ... Concepts>
   using Dependencies = Dependency::WorkloadAware<Concepts...>;
@@ -36,7 +36,7 @@ struct SchedulerTraits<Abstraction::SchedulerEnum::compact> {
 
 template<>
 struct SchedulerTraits<Abstraction::SchedulerEnum::task_pack> {
-  static constexpr auto name = "taskpack";
+  static std::string name() { return "taskpack"; }
 
   template<typename ... Concepts>
   using Dependencies = Dependency::WorkloadAwareWithK<Concepts...>;
@@ -44,7 +44,7 @@ struct SchedulerTraits<Abstraction::SchedulerEnum::task_pack> {
 
 template<>
 struct SchedulerTraits<Abstraction::SchedulerEnum::greedy> {
-  static constexpr auto name = "greedy";
+  static std::string name() { return "greedy"; }
 
   template<typename ... Concepts>
   using Dependencies = Dependency::WorkloadAware<Concepts...>;

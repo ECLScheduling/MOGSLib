@@ -22,11 +22,13 @@ bool MOGSLibLB::QueryBalanceNow(int _step)
 }
 
 void MOGSLibLB::work(LDStats* stats) {
-  //TODO: lacking the creation of concepts.
-  auto map = MOGSLib::SchedulerCollection::schedule("greedy");
+  std::string scheduler_name = "greedy";
+  auto map = MOGSLib::SchedulerCollection::schedule(scheduler_name);
   
-  for(auto i = 0; i < adapter0->ntasks(); ++i)
-    CkPrintf("Task %d in PE %d.\n",adapter0->task_ids[i], adapter0->PE_ids[map[i]]);
+  auto temporary_hack = std::get<0>(MOGSLib::SchedulerCollection::ConceptTuple::concepts);
+
+  for(auto i = 0; i < temporary_hack.ntasks(); ++i)
+    CkPrintf("Task %d in PE %d.\n",temporary_hack.task_ids[i], temporary_hack.PE_ids[map[i]]);
 
   delete map;
 }

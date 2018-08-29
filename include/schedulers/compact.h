@@ -12,7 +12,7 @@ template<typename ... _Concepts>
 class Compact : public Abstraction::Scheduler<Abstraction::SchedulerEnum::compact> {
 public:
 
-  using Concepts = typename MOGSLib::SchedulerTraits<SchedulerType>::Dependencies<_Concepts...>;
+  using Concepts = typename MOGSLib::SchedulerTraits<Abstraction::SchedulerEnum::compact>::Dependencies<_Concepts...>;
   std::unique_ptr<Concepts> concepts;
 
   /**

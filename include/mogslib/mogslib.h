@@ -3,24 +3,13 @@
 #include <rts/charm.h>
 #include <rts/charm.ipp>
 
-@SCHED_INCLUDES@
-@CONCEPT_INCLUDES@
+#include <schedulers/greedy.h>
+
+#include <concepts/concrete/basic_scheduler_input.h>
+#include <concepts/init/charm/basic_scheduler_input.ipp>
+
 
 namespace MOGSLib {
-
-/**
- * @brief This static structure is responsible for calling the init method of several Concepts within a tuple of concepts.
- * @type Tuple A tuple of concepts concrete definition.
- * @type Index The index passed as template parameter to std::get.
- * @type Indice The indice of the next concept's init calls.
- */
-template<typename Tuple, unsigned Index, unsigned ... Indice>
-struct ConceptInitializer {
-  static void tuple_init(Tuple &tuple) {
-    ConceptInitializer<Tuple, Index>::tuple_init(tuple);
-    ConceptInitializer<Tudice...>::tuple_init(tuple);
-  }
-};
 
 /**
  * @brief This specialization of ConceptInitializer is responsible for calling the init method of a single Concept within a tuple of concepts.
@@ -29,9 +18,9 @@ struct ConceptInitializer {
  * @type Index The index passed as template parameter to std::get.
  */
 template<typename Tuple, unsigned Index>
-struct ConceptInitializer<Tuple, Index> {
+struct ConceptInitializer {
   static bool initialized;
-  static void tuple_init(Tuple &tuple) {
+  static void init(Tuple &tuple) {
     if(!initialized)
       std::get<Index>(tuple).init();
     initialized = true;
@@ -53,7 +42,7 @@ struct SchedulerCollection {
    * @details The "type" type is constructed by the precompilation step in MOGSLib as is every TupleGet specialization.
    */
   struct ConceptTuple {
-    using type = std::tuple<$CONCEPT_TUPLE$>;
+    using type = std::tuple<ConceptDecl(BasicSchedulerInput)>;
     
     static type concepts;
 
@@ -66,7 +55,7 @@ struct SchedulerCollection {
       static T* get() { return nullptr; }
     };
 
-    $TUPLE_GET_SPECS$ //TupleGetSnippet()
+    TupleGetSnippet(ConceptDecl(BasicSchedulerInput), 0) //TupleGetSnippet()
 
     /**
      * @brief Get a value from the concepts tuple that corresponds to the T type.
@@ -105,7 +94,7 @@ struct SchedulerCollection {
   struct CompleteScheduler {
     using Scheduler = Sched<Concepts...>;
 
-    std::unique_pointer<Scheduler> scheduler;
+    std::unique_ptr<Scheduler> scheduler;
 
     TaskMap init_and_work() {
       scheduler = std::make_unique<Scheduler>();
@@ -116,17 +105,18 @@ struct SchedulerCollection {
     TaskMap work() {
       return scheduler->work();
     }
-
-    void clean() {
-      ConceptInitializer<ConceptTuple, std::tuple_elements<ConceptTuple>::value>::clean(concepts);
-    }
   };
 
-  using SchedulerTuple = std::tuple<$SCHEDULER_TUPLE$>;
+  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(Greedy), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput))>;
   static SchedulerTuple schedulers;
 
-  static void TaskMap schedule(std:string &scheduler_name) {
-$SCHEDULE_SNIPPET$
+  /**
+   * @brief Evoke a scheduler and its dependencies to obtain a task map.
+   * @details Calls the init method of every concept linked to the scheduler and the scheduler's init itself, then call the scheduler's work method.
+   * @param scheduler_name The name of the scheduler to be invoked. The names are declared in the scheduler traits.
+   */
+  static TaskMap schedule(std::string &scheduler_name) {
+		ScheduleSnippet(0)
     return nullptr;
   }
 };

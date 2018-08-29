@@ -33,15 +33,16 @@ struct TemplateName \
 #define ConceptDecl(Name) MOGSLib::Concept::Name
 /** TODO: The next line is unsupported by some compilers. More study in this might make it more portable. As of now ## does the trick. **/
 //#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<MOGSLib::Scheduler::SchedName __VA_OPT__(,) __VA_ARGS__>
-#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<SchedulerDecl(SchedName), ##__VA_ARGS__>
+#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<SchedName, ##__VA_ARGS__>
 
-#define ScheduleSnippet(SchedId, ...) \
-if(scheduler_name.compare(SchedulerTraits<typename std::tuple_element<SchedId, SchedulerTuple>::type::SchedulerType)>::name)\
-    ConceptInitializer<ConceptTuple, ##__VA_ARGS__>::tuple_init(concepts);\
-    return std::get<SchedId>(schedulers).init_and_work(std::tie());
+#define ScheduleSnippet(SchedId) \
+if(scheduler_name.compare(SchedulerTraits<std::tuple_element<SchedId, SchedulerTuple>::type::Scheduler::scheduler_type()>::name()) == 0) \
+    return std::get<SchedId>(schedulers).init_and_work();
 
 #define TupleGetSnippet(ConceptName, ConceptIndex) \
-template<bool spec>\
-struct TupleGet<ConceptDecl(ConceptName), spec> {\
-  static A* get() { return &std::get<ConceptIndex>(concepts); }\
+template<bool spec> \
+struct TupleGet<ConceptName, spec> { \
+  static ConceptName* get() { \
+    ConceptInitializer<type, ConceptIndex>::init(ConceptTuple::concepts); \
+    return &std::get<ConceptIndex>(ConceptTuple::concepts); } \
 };

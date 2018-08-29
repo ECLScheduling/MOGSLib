@@ -19,7 +19,7 @@ def find_sched_class_name(sched_name):
     for line in infile:
       match = p.match(line)
       if match is not None:
-        classname = match.group(1)
+        classname = 'SchedulerDecl(' + match.group(1) + ')'
         break
   return classname
 
@@ -61,6 +61,14 @@ def generate_schedule_function_code(n):
     ret += '\t\tScheduleSnippet(' + str(i) + ')\n'
   return ret[:-1]
 
+def generate_tupleget_specs(adapters):
+  ret = ''
+  i = 0
+  for adapter in adapters:
+    ret += 'TupleGetSnippet(' + adapter + ', ' + str(i) + ')\n'
+  ret = ret[:-1]
+  return ret
+
 def configure_schedulers(scheds, rts_name):
   folders = get_folder_map()
   file = os.path.join(folders['mogslib'], 'mogslib.h')
@@ -84,6 +92,7 @@ def configure_schedulers(scheds, rts_name):
         concept_includes += '#include <concepts/init/' + rts_name + '/' + concept + '.ipp>\n'
         included_concepts[concept] = concept_index
 
+  adapters_class_names = find_adapters_class_names(included_concepts.keys())
   with open(file, 'r+') as infile:
     filedata = infile.read()
     filedata = filedata.replace('@SCHED_INCLUDES@', sched_includes)
@@ -91,8 +100,8 @@ def configure_schedulers(scheds, rts_name):
 
     filedata = filedata.replace('$SCHEDULER_TUPLE$', generate_scheduler_tuple_code(sched_names, sched_adapters))
     filedata = filedata.replace('$SCHEDULE_SNIPPET$', generate_schedule_function_code(len(sched_names)))
-    filedata = filedata.replace('$CONCEPT_TUPLE$', ', '.join(find_adapters_class_names(included_concepts.keys())))
-    filedata = filedata.replace('$TUPLE_GET_SPECS$', generate_tupleget_specs())
+    filedata = filedata.replace('$CONCEPT_TUPLE$', ', '.join(adapters_class_names))
+    filedata = filedata.replace('$TUPLE_GET_SPECS$', generate_tupleget_specs(adapters_class_names))
     infile.seek(0)
     infile.truncate()
     infile.write(filedata)

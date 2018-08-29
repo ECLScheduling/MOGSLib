@@ -7,29 +7,15 @@
 namespace MOGSLib {
 
 /**
- * @brief This static structure is responsible for calling the init method of several Concepts within a tuple of concepts.
- * @type Tuple A tuple of concepts concrete definition.
- * @type Index The index passed as template parameter to std::get.
- * @type Indice The indice of the next concept's init calls.
- */
-template<typename Tuple, unsigned Index, unsigned ... Indice>
-struct ConceptInitializer {
-  static void tuple_init(Tuple &tuple) {
-    ConceptInitializer<Tuple, Index>::tuple_init(tuple);
-    ConceptInitializer<Tudice...>::tuple_init(tuple);
-  }
-};
-
-/**
  * @brief This specialization of ConceptInitializer is responsible for calling the init method of a single Concept within a tuple of concepts.
  * @details When a concept is initialized by this structure, future calls to its initialization won't invoke the init method of the previously-initialized concept.
  * @type Tuple A tuple of concepts concrete definition.
  * @type Index The index passed as template parameter to std::get.
  */
 template<typename Tuple, unsigned Index>
-struct ConceptInitializer<Tuple, Index> {
+struct ConceptInitializer {
   static bool initialized;
-  static void tuple_init(Tuple &tuple) {
+  static void init(Tuple &tuple) {
     if(!initialized)
       std::get<Index>(tuple).init();
     initialized = true;
@@ -103,7 +89,7 @@ struct SchedulerCollection {
   struct CompleteScheduler {
     using Scheduler = Sched<Concepts...>;
 
-    std::unique_pointer<Scheduler> scheduler;
+    std::unique_ptr<Scheduler> scheduler;
 
     TaskMap init_and_work() {
       scheduler = std::make_unique<Scheduler>();
@@ -114,16 +100,17 @@ struct SchedulerCollection {
     TaskMap work() {
       return scheduler->work();
     }
-
-    void clean() {
-      ConceptInitializer<ConceptTuple, std::tuple_elements<ConceptTuple>::value>::clean(concepts);
-    }
   };
 
   using SchedulerTuple = std::tuple<$SCHEDULER_TUPLE$>;
   static SchedulerTuple schedulers;
 
-  static void TaskMap schedule(std:string &scheduler_name) {
+  /**
+   * @brief Evoke a scheduler and its dependencies to obtain a task map.
+   * @details Calls the init method of every concept linked to the scheduler and the scheduler's init itself, then call the scheduler's work method.
+   * @param scheduler_name The name of the scheduler to be invoked. The names are declared in the scheduler traits.
+   */
+  static TaskMap schedule(std::string &scheduler_name) {
 $SCHEDULE_SNIPPET$
     return nullptr;
   }

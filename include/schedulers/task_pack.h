@@ -12,7 +12,7 @@ template<typename ... _Concepts>
 class TaskPack : public Abstraction::Scheduler<Abstraction::SchedulerEnum::task_pack> {
 public:
 
-  using Concepts = typename MOGSLib::SchedulerTraits<SchedulerType>::Dependencies<_Concepts...>;
+  using Concepts = typename MOGSLib::SchedulerTraits<Abstraction::SchedulerEnum::task_pack>::Dependencies<_Concepts...>;
   std::unique_ptr<Concepts> concepts;
 
   /**
