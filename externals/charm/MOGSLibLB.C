@@ -22,7 +22,9 @@ bool MOGSLibLB::QueryBalanceNow(int _step)
 }
 
 void MOGSLibLB::work(LDStats* stats) {
-  std::string scheduler_name = "greedy";
+  std::string scheduler_name = "roundrobin";
+  MOGSLib::RTS::Charm::stats = stats;
+
   auto map = MOGSLib::SchedulerCollection::schedule(scheduler_name);
   
   auto temporary_hack = std::get<0>(MOGSLib::SchedulerCollection::ConceptTuple::concepts);

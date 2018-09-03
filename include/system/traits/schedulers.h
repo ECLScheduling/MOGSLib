@@ -3,6 +3,7 @@
 #include <system/types.h>
 
 #include <dependencies/workload_aware.h>
+#include <dependencies/no_dependencies.h>
 
 namespace MOGSLib {
 
@@ -15,7 +16,7 @@ struct SchedulerTraits {
   static std::string name() { return "null"; }
 
   template<typename ... Concepts>
-  struct Dependencies {};
+  using Dependencies = Dependency::NoDependencies<Concepts...>;
 };
 
 template<>

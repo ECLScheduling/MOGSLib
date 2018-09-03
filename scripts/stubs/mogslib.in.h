@@ -57,7 +57,7 @@ struct SchedulerCollection {
      * @details This method utilizes the specialized TupleGet structures that are generated in MOGSLib precompilation step.
      */
     template<typename T>
-    static T* get() { return &TupleGet<T>::get(); }
+    static T* get() { return TupleGet<T>::get(); }
 
     /**
      * @brief This structure returns a subtuple of the type tuple containing pointers to its values.
@@ -74,7 +74,7 @@ struct SchedulerCollection {
      */
     template<typename T>
     struct SubTupleGet<T> {
-      static std::tuple<T*> get() { return std::make_tuple(TupleGet<T>::get()); }
+      static std::tuple<T*> get() { return std::make_tuple(ConceptTuple::get<T>()); }
     };
 
     /**
