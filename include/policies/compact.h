@@ -2,8 +2,6 @@
 
 #include <system/type_definitions.h>
 
-#include <cstring>
-
 BEGIN_NAMESPACE(Policy)
 
 /**

@@ -51,4 +51,12 @@ struct SchedulerTraits<Abstraction::SchedulerEnum::greedy> {
   using Dependencies = Dependency::WorkloadAware<Concepts...>;
 };
 
+template<>
+struct SchedulerTraits<Abstraction::SchedulerEnum::binlpt> {
+  static std::string name() { return "binlpt"; }
+
+  template<typename ... Concepts>
+  using Dependencies = Dependency::WorkloadAwareWithK<Concepts...>;
+};
+
 }

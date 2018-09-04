@@ -23,7 +23,8 @@ enum SchedulerEnum {
   round_robin,
   compact,
   task_pack,
-  greedy
+  greedy,
+  binlpt
 };
 
 END_NAMESPACE
