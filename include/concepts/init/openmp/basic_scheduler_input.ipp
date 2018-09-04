@@ -6,4 +6,4 @@ void BasicSchedulerInput::init<MOGSLib::Abstraction::RuntimeSystemEnum::OpenMP>(
   PEs.resize(MOGSLib::RTS::OpenMP::nPEs);
 }
 
-END_NAMESPAC
+END_NAMESPACE

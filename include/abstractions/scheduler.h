@@ -17,14 +17,14 @@ public:
 
 protected:
   using DependencyStructure = typename MOGSLib::SchedulerTraits<T>::template Dependencies<_Concepts...>;
-  std::unique_ptr<DependencyStructure> concepts;
+  std::shared_ptr<DependencyStructure> concepts;
 
 public:
   /**
    * @brief The method that will initialize the references to the concrete concepts used by the scheduler.
    */
   void init(std::tuple<_Concepts *...> ref) {
-    concepts = std::make_unique<DependencyStructure>(ref);
+    concepts = std::make_shared<DependencyStructure>(ref);
   }
 
   /**

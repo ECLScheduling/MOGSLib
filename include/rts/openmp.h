@@ -2,6 +2,7 @@
 
 #include <abstractions/rts.h>
 #include <system/type_definitions.h>
+#include <iostream>
 
 BEGIN_NAMESPACE(Abstraction)
 
@@ -42,5 +43,5 @@ struct RTS<RuntimeSystemEnum::OpenMP> {
 END_NAMESPACE
 
 BEGIN_NAMESPACE(RTS)
-using OpenMP = MOGSLib::Abstraction::RTS<RuntimeSystemEnum::OpenMP>;
+using OpenMP = MOGSLib::Abstraction::RTS<MOGSLib::Abstraction::RuntimeSystemEnum::OpenMP>;
 END_NAMESPACE

@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <type_traits>
+#include <tuple>
 
 #define HAS_MEMBER_MACRO(MethodName, TemplateName) \
 template <typename T> \

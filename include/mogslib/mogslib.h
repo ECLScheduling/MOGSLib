@@ -1,12 +1,12 @@
 #pragma once
 
-#include <rts/charm.h>
-#include <rts/charm.ipp>
+#include <rts/openmp.h>
+#include <rts/openmp.ipp>
 
-#include <schedulers/round_robin.h>
+#include <schedulers/greedy.h>
 
 #include <concepts/concrete/basic_scheduler_input.h>
-#include <concepts/init/charm/basic_scheduler_input.ipp>
+#include <concepts/init/openmp/basic_scheduler_input.ipp>
 
 
 namespace MOGSLib {
@@ -107,7 +107,7 @@ struct SchedulerCollection {
     }
   };
 
-  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(RoundRobin), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput))>;
+  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(Greedy), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput))>;
   static SchedulerTuple schedulers;
 
   /**

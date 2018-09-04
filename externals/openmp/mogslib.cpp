@@ -8,7 +8,7 @@
  * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_chunksize(unsigned chunksize) {
-  MOGSLib::Definitions::RTS::set_chunk_size(chunksize);
+  MOGSLib::RTS::OpenMP::set_chunk_size(chunksize);
 }
 
 /**
@@ -17,7 +17,7 @@ inline void mogslib_call_set_chunksize(unsigned chunksize) {
  * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_nPEs(unsigned nPEs) {
-  MOGSLib::Definitions::RTS::set_nPEs(nPEs);
+  MOGSLib::RTS::OpenMP::set_nPEs(nPEs);
 }
 
 /**
@@ -26,7 +26,7 @@ inline void mogslib_call_set_nPEs(unsigned nPEs) {
  * @param ntasks The amount of tasks generated in OpenMP.
  */
 inline void mogslib_call_set_ntasks(unsigned ntasks) {
-  MOGSLib::Definitions::RTS::set_ntasks(ntasks);
+  MOGSLib::RTS::OpenMP::set_ntasks(ntasks);
 }
 
 /**
@@ -35,8 +35,8 @@ inline void mogslib_call_set_ntasks(unsigned ntasks) {
  * @return The task map represented as an array to where the task should execute.
  */
 inline unsigned *mogslib_call_strategy_map() {
-  //TODO: lacking the creation of concepts.
-  return MOGSLib::SchedulerCollection::schedule("greedy");
+  std::string scheduler_name = "greedy";
+  return MOGSLib::SchedulerCollection::schedule(scheduler_name);
 }
 
 extern "C" {
