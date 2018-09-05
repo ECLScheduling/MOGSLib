@@ -69,7 +69,7 @@ public:
     data._ntasks = 0;
     data._nPEs = 0;
 
-    scheduler.init(&data,&data,&data);
+    scheduler.init(std::make_tuple(&data,&data,&data));
 
     map = nullptr;
   }

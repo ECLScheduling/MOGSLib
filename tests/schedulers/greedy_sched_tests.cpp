@@ -77,7 +77,7 @@ public:
   }
 
   void SetUp() {
-    scheduler.init(&data, &data);
+    scheduler.init(std::make_tuple(&data, &data));
   }
 
   void TearDown() {

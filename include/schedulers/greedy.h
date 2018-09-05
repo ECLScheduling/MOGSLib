@@ -18,7 +18,7 @@ public:
    **/
   TaskMap work() override {
     auto concepts = Base::concepts;
-    
+
     auto ntasks = concepts->task_data->ntasks();
     auto map = new Index[ntasks]();
     

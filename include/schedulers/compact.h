@@ -11,14 +11,14 @@ BEGIN_NAMESPACE(Scheduler)
 template<typename ... _Concepts>
 class Compact : public Abstraction::Scheduler<Abstraction::SchedulerEnum::compact, _Concepts...> {
 public:
-  using Base = Abstraction::Scheduler<Abstraction::SchedulerEnum::greedy, _Concepts...>;
+  using Base = Abstraction::Scheduler<Abstraction::SchedulerEnum::compact, _Concepts...>;
 
   /**
    * @brief The method to obtain a task map based on a compact policy.
    **/
   TaskMap work() override {
     auto concepts = Base::concepts;
-
+    
     auto ntasks = concepts->task_data->ntasks();
     auto nPEs = concepts->PE_data->nPEs();
 
