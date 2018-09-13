@@ -309,26 +309,27 @@ TEST_F(BinlptPolicyTests, policy_regular_tasks_loaded_PEs) {
 
   execute_policy();
 
-  EXPECT_EQ(1, map[0]);
-  EXPECT_EQ(1, map[1]);
-  EXPECT_EQ(0, map[2]);
-  EXPECT_EQ(0, map[3]);
+  EXPECT_EQ(0, map[0]);
+  EXPECT_EQ(0, map[1]);
+  EXPECT_EQ(1, map[2]);
+  EXPECT_EQ(1, map[3]);
 }
 
-// TEST_F(BinlptPolicyTests, policy_irregular_tasks_loaded_PEs) {
-//   Index tasks = 5;
-//   Index PEs = 4;
-//   k = 3;
+TEST_F(BinlptPolicyTests, policy_irregular_tasks_loaded_PEs) {
+  Index tasks = 5;
+  Index PEs = 4;
+  k = 3;
 
-//   set_increasing_loads(tasks); // [1,2,3,4,5] => 0:[1,2,3] 1:[4,5] 2:[] => ordered:{0,1}
+  set_increasing_loads(tasks); // [1,2,3,4,5] => 0:[1,2,3] 1:[4,5] 2:[] => ordered:{0,1}
   
-//   setPEs(PEs);
-//   PE_workloads[0] = 7;
+  setPEs(PEs);
+  PE_workloads[0] = 7;
 
-//   execute_policy();
+  execute_policy();
 
-//   EXPECT_EQ(0, map[0]);
-//   EXPECT_EQ(0, map[1]);
-//   EXPECT_EQ(1, map[2]);
-//   EXPECT_EQ(1, map[3]);
-// }
+  EXPECT_EQ(2, map[0]);
+  EXPECT_EQ(2, map[1]);
+  EXPECT_EQ(2, map[2]);
+  EXPECT_EQ(1, map[3]);
+  EXPECT_EQ(1, map[4]);
+}

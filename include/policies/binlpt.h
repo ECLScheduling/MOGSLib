@@ -27,7 +27,7 @@ public:
   /**
    * @brief Structure to auxiliate the comparison in the sort algorithms
    **/
-  template<typename T, bool ascending_order>
+  template<typename T, bool decreasing_order>
   struct Compare {
     static bool value(T &a, T &b) {
       return a < b;
@@ -35,7 +35,7 @@ public:
   };
 
   /**
-   * @brief Structure specialization to auxiliate the comparison in the sort algorithms 
+   * @brief Structure specialization to auxiliate the comparison in the sort algorithms.
    **/
   template<typename T>
   struct Compare<T, false> {
@@ -49,13 +49,13 @@ public:
    *
    * @type T The type of elements to be sorted. Must perform < operator.
    * @type UInt The unsigned integer type to be used as the array index.
-   * @type ascending_order A boolean to choose whether the algorithm should organize in ascending order or not. This value defaults to increasing order.
+   * @type decreasing_order A boolean to choose whether the algorithm should organize in ascending order or not. This value defaults to increasing order.
    *
    * @param map The original indices of the elements in a.
    * @param a The array of elements to be sorted.
    * @param n the size of the array a.
    **/
-  template <typename T, typename UInt, bool ascending_order = true>
+  template <typename T, typename UInt, bool decreasing_order = true>
   static void insertion_sort(UInt *map, T *a, const UInt n) {
     UInt i, j; /* Loop indexes.    */
     
@@ -65,7 +65,7 @@ public:
       for (j = i + 1; j < n; j++)
       {
         /* Swap. */
-        if (Compare<T, ascending_order>::value(a[j], a[i]))
+        if (Compare<T, decreasing_order>::value(a[j], a[i]))
         {
           swap<T>(a[i], a[j]);
           swap<UInt>(map[i], map[j]);
@@ -136,7 +136,7 @@ public:
       chunk_map[i] = i;
 
     /* Organize the chunks in decreasing order */
-    insertion_sort<Load, Index, false>(chunk_map, chunk_loads, nchunks);
+    insertion_sort<Load, Index, true>(chunk_map, chunk_loads, nchunks);
 
     /* Iterate over the chunks, starting from the largest, and assign them to PEs */
     for(Index i = nchunks; i > 0; --i) {
