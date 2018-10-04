@@ -21,7 +21,7 @@ public:
     
     auto ntasks = concepts->task_data->ntasks();
     auto nPEs = concepts->PE_data->nPEs();
-    auto npacks = concepts->k_data->k();
+    auto npacks = *concepts->k;
 
     auto map = new Index[ntasks]();
     Policy::TaskPack::map(map, ntasks, nPEs, npacks);

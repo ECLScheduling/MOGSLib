@@ -41,7 +41,7 @@ struct DataDummyContainer {
   }
 };
 
-using TestScheduler = MOGSLib::Scheduler::TaskPack<DataDummyContainer, DataDummyContainer, DataDummyContainer>;
+using TestScheduler = MOGSLib::Scheduler::TaskPack<DataDummyContainer, DataDummyContainer, Index>;
 
 class TaskPackSchedTests : public ::testing::Test {
 public:
@@ -69,7 +69,7 @@ public:
     data._ntasks = 0;
     data._nPEs = 0;
 
-    scheduler.init(std::make_tuple(&data,&data,&data));
+    scheduler.init(std::make_tuple(&data,&data,&data._k));
 
     map = nullptr;
   }
