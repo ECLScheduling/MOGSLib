@@ -4,12 +4,29 @@
 #include <rts/charm.ipp>
 
 #include <schedulers/greedy.h>
-#include <schedulers/round_robin.h>
 
 #include <concepts/concrete/basic_scheduler_input.h>
 #include <concepts/init/charm/basic_scheduler_input.ipp>
 
 namespace MOGSLib {
+
+#define SchedulerDecl(Name) MOGSLib::Scheduler::Name
+#define ConceptDecl(Name) MOGSLib::Concept::Name
+/** TODO: The next line is unsupported by some compilers. More study in this might make it more portable. As of now ## does the trick. **/
+//#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<MOGSLib::Scheduler::SchedName __VA_OPT__(,) __VA_ARGS__>
+#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<SchedName, ##__VA_ARGS__>
+
+#define ScheduleSnippet(SchedId) \
+if(scheduler_name.compare(SchedulerTraits<std::tuple_element<SchedId, SchedulerTuple>::type::Scheduler::scheduler_type()>::name()) == 0) \
+    return std::get<SchedId>(schedulers).init_and_work();
+
+#define TupleGetSnippet(ConceptName, ConceptIndex) \
+template<bool spec> \
+struct TupleGet<ConceptName, spec> { \
+  static ConceptName* get() { \
+    ConceptInitializer<type, ConceptIndex>::init(ConceptTuple::concepts); \
+    return &std::get<ConceptIndex>(ConceptTuple::concepts); } \
+};
 
 /**
  * @brief This specialization of ConceptInitializer is responsible for calling the init method of a single Concept within a tuple of concepts.
@@ -90,24 +107,37 @@ struct SchedulerCollection {
     static auto get_tuple() { return SubTupleGet<T...>::get(); }
   };
 
+  /**
+   * @brief This structure assembles all the components to form a complete scheduler in a given system.
+   * @details The assembly is composed of a scheduler and all its dependent concepts already situated in a context.
+   * @type Sched The scheduler class with its dependencies expressed.
+   * @type Concepts This variadic template argument encompasses all the concrete concepts already parametrized to respect the target RTS/Libraries.
+   */
   template<template<typename ... Concepts> typename Sched, typename ... Concepts>
   struct CompleteScheduler {
     using Scheduler = Sched<Concepts...>;
 
     std::unique_ptr<Scheduler> scheduler;
 
+    /**
+     * @brief This method initializes the global scheduler, its concepts and then issues the work call.
+     */
     TaskMap init_and_work() {
       scheduler = std::make_unique<Scheduler>();
       scheduler->init(ConceptTuple::get_tuple<Concepts...>());
-      return scheduler->work();
+      return work();
     }
 
+    /**
+     * @brief This method calls the work method contained in the global scheduler.
+     * @details This method works under the assumption that all the concepts and the scheduler itself is already instantiated and initialized.
+     */
     TaskMap work() {
       return scheduler->work();
     }
   };
 
-  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(Greedy), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput)), SchedulerTupleDef(SchedulerDecl(RoundRobin), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput))>;
+  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(Greedy), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput))>;
   static SchedulerTuple schedulers;
 
   /**
@@ -117,7 +147,6 @@ struct SchedulerCollection {
    */
   static TaskMap schedule(std::string &scheduler_name) {
 		ScheduleSnippet(0)
-		ScheduleSnippet(1)
     return nullptr;
   }
 };

@@ -4,24 +4,29 @@
 
 BEGIN_NAMESPACE(Dependency)
 
-template<typename ... Concepts>
+/**
+ * @brief This class expresses an abstract workload data dependency.
+ */
+template<typename TaskWorkload, typename PEWorkload>
 struct WorkloadAware {
-  using DependencyTuple = std::tuple<Concepts ...>;
-  using pDependencyTuple = std::tuple<Concepts *...>;
+  TaskWorkload *task_data;
+  PEWorkload *PE_data;
 
-  typename std::tuple_element<0, DependencyTuple>::type *task_data;
-  typename std::tuple_element<1, DependencyTuple>::type *PE_data;
-
-  WorkloadAware(pDependencyTuple concepts) : task_data(std::get<0>(concepts)), PE_data(std::get<1>(concepts)) {}
+  template<typename ... Concepts>
+  WorkloadAware(std::tuple<Concepts...> concepts) : task_data(std::get<0>(concepts)), PE_data(std::get<1>(concepts)) {}
 };
 
-template<typename ... Concepts>
-struct WorkloadAwareWithK : public WorkloadAware<Concepts ...> {
-  using Parent = WorkloadAware<Concepts ...>;
+/**
+ * @brief This class expresses an abstract workload data dependency and a generic K value.
+ */
+template<typename TaskWorkload, typename PEWorkload, typename K>
+struct WorkloadAwareWithK : public WorkloadAware<TaskWorkload, PEWorkload> {
+  using Base = WorkloadAware<TaskWorkload, PEWorkload>;
 
-  typename std::tuple_element<2, typename Parent::DependencyTuple>::type *k_data;
+  K *k;
 
-  WorkloadAwareWithK(typename Parent::pDependencyTuple concepts) : Parent(concepts), k_data(std::get<2>(concepts)) {}
+  template<typename ... Concepts>
+  WorkloadAwareWithK(std::tuple<Concepts...> concepts) : Base(std::make_tuple(std::get<0>(concepts), std::get<1>(concepts))), k(std::get<2>(concepts)) {}
 };
 
 END_NAMESPACE
