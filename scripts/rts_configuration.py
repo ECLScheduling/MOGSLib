@@ -48,7 +48,7 @@ def pre_custom(dict):
   exit()
 
 def pre_default(dict):
-  folders = get_folder_map()
+  folders = MOGSLib.folders
   
   print('Preparing MOGSLib for the ' + dict['RTS_ENUM_VAL'] + ' Runtime System')
   print('\tDefining RTS traits in system/type_definitions.h')

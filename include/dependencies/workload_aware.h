@@ -1,19 +1,20 @@
 #pragma once
 
 #include <system/static.h>
+#include <minimal_dependencies.h>
 
 BEGIN_NAMESPACE(Dependency)
 
 /**
  * @brief This class expresses an abstract workload data dependency.
+ * @details TODO: When C++17 comes out, change the typenames for Concepts and add the necessary methods to obtain workloads.
  */
 template<typename TaskWorkload, typename PEWorkload>
-struct WorkloadAware {
-  TaskWorkload *task_data;
+struct WorkloadAware : public MinimalDependencies<TaskWorkload> {
   PEWorkload *PE_data;
 
   template<typename ... Concepts>
-  WorkloadAware(std::tuple<Concepts...> concepts) : task_data(std::get<0>(concepts)), PE_data(std::get<1>(concepts)) {}
+  WorkloadAware(std::tuple<Concepts...> concepts) : MinimalDependencies<TaskWorkload>(std::make_tuple(std::get<0>(concepts))), PE_data(std::get<1>(concepts)) {}
 };
 
 /**

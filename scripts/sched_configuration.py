@@ -6,7 +6,7 @@ import re
 included_concepts = dict()
 
 def find_sched_class_name(sched_name):
-  folders = get_folder_map()
+  folders = MOGSLib.folders
   file = os.path.join(folders['schedulers'], sched_name + '.h')
   classname = ''
 
@@ -25,7 +25,7 @@ def find_sched_class_name(sched_name):
 
 
 def find_adapters_class_names(concepts):
-  folders = get_folder_map()
+  folders = MOGSLib.folders
   concept_classes = []
 
   for concept in concepts:
@@ -70,7 +70,7 @@ def generate_tupleget_specs(adapters):
   return ret
 
 def configure_schedulers(scheds, rts_name):
-  folders = get_folder_map()
+  folders = MOGSLib.folders
   file = os.path.join(folders['mogslib'], 'mogslib.h')
 
   sched_includes = ''
