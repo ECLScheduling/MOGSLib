@@ -59,20 +59,44 @@ def swap_stub_annotations(scheduler):
     infile.truncate()
     infile.write(filedata)
 
-def add_scheduler_to_types_enum(scheduler):
+def find_scheduler_enum_in_system_types():
   file = os.path.join(MOGSLib.folders['system'], 'types.h')
-  enums = 'no match'
+  scheduler_enum_line = 1             # This starts with 1 due to the null scheduler being present and the line number would invariably have to be incremented by 1.
   with open(file, 'r') as infile:
-    filedata = infile.read()
-    p = re.compile(r"(.*)", re.MULTILINE) #TODO: check this regex out
-    match = p.match(filedata)
-    print(match)
-    if match is not None:
-      enums = match.group(1)
-  print(enums)
+    p = re.compile('.*?SchedulerEnum.*?')
+    for line in infile:
+      match = p.match(line)
+      if match is not None:
+        return scheduler_enum_line
+      scheduler_enum_line += 1
+    print('Couldn\'t find the SchedulerEnum enumerate in the system/types.h file')
+    exit()
+
+def add_scheduler_to_system_types(symbolic_name):
+  file = os.path.join(MOGSLib.folders['system'], 'types.h')
+  lines = list()
+  enumerate_line = find_scheduler_enum_in_system_types()
+  
+  with open(file, 'r+') as infile:
+    lines = infile.readlines()
+
+  lines[enumerate_line] += '  ' + symbolic_name + ',\n' #Warning: If the code convetion ever changes to use tabs over spaces, this method will have to be changed.
+
+  with open(file, 'w+') as infile:
+    for line in lines:
+      infile.write(line)
+
+
+def add_scheduler_to_traits(symbolic_name, dependency_class):
+  file = os.path.join(MOGSLib.folders['system'], 'types.h')
+
+  stub_contents = os.path.join(MOGSLib.folders['stub'], 'scheduler.in.h')
+  # This function must be redone.
+
 
 new_scheduler = NewScheduler(args.name, args.cname, args.cdeps)
 
-#copy_scheduler_stub(new_scheduler)
-#swap_stub_annotations(new_scheduler)
-add_scheduler_to_types_enum(new_scheduler)
+copy_scheduler_stub(new_scheduler)
+swap_stub_annotations(new_scheduler)
+add_scheduler_to_system_types(new_scheduler.name)
+add_scheduler_to_traits(new_scheduler.name, new_scheduler.cdeps)
