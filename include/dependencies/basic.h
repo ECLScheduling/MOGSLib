@@ -13,7 +13,7 @@ struct BasicDependencies {
   TaskData *task_data;
 
   template<typename ... Concepts>
-  BasicDependencies(std::tuple<TaskData> concepts) : task_data(std::get<0>(concepts)) {}
+  BasicDependencies(std::tuple<Concepts...> concepts) : task_data(std::get<0>(concepts)) {}
 };
 
 END_NAMESPACE
