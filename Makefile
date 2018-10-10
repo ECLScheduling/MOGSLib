@@ -38,7 +38,7 @@ DEPDIR :=.deps
 MAINFILES :=src/perf.cpp
 BINARIES  :=$(BINDIR)/execute_me
 # Compiler & linker flags
-CXXFLAGS :=-std=c++14 -Wall -fopenmp -O3
+CXXFLAGS :=-std=c++14 -Wall -O3
 LDFLAGS  :=
 LDLIBS   :=
 INCLUDE  :=$(foreach d, $(INCDIR), -I$d)
@@ -49,12 +49,12 @@ TMAINFILES :=$(shell find $(TSTDIR) -name '*.cpp' 2> /dev/null)
 TBINARIES  :=$(patsubst $(TSTDIR)/%.cpp,$(BINDIR)/%,$(TMAINFILES))
 # Compiler & linker flags
 TCXXFLAGS :=
-TLDFLAGS  :=-lgtest_main -pthread
+TLDFLAGS  :=-pthread -lgtest_main
 TLDLIBS   :=
 TINCLUDE  :=
 ### MAKEFILE CONTROL VARIABLES
 # Debug flag, if != 0 deactivates all supressed echoing
-DEBUG :=0
+DEBUG :=1
 ############################# AUTOMATIC VARIABLES #############################
 ### PROGRAM-RELATED VARIABLES
 MAINDEPS  :=$(patsubst %.cpp,$(DEPDIR)/%.d,$(MAINFILES))

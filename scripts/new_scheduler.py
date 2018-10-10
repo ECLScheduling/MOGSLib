@@ -88,10 +88,27 @@ def add_scheduler_to_system_types(symbolic_name):
 
 
 def add_scheduler_to_traits(symbolic_name, dependency_class):
-  file = os.path.join(MOGSLib.folders['system'], 'types.h')
+  file = os.path.join(MOGSLib.folders['stub'], 'scheduler_traits.in.h')
+  stub_contents = list()
 
-  stub_contents = os.path.join(MOGSLib.folders['stub'], 'scheduler.in.h')
-  # This function must be redone.
+  with open(file, 'r') as infile:
+    stub_contents = infile.readlines()
+  
+  for i,line in enumerate(stub_contents):
+    stub_contents[i] = line.replace("$TNAME$", symbolic_name)
+    stub_contents[i] = stub_contents[i].replace("$DEPS$", dependency_class)
+
+  file = os.path.join(MOGSLib.folders['system'], 'traits', 'schedulers.h')
+  with open(file, 'r+') as infile:
+    content = infile.read()
+    content = content[:-2] + '\n'
+    
+    infile.seek(0)
+    infile.truncate()
+    infile.write(content)
+    for line in stub_contents:
+      infile.write(line)
+    infile.write('\n\n}')
 
 
 new_scheduler = NewScheduler(args.name, args.cname, args.cdeps)
