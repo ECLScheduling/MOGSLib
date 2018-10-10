@@ -1,12 +1,14 @@
 #pragma once
 
-#include <rts/charm.h>
-#include <rts/charm.ipp>
+#include <rts/openmp.h>
+#include <rts/openmp.ipp>
 
-#include <schedulers/greedy.h>
+#include <schedulers/binlpt.h>
 
 #include <concepts/concrete/basic_scheduler_input.h>
-#include <concepts/init/charm/basic_scheduler_input.ipp>
+#include <concepts/init/openmp/basic_scheduler_input.ipp>
+#include <concepts/concrete/int.h>
+#include <concepts/init/openmp/int.ipp>
 
 namespace MOGSLib {
 
@@ -59,7 +61,7 @@ struct SchedulerCollection {
    * @details The "type" type is constructed by the precompilation step in MOGSLib as is every TupleGet specialization.
    */
   struct ConceptTuple {
-    using type = std::tuple<ConceptDecl(BasicSchedulerInput)>;
+    using type = std::tuple<ConceptDecl(BasicSchedulerInput), int>;
     
     static type concepts;
 
@@ -72,7 +74,8 @@ struct SchedulerCollection {
       static T* get() { return nullptr; }
     };
 
-    TupleGetSnippet(ConceptDecl(BasicSchedulerInput), 0) //TupleGetSnippet()
+    TupleGetSnippet(ConceptDecl(BasicSchedulerInput), 0)
+    TupleGetSnippet(int, 1)
 
     /**
      * @brief Get a value from the concepts tuple that corresponds to the T type.
@@ -137,7 +140,7 @@ struct SchedulerCollection {
     }
   };
 
-  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(Greedy), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput))>;
+  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(BinLPT), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput), int)>;
   static SchedulerTuple schedulers;
 
   /**

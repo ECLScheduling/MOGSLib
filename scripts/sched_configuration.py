@@ -4,6 +4,7 @@ from mogslib_utils import *
 import re
 
 included_concepts = dict()
+std_natives = ('int', 'double', 'char', 'float')
 
 def find_sched_class_name(sched_name):
   folders = MOGSLib.folders
@@ -23,12 +24,14 @@ def find_sched_class_name(sched_name):
         break
   return classname
 
-
 def find_adapters_class_names(concepts):
   folders = MOGSLib.folders
   concept_classes = []
 
   for concept in concepts:
+    if concept in std_natives:
+      concept_classes.append(concept)
+      continue
     file = os.path.join(folders['concepts'], 'concrete', concept + '.h')
     if not os.path.isfile(file):
       print('Concrete Concept \'' + concept + '\' was not found in MOGSLib.')
@@ -65,8 +68,9 @@ def generate_tupleget_specs(adapters):
   ret = ''
   i = 0
   for adapter in adapters:
-    ret += 'TupleGetSnippet(' + adapter + ', ' + str(i) + ')\n'
-  ret = ret[:-1]
+    ret += 'TupleGetSnippet(' + adapter + ', ' + str(i) + ')\n    ' #Warning: The 4 spaces should be swapped for 2 tabs if the project code style ever changes to tabs.
+    i += 1
+  ret = ret[:-5] #Warning: Read the warning above.
   return ret
 
 def configure_schedulers(scheds, rts_name):

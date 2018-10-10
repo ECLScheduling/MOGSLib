@@ -67,7 +67,7 @@ struct SchedulerCollection {
       static T* get() { return nullptr; }
     };
 
-    $TUPLE_GET_SPECS$ //TupleGetSnippet()
+    $TUPLE_GET_SPECS$
 
     /**
      * @brief Get a value from the concepts tuple that corresponds to the T type.
