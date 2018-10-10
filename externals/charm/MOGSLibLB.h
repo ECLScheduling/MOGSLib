@@ -9,16 +9,15 @@
 #include "CentralLB.h"
 #include "MOGSLibLB.decl.h"
 
-#include <rts/rts_includes.h>
-
 #include "ckgraph.h"
 #include <cassert>
+
+#include <mogslib/mogslib.h>
 
 void CreateMOGSLibLB();
 
 class MOGSLibLB : public CBase_MOGSLibLB {
 public:
-  MOGSLib::Adaptor *adaptor;
 
   MOGSLibLB(const CkLBOptions &);
   MOGSLibLB(CkMigrateMessage *m): CBase_MOGSLibLB(m) {}
