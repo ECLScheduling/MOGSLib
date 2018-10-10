@@ -13,8 +13,7 @@ template<typename TaskWorkload, typename PEWorkload>
 struct WorkloadAware : public BasicDependencies<TaskWorkload> {
   PEWorkload *PE_data;
 
-  template<typename ... Concepts>
-  WorkloadAware(std::tuple<Concepts...> concepts) : BasicDependencies<TaskWorkload>(std::make_tuple(std::get<0>(concepts))), PE_data(std::get<1>(concepts)) {}
+  WorkloadAware(std::tuple<TaskWorkload*, PEWorkload*> c) : BasicDependencies<TaskWorkload>(std::make_tuple(std::get<0>(c))), PE_data(std::get<1>(c)) {}
 };
 
 /**
@@ -22,12 +21,9 @@ struct WorkloadAware : public BasicDependencies<TaskWorkload> {
  */
 template<typename TaskWorkload, typename PEWorkload, typename K>
 struct WorkloadAwareWithK : public WorkloadAware<TaskWorkload, PEWorkload> {
-  using Base = WorkloadAware<TaskWorkload, PEWorkload>;
-
   K *k;
 
-  template<typename ... Concepts>
-  WorkloadAwareWithK(std::tuple<Concepts...> concepts) : Base(std::make_tuple(std::get<0>(concepts), std::get<1>(concepts))), k(std::get<2>(concepts)) {}
+  WorkloadAwareWithK(std::tuple<TaskWorkload*, PEWorkload *, K*> c) : WorkloadAware<TaskWorkload, PEWorkload>(std::make_tuple(std::get<0>(c), std::get<1>(c))), k(std::get<2>(c)) {}
 };
 
 END_NAMESPACE

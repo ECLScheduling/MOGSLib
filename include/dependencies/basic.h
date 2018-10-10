@@ -12,8 +12,7 @@ template<typename TaskData>
 struct BasicDependencies {
   TaskData *task_data;
 
-  template<typename ... Concepts>
-  BasicDependencies(std::tuple<Concepts...> concepts) : task_data(std::get<0>(concepts)) {}
+  BasicDependencies(std::tuple<TaskData*> t) : task_data(std::get<0>(t)) {}
 };
 
 END_NAMESPACE

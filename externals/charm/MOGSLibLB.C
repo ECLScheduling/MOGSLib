@@ -22,15 +22,23 @@ bool MOGSLibLB::QueryBalanceNow(int _step)
 }
 
 void MOGSLibLB::work(LDStats* stats) {
-  std::string scheduler_name = "roundrobin";
+  std::string scheduler_name = "greedy";
+  
   MOGSLib::RTS::Charm::stats = stats;
-
   auto map = MOGSLib::SchedulerCollection::schedule(scheduler_name);
   
-  auto temporary_hack = std::get<0>(MOGSLib::SchedulerCollection::ConceptTuple::concepts);
+  /*
+   * This is a temporary hack to get the first concept in the collection of concepts.
+   * As of now, when the library is compiled for Charm++, the first concept will always have the task data needed to migrate the tasks.
+   * This will be revisited to be more readable and intuitive.
+   */
+  auto task_info = std::get<0>(MOGSLib::SchedulerCollection::ConceptTuple::concepts);
 
-  for(auto i = 0; i < temporary_hack.ntasks(); ++i)
-    CkPrintf("Task %d in PE %d.\n",temporary_hack.task_ids[i], temporary_hack.PE_ids[map[i]]);
+  //for(auto i = 0; i < task_info.ntasks(); ++i)
+    //CkPrintf("Task %d in PE %d.\n",task_info.task_ids[i], task_info.PE_ids[map[i]]);
+
+  for(auto i = 0; i < task_info.ntasks(); ++i)
+    stats->assign(task_info.task_ids[i], task_info.PE_ids[map[i]]);
 
   delete map;
 }
