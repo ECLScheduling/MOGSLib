@@ -2,29 +2,22 @@
 
 #include <vector>
 
-#include <abstractions/concept.h>
-
 BEGIN_NAMESPACE(Concept)
 
 /**
- * @brief A concrete concept that fulfills both PEData and TaskData concepts.
+ * @brief A concrete concept that access information about the amount of PEs and work units in the system.
  */
-class BasicSchedulerInput : public Abstraction::Concept {
+class WorkloadObliviousInput : public Abstraction::Concept {
 public:
   using Index = MOGSLib::Index;
-  using Load = MOGSLib::Load;
-
-  std::vector<Index> task_ids;
-  std::vector<Index> PE_ids;
-
-  std::vector<Load> tasks;
-  std::vector<Load> PEs;
+  
+  Index tasks, PEs;
 
   /**
    * @brief Gets the amount of tasks in a scheduler input.
    */
   inline Index ntasks() {
-    return tasks.size();
+    return tasks;
   }
 
   /**
@@ -32,14 +25,14 @@ public:
    * @details This method has a const specifier.
    */
   inline Index ntasks() const {
-    return tasks.size();
+    return tasks;
   }
 
   /**
    * @brief Gets the workload of every task in the input.
    */
   inline Load* tasks_workloads() {
-    return tasks.data();
+    return nullptr;
   }
 
   /**
@@ -47,29 +40,22 @@ public:
    * @details This method has a const specifier.
    */
   inline Index nPEs() const {
-    return PEs.size();
+    return PEs;
   }
 
   /**
    * @brief Gets the amount of PEs in a scheduler input.
    */
   inline Index nPEs() {
-    return PEs.size();
+    return PEs;
   }
 
   /**
    * @brief Gets the workload of every PE in the input.
    */
   inline Load* PEs_workloads() {
-    return PEs.data();
+    return nullptr;
   }
-
-  /**
-   * @brief A function to initialize all the concepts values and references to be used by the scheduler.
-   * @details The init method will be called by MOGSLib before invoking the scheduler and after all the RTS data is set-up.
-   */
-  template<MOGSLib::Abstraction::RuntimeSystemEnum T = MOGSLib::TargetSystem>
-  void init() {}
 };
 
 END_NAMESPACE
