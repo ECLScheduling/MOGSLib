@@ -11,9 +11,7 @@ BEGIN_NAMESPACE(Abstraction)
  * @details This structure must contain solely static data in order to be acessed globally by Binders, Initializers, Concepts and Adaptors.
  */
 template<>
-struct RTS<RuntimeSystemEnum::OpenMP> {
-  static constexpr auto id = RuntimeSystemEnum::OpenMP;
-
+struct RTS<MOGSLib::RuntimeSystemEnum::OpenMP> : RTS<MOGSLib::RuntimeSystemEnum::OpenMP, false> {
   using Index = MOGSLib::Index;
 
   static Index chunk_size;
@@ -40,8 +38,4 @@ struct RTS<RuntimeSystemEnum::OpenMP> {
 
 };
 
-END_NAMESPACE
-
-BEGIN_NAMESPACE(RTS)
-using OpenMP = MOGSLib::Abstraction::RTS<MOGSLib::Abstraction::RuntimeSystemEnum::OpenMP>;
 END_NAMESPACE

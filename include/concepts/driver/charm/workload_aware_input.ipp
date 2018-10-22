@@ -1,14 +1,11 @@
-#include <concepts/implementation/workload_aware_input.h>
-#include <rts/charm.h>
+#pragma once
+#include <concepts/driver/workload_aware_input.h>
 
-BEGIN_NAMESPACE(Concept)
-
-template<MOGSLib::Abstraction::RuntimeSystemEnum T>
-void temp_func_aware(WorkloadAwareInput& concept) {}
+namespace MOGSLib {
 
 template<>
-void temp_func_aware<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>(WorkloadAwareInput& concept) {
-  auto input = MOGSLib::RTS::Charm::stats;
+inline void workload_aware_input_driver<RuntimeSystemEnum::Charm>(Concept::WorkloadAwareInput& concept) {
+  auto input = RTS::stats;
 
   auto nPEs = input->nprocs();
   auto nTasks = input->n_objs;
@@ -47,11 +44,4 @@ void temp_func_aware<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>(WorkloadAwa
   delete [] map;
 }
 
-template<>
-struct Driver<WorkloadAwareInput, MOGSLib::Abstraction::RuntimeSystemEnum::Charm> {
-  using Initializer = void (*)(WorkloadAwareInput&);
-
-  static constexpr Initializer initializer = temp_func_aware<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>;
-};
-
-END_NAMESPACE
+}

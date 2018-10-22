@@ -7,7 +7,7 @@ BEGIN_NAMESPACE(Concept)
 /**
  * @brief A concrete concept that access information about the amount of PEs and work units in the system.
  */
-class WorkloadObliviousInput : public Abstraction::Concept {
+class WorkloadObliviousInput {
 public:
   using Index = MOGSLib::Index;
   

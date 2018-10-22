@@ -1,5 +1,7 @@
 #pragma once
 
+#include <system/type_definitions.h>
+
 #include <vector>
 
 BEGIN_NAMESPACE(Concept)
@@ -7,7 +9,7 @@ BEGIN_NAMESPACE(Concept)
 /**
  * @brief A concrete concept that fulfills the access to task and PE workload inputs.
  */
-class WorkloadAwareInput : public Abstraction::Concept {
+class WorkloadAwareInput {
 public:
   using Index = MOGSLib::Index;
   using Load = MOGSLib::Load;

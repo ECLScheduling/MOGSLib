@@ -3,13 +3,13 @@
 #include <system/static.h>
 #include <string>
 
-BEGIN_NAMESPACE(Abstraction)
+namespace MOGSLib {
 
 /**
  * @brief An enumerate of all the supported runtime systems for MOGSLib schedulers.
  */
 enum RuntimeSystemEnum {
-  Testing,
+  NoRTS,
   Custom,
   Charm,
   OpenMP
@@ -27,4 +27,4 @@ enum SchedulerEnum {
   binlpt
 };
 
-END_NAMESPACE
+}

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <system/static.h>
-#include <minimal_dependencies.h>
+#include <dependencies/minimal_dependencies.h>
 
 BEGIN_NAMESPACE(Dependency)
 

@@ -4,7 +4,8 @@
 #include <system/traits/schedulers.h>
 
 namespace MOGSLib {
-  static constexpr auto TargetSystem = MOGSLib::Abstraction::RuntimeSystemEnum::Charm;
+  static constexpr auto TargetSystem = RuntimeSystemEnum::OpenMP;
+  using RTS = Abstraction::RTS<TargetSystem>;
 
   using Index = RuntimeTraits<TargetSystem>::Index;
   using Load = RuntimeTraits<TargetSystem>::Load;

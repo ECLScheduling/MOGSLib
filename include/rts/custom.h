@@ -9,8 +9,6 @@ BEGIN_NAMESPACE(Abstraction)
  * @details This structure must contain solely static data in order to be acessed globally by Binders, Initializers, Concepts and Adaptors.
  */
 template<>
-struct RTS<RuntimeSystemEnum::Custom> {
-  static constexpr auto id = RuntimeSystemEnum::Custom;
-};
+struct RTS<RuntimeSystemEnum::Custom> : RTS<RuntimeSystemEnum::Custom, false> {};
 
 END_NAMESPACE

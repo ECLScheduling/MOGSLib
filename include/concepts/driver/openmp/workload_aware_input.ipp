@@ -1,22 +1,12 @@
-#include <concepts/implementation/workload_aware_input.h>
-#include <rts/openmp.h>
+#pragma once
+#include <concepts/driver/workload_aware_input.h>
 
-BEGIN_NAMESPACE(Concept)
-
-template<MOGSLib::Abstraction::RuntimeSystemEnum T>
-void temp_omp_func_aware(WorkloadAwareInput& concept) {}
+namespace MOGSLib {
 
 template<>
-void temp_omp_func_aware<MOGSLib::Abstraction::RuntimeSystemEnum::OpenMP>(WorkloadAwareInput& concept) {
-  concept.tasks.resize(MOGSLib::RTS::OpenMP::ntasks);
-  concept.PEs.resize(MOGSLib::RTS::OpenMP::nPEs);
+inline void workload_aware_input_driver<RuntimeSystemEnum::OpenMP>(Concept::WorkloadAwareInput& concept) {
+  concept.tasks.resize(RTS::ntasks);
+  concept.PEs.resize(RTS::nPEs);
 }
 
-template<>
-struct Driver<WorkloadAwareInput, MOGSLib::Abstraction::RuntimeSystemEnum::OpenMP> {
-  using Initializer = void (*)(WorkloadAwareInput&);
-
-  static constexpr Initializer initializer = temp_omp_func_aware<MOGSLib::Abstraction::RuntimeSystemEnum::OpenMP>;
-};
-
-END_NAMESPACE
+}

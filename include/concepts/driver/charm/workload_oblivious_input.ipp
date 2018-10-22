@@ -1,26 +1,14 @@
 #pragma once
+#include <concepts/driver/workload_oblivious_input.h>
 
-#include <concepts/implementation/workload_oblivious_input.h>
-#include <rts/charm.h>
-
-BEGIN_NAMESPACE(Concept)
-
-template<MOGSLib::Abstraction::RuntimeSystemEnum T>
-void temp_func(WorkloadObliviousInput& concept) {}
+namespace MOGSLib {
 
 template<>
-void temp_func<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>(WorkloadObliviousInput& concept) {
-  auto input = MOGSLib::RTS::Charm::stats;
+inline void workload_oblivious_input_driver<RuntimeSystemEnum::Charm>(Concept::WorkloadObliviousInput& concept) {
+  auto input = RTS::stats;
 
   concept.tasks = input->n_objs;
   concept.PEs = input->nprocs();
 }
 
-template<>
-struct Driver<WorkloadObliviousInput, MOGSLib::Abstraction::RuntimeSystemEnum::Charm> {
-  using Initializer = void (*)(WorkloadObliviousInput&);
-
-  static constexpr Initializer initializer = temp_func<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>;
-};
-
-END_NAMESPACE
+}
