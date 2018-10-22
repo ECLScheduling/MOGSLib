@@ -11,13 +11,4 @@ public:
   T value;
 };
 
-/**
- * @brief A concrete concept that serves as a container to a generic K value pointer.
- */
-template<typename T = MOGSLib::Index>
-struct KPointer {
-public:
-  T *value;
-};
-
 END_NAMESPACE

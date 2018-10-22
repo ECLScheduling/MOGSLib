@@ -7,12 +7,12 @@ namespace MOGSLib {
 
 #define SchedulerDecl(Name) MOGSLib::Scheduler::Name
 #define ConceptDecl(Name) MOGSLib::Concept::Name
-/** TODO: The next line is unsupported by some compilers. More study in this might make it more portable. As of now ## does the trick. **/
-//#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<MOGSLib::Scheduler::SchedName __VA_OPT__(,) __VA_ARGS__>
 #define SchedulerTupleDef(SchedName, ...) CompleteScheduler<SchedName, ##__VA_ARGS__>
+  /** TODO: The next line is unsupported by some compilers. More study in this might make it more portable. As of now ##__VA_ARGS__ must do. **/
+//#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<MOGSLib::Scheduler::SchedName __VA_OPT__(,) __VA_ARGS__>
 
 #define ScheduleSnippet(SchedId) \
-if(scheduler_name.compare(SchedulerTraits<std::tuple_element<SchedId, SchedulerTuple>::type::Scheduler::scheduler_type()>::name()) == 0) \
+if(scheduler_name.compare(SchedulerTraits< std::tuple_element<SchedId, SchedulerTuple>::type::Scheduler::scheduler_type() >::name()) == 0) \
     return std::get<SchedId>(schedulers).init_and_work();
 
 #define TupleGetSnippet(ConceptName, ConceptIndex) \
@@ -33,9 +33,10 @@ template<typename Tuple, unsigned Index>
 struct ConceptInitializer {
   static bool initialized;
   static void init(Tuple &tuple) {
-    if(!initialized)
-      std::get<Index>(tuple).init();
-    initialized = true;
+    if(!initialized) {
+      Driver<typename std::tuple_element<Index,Tuple>::type, TargetSystem>::init(*(std::get<Index>(tuple)));
+      initialized = true;
+    }
   }
 };
 

@@ -22,12 +22,10 @@ struct WorkloadAware : public MinimalDependencies<TaskWorkload> {
  */
 template<typename TaskWorkload, typename PEWorkload, typename K>
 struct WorkloadAwareWithK : public WorkloadAware<TaskWorkload, PEWorkload> {
-  using Base = WorkloadAware<TaskWorkload, PEWorkload>;
-
   K *k;
 
   template<typename ... Concepts>
-  WorkloadAwareWithK(std::tuple<Concepts...> concepts) : Base(std::make_tuple(std::get<0>(concepts), std::get<1>(concepts))), k(std::get<2>(concepts)) {}
+  WorkloadAwareWithK(std::tuple<Concepts...> concepts) : WorkloadAware<TaskWorkload, PEWorkload>(std::make_tuple(std::get<0>(concepts), std::get<1>(concepts))), k(std::get<2>(concepts)) {}
 };
 
 END_NAMESPACE

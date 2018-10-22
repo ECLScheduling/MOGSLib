@@ -21,7 +21,7 @@ public:
     
     auto PE_data = concepts->PE_data;
     auto task_data = concepts->task_data;
-    auto chunks = *concepts->k;
+    auto chunks = *concepts->k->value;
 
     auto ntasks = task_data->ntasks();
 

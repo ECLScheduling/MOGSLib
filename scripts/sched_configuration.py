@@ -15,12 +15,15 @@ def find_sched_class_name(sched_name):
     exit()
 
   with open(file, 'r') as infile:
-    p = re.compile('class\s+(\w+)\s+:\s+public\s+Abstraction::Scheduler')
+    p = re.compile('(class|struct)\s+(\w+)\s+:\s+public\s+Abstraction::Scheduler')
     for line in infile:
       match = p.match(line)
       if match is not None:
-        classname = 'SchedulerDecl(' + match.group(1) + ')'
+        classname = 'SchedulerDecl(' + match.group(2) + ')'
         break
+    if not classname:
+      print('Scheduler \'' + sched_name + '\' could not be identified as a C++ class.')
+      exit()
   return classname
 
 
@@ -29,18 +32,23 @@ def find_adapters_class_names(concepts):
   concept_classes = []
 
   for concept in concepts:
-    file = os.path.join(folders['concepts'], 'concrete', concept + '.h')
+    file = os.path.join(folders['concepts'], 'implementation', concept + '.h')
     if not os.path.isfile(file):
       print('Concrete Concept \'' + concept + '\' was not found in MOGSLib.')
       exit()
 
     with open(file, 'r') as infile:
-      p = re.compile('class\s+(\w+)\s+:\s+public\s+Abstraction::Concept')
+      p = re.compile('(class|struct)\s+(\w+)\s+[{:]')
+      found = False
       for line in infile:
         match = p.match(line)
         if match is not None:
-          concept_classes.append('ConceptDecl(' + match.group(1) + ')')
+          concept_classes.append('ConceptDecl(' + match.group(2) + ')')
+          found = True
           break
+      if not found:
+        print('Concrete Concept \'' + concept + '\' could not be identified as a C++ class nor struct.')
+        exit()
   return concept_classes
 
 def generate_scheduler_tuple_code(names, concepts):
@@ -78,7 +86,7 @@ def configure_schedulers(scheds, rts_name):
   sched_names = []
   sched_adapters = []
   for sched in scheds:
-    print('\nConfiguring Scheduler \'' + sched.name + '\' to work within \'' + rts_name + '\' Runtime System.')
+    print('\nConfiguring \'' + sched.name + '\' scheduler to work within the \'' + rts_name + '\' runtime system.')
     sched_includes += '#include <schedulers/' + sched.name + '.h>\n'
 
     sched_names.append(find_sched_class_name(sched.name))
@@ -87,9 +95,13 @@ def configure_schedulers(scheds, rts_name):
     for concept in sched.concepts:
       concept_index = 0
       if concept not in included_concepts:
-        print('\tImporting \'' + concept + '\' Concept to MOGSLib definitions.')
-        concept_includes += '#include <concepts/concrete/' + concept + '.h>\n'
-        concept_includes += '#include <concepts/init/' + rts_name + '/' + concept + '.ipp>\n'
+        print('\tSetting \'' + concept + '\' drivers for \'' + rts_name + '\' in MOGSLib definitions.')
+
+        test_concept_file = os.path.join(folders['concepts'], 'driver', rts_name, concept + '.ipp')
+        if os.path.isfile(test_concept_file):
+          concept_includes += '#include <concepts/driver/' + rts_name + '/' + concept + '.ipp>\n'
+        else:
+          print('\t\tDriver specialization for \'' + concept + '\' in \'' + rts_name + '\' RTS was not found in MOGSLib.')
         included_concepts[concept] = concept_index
 
   adapters_class_names = find_adapters_class_names(included_concepts.keys())

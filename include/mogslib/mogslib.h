@@ -1,23 +1,23 @@
 #pragma once
 
-#include <rts/charm.h>
-#include <rts/charm.ipp>
+#include <rts/openmp.h>
+#include <rts/openmp.ipp>
 
-#include <schedulers/greedy.h>
+#include <schedulers/binlpt.h>
 
-#include <concepts/concrete/basic_scheduler_input.h>
-#include <concepts/init/charm/basic_scheduler_input.ipp>
+#include <concepts/driver/openmp/workload_aware_input.ipp>
+#include <concepts/driver/openmp/chunks_input.ipp>
 
 namespace MOGSLib {
 
 #define SchedulerDecl(Name) MOGSLib::Scheduler::Name
 #define ConceptDecl(Name) MOGSLib::Concept::Name
-/** TODO: The next line is unsupported by some compilers. More study in this might make it more portable. As of now ## does the trick. **/
-//#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<MOGSLib::Scheduler::SchedName __VA_OPT__(,) __VA_ARGS__>
 #define SchedulerTupleDef(SchedName, ...) CompleteScheduler<SchedName, ##__VA_ARGS__>
+  /** TODO: The next line is unsupported by some compilers. More study in this might make it more portable. As of now ##__VA_ARGS__ must do. **/
+//#define SchedulerTupleDef(SchedName, ...) CompleteScheduler<MOGSLib::Scheduler::SchedName __VA_OPT__(,) __VA_ARGS__>
 
 #define ScheduleSnippet(SchedId) \
-if(scheduler_name.compare(SchedulerTraits<std::tuple_element<SchedId, SchedulerTuple>::type::Scheduler::scheduler_type()>::name()) == 0) \
+if(scheduler_name.compare(SchedulerTraits< std::tuple_element<SchedId, SchedulerTuple>::type::Scheduler::scheduler_type() >::name()) == 0) \
     return std::get<SchedId>(schedulers).init_and_work();
 
 #define TupleGetSnippet(ConceptName, ConceptIndex) \
@@ -38,9 +38,10 @@ template<typename Tuple, unsigned Index>
 struct ConceptInitializer {
   static bool initialized;
   static void init(Tuple &tuple) {
-    if(!initialized)
-      std::get<Index>(tuple).init();
-    initialized = true;
+    if(!initialized) {
+      Driver<typename std::tuple_element<Index,Tuple>::type, TargetSystem>::init(*(std::get<Index>(tuple)));
+      initialized = true;
+    }
   }
 };
 
@@ -59,7 +60,7 @@ struct SchedulerCollection {
    * @details The "type" type is constructed by the precompilation step in MOGSLib as is every TupleGet specialization.
    */
   struct ConceptTuple {
-    using type = std::tuple<ConceptDecl(BasicSchedulerInput)>;
+    using type = std::tuple<ConceptDecl(WorkloadAwareInput), ConceptDecl(ChunksInput)>;
     
     static type concepts;
 
@@ -72,7 +73,8 @@ struct SchedulerCollection {
       static T* get() { return nullptr; }
     };
 
-    TupleGetSnippet(ConceptDecl(BasicSchedulerInput), 0) //TupleGetSnippet()
+    TupleGetSnippet(ConceptDecl(WorkloadAwareInput), 0)
+TupleGetSnippet(ConceptDecl(ChunksInput), 0) //TupleGetSnippet()
 
     /**
      * @brief Get a value from the concepts tuple that corresponds to the T type.
@@ -137,7 +139,7 @@ struct SchedulerCollection {
     }
   };
 
-  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(Greedy), ConceptDecl(BasicSchedulerInput), ConceptDecl(BasicSchedulerInput))>;
+  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(BinLPT), ConceptDecl(WorkloadAwareInput), ConceptDecl(WorkloadAwareInput), ConceptDecl(ChunksInput))>;
   static SchedulerTuple schedulers;
 
   /**
