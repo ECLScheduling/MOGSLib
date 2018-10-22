@@ -143,7 +143,7 @@ $TUPLE_GET_SPECS$
    */
   static TaskMap schedule(std::string &scheduler_name) {
 $SCHEDULE_SNIPPET$
-    return nullptr;
+    throw "Invalid scheduler name";
   }
 };
 

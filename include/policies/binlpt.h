@@ -112,7 +112,7 @@ public:
     return chunksizes;
   }
 
-  static auto compute_chunkloads(const Index ntasks, const Load *workloads, const Index *chunksizes, const Index &k) {
+  static auto compute_chunkloads(const Load *workloads, const Index *chunksizes, const Index &k) {
     Index cur_chunk;
     Load *chunk_loads;
 
@@ -128,7 +128,7 @@ public:
 
   static void map(TaskMap &map, const Index &ntasks, Load *task_workload, const Index &nPEs, Load *PE_workload, const Index &nchunks) {
     auto chunk_sizes = compute_chunksizes(ntasks, task_workload, nchunks);
-    auto chunk_loads = compute_chunkloads(ntasks, task_workload, chunk_sizes, nchunks);
+    auto chunk_loads = compute_chunkloads(task_workload, chunk_sizes, nchunks);
     auto chunk_offset = compute_cummulativesum<Index>(chunk_sizes, nchunks);
     
     Index *chunk_map = new Index[nchunks];

@@ -1,6 +1,4 @@
-// #### MOGSLib Includes ####
 #include <mogslib/mogslib.h>
-// #### End of MOGSLib Includes ####
 
 /**
  * @brief Set the amount of chunks in the OpenMP RTS datastructure.
@@ -8,7 +6,7 @@
  * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_chunksize(unsigned chunksize) {
-  MOGSLib::RTS::OpenMP::set_chunk_size(chunksize);
+  MOGSLib::RTS::set_chunk_size(chunksize);
 }
 
 /**
@@ -17,7 +15,7 @@ inline void mogslib_call_set_chunksize(unsigned chunksize) {
  * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_nPEs(unsigned nPEs) {
-  MOGSLib::RTS::OpenMP::set_nPEs(nPEs);
+  MOGSLib::RTS::set_nPEs(nPEs);
 }
 
 /**
@@ -26,7 +24,7 @@ inline void mogslib_call_set_nPEs(unsigned nPEs) {
  * @param ntasks The amount of tasks generated in OpenMP.
  */
 inline void mogslib_call_set_ntasks(unsigned ntasks) {
-  MOGSLib::RTS::OpenMP::set_ntasks(ntasks);
+  MOGSLib::RTS::set_ntasks(ntasks);
 }
 
 /**
@@ -35,7 +33,7 @@ inline void mogslib_call_set_ntasks(unsigned ntasks) {
  * @return The task map represented as an array to where the task should execute.
  */
 inline unsigned *mogslib_call_strategy_map() {
-  std::string scheduler_name = "greedy";
+  std::string scheduler_name = "binlpt";
   return MOGSLib::SchedulerCollection::schedule(scheduler_name);
 }
 

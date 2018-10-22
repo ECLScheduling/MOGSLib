@@ -1,12 +1,12 @@
 #pragma once
 
-#include <rts/charm.h>
-#include <rts/charm.ipp>
+#include <rts/openmp.h>
+#include <rts/openmp.ipp>
 
 #include <schedulers/binlpt.h>
 
-#include <concepts/driver/charm/workload_aware_input.ipp>
-#include <concepts/driver/charm/chunks_input.ipp>
+#include <concepts/driver/openmp/workload_aware_input.ipp>
+#include <concepts/driver/openmp/chunks_input.ipp>
 
 namespace MOGSLib {
 
@@ -149,7 +149,7 @@ struct SchedulerCollection {
    */
   static TaskMap schedule(std::string &scheduler_name) {
 		ScheduleSnippet(0)
-    return nullptr;
+    throw "Invalid scheduler name";
   }
 };
 
