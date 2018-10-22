@@ -12,8 +12,7 @@ template<typename TaskData>
 struct MinimalDependencies {
   TaskData *task_data;
 
-  template<typename ... Concepts>
-  MinimalDependencies(std::tuple<TaskData> concepts) : task_data(std::get<0>(concepts)) {}
+  MinimalDependencies(std::tuple<TaskData*> concepts) : task_data(std::get<0>(concepts)) {}
 };
 
 END_NAMESPACE

@@ -9,9 +9,9 @@ BEGIN_NAMESPACE(Scheduler)
  * @brief Class that represents a scheduler which utilizes the compact policy to output a task map.
  **/
 template<typename ... _Concepts>
-class TaskPack : public Abstraction::Scheduler<Abstraction::SchedulerEnum::task_pack, _Concepts...> {
+class TaskPack : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::task_pack, _Concepts...> {
 public:
-  using Base = Abstraction::Scheduler<Abstraction::SchedulerEnum::task_pack, _Concepts...>;
+  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::task_pack, _Concepts...>;
 
   /**
    * @brief The method to obtain a task map based on a compact policy.

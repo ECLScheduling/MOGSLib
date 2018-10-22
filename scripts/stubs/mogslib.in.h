@@ -34,7 +34,7 @@ struct ConceptInitializer {
   static bool initialized;
   static void init(Tuple &tuple) {
     if(!initialized) {
-      Driver<typename std::tuple_element<Index,Tuple>::type, TargetSystem>::init(*(std::get<Index>(tuple)));
+      Driver<typename std::tuple_element<Index,Tuple>::type, TargetSystem>::init(std::get<Index>(tuple));
       initialized = true;
     }
   }
@@ -68,7 +68,7 @@ struct SchedulerCollection {
       static T* get() { return nullptr; }
     };
 
-    $TUPLE_GET_SPECS$ //TupleGetSnippet()
+$TUPLE_GET_SPECS$
 
     /**
      * @brief Get a value from the concepts tuple that corresponds to the T type.

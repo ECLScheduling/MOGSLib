@@ -9,9 +9,9 @@ BEGIN_NAMESPACE(Scheduler)
  * @brief Class that represents a scheduler which utilizes a greedy heuristic to output a task map.
  **/
 template<typename ... _Concepts>
-class Greedy : public Abstraction::Scheduler<Abstraction::SchedulerEnum::greedy, _Concepts...> {
+class Greedy : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::greedy, _Concepts...> {
 public:
-  using Base = Abstraction::Scheduler<Abstraction::SchedulerEnum::greedy, _Concepts...>;
+  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::greedy, _Concepts...>;
 
   /**
    * @brief The method to obtain a task map based on a greedy heuristic.

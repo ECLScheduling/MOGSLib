@@ -1,60 +1,24 @@
 #pragma once
 
-#include <system/type_definitions.h>
-
-#include <vector>
+#include <concepts/implementation/workload_oblivious_input.h>
 
 BEGIN_NAMESPACE(Concept)
 
 /**
  * @brief A concrete concept that fulfills the access to task and PE workload inputs.
  */
-class WorkloadAwareInput {
+class WorkloadAwareInput : public WorkloadObliviousInput<> {
 public:
-  using Index = MOGSLib::Index;
+  using Index = WorkloadObliviousInput::Index;
   using Load = MOGSLib::Load;
 
-  std::vector<Index> task_ids;
-  std::vector<Index> PE_ids;
-
-  std::vector<Load> tasks;
-  std::vector<Load> PEs;
-
-  /**
-   * @brief Gets the amount of tasks in a scheduler input.
-   */
-  inline Index ntasks() {
-    return tasks.size();
-  }
-
-  /**
-   * @brief Gets the amount of tasks in a scheduler input.
-   * @details This method has a const specifier.
-   */
-  inline Index ntasks() const {
-    return tasks.size();
-  }
+  std::vector<Load> tasks, PEs;
 
   /**
    * @brief Gets the workload of every task in the input.
    */
   inline Load* tasks_workloads() {
     return tasks.data();
-  }
-
-  /**
-   * @brief Gets the amount of PEs in a scheduler input.
-   * @details This method has a const specifier.
-   */
-  inline Index nPEs() const {
-    return PEs.size();
-  }
-
-  /**
-   * @brief Gets the amount of PEs in a scheduler input.
-   */
-  inline Index nPEs() {
-    return PEs.size();
   }
 
   /**

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <rts/openmp.h>
-#include <rts/openmp.ipp>
+#include <rts/charm.h>
+#include <rts/charm.ipp>
 
 #include <schedulers/binlpt.h>
 
-#include <concepts/driver/openmp/workload_aware_input.ipp>
-#include <concepts/driver/openmp/chunks_input.ipp>
+#include <concepts/driver/charm/workload_aware_input.ipp>
+#include <concepts/driver/charm/chunks_input.ipp>
 
 namespace MOGSLib {
 
@@ -39,7 +39,7 @@ struct ConceptInitializer {
   static bool initialized;
   static void init(Tuple &tuple) {
     if(!initialized) {
-      Driver<typename std::tuple_element<Index,Tuple>::type, TargetSystem>::init(*(std::get<Index>(tuple)));
+      Driver<typename std::tuple_element<Index,Tuple>::type, TargetSystem>::init(std::get<Index>(tuple));
       initialized = true;
     }
   }
@@ -74,7 +74,7 @@ struct SchedulerCollection {
     };
 
     TupleGetSnippet(ConceptDecl(WorkloadAwareInput), 0)
-TupleGetSnippet(ConceptDecl(ChunksInput), 0) //TupleGetSnippet()
+    TupleGetSnippet(ConceptDecl(ChunksInput), 1)
 
     /**
      * @brief Get a value from the concepts tuple that corresponds to the T type.

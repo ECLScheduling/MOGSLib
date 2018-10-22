@@ -1,12 +1,14 @@
 #pragma once
 
 #include <vector>
+#include <system/type_definitions.h>
 
 BEGIN_NAMESPACE(Concept)
 
 /**
  * @brief A concrete concept that access information about the amount of PEs and work units in the system.
  */
+template<MOGSLib::RuntimeSystemEnum R = MOGSLib::TargetSystem>
 class WorkloadObliviousInput {
 public:
   using Index = MOGSLib::Index;
@@ -29,13 +31,6 @@ public:
   }
 
   /**
-   * @brief Gets the workload of every task in the input.
-   */
-  inline Load* tasks_workloads() {
-    return nullptr;
-  }
-
-  /**
    * @brief Gets the amount of PEs in a scheduler input.
    * @details This method has a const specifier.
    */
@@ -49,12 +44,47 @@ public:
   inline Index nPEs() {
     return PEs;
   }
+};
+
+/**
+ * @brief A concrete concept that access information about the amount of PEs and work units in the system.
+ * @details A specialization for the charm system, which must retain information about the PEs and tasks ids.
+ */
+template<>
+class WorkloadObliviousInput<MOGSLib::RuntimeSystemEnum::Charm> {
+public:
+  using Index = MOGSLib::Index;
+  
+  std::vector<Index> task_ids, PE_ids;
 
   /**
-   * @brief Gets the workload of every PE in the input.
+   * @brief Gets the amount of tasks in a scheduler input.
    */
-  inline Load* PEs_workloads() {
-    return nullptr;
+  inline Index ntasks() {
+    return task_ids.size();
+  }
+
+  /**
+   * @brief Gets the amount of tasks in a scheduler input.
+   * @details This method has a const specifier.
+   */
+  inline Index ntasks() const {
+    return task_ids.size();
+  }
+
+  /**
+   * @brief Gets the amount of PEs in a scheduler input.
+   * @details This method has a const specifier.
+   */
+  inline Index nPEs() const {
+    return PE_ids.size();
+  }
+
+  /**
+   * @brief Gets the amount of PEs in a scheduler input.
+   */
+  inline Index nPEs() {
+    return PE_ids.size();
   }
 };
 

@@ -4,6 +4,7 @@ from mogslib_utils import *
 import re
 
 included_concepts = dict()
+project_tab = '  ' # Warning: This script assumes a 2-spaces feed when identing.
 
 def find_sched_class_name(sched_name):
   folders = MOGSLib.folders
@@ -38,12 +39,20 @@ def find_adapters_class_names(concepts):
       exit()
 
     with open(file, 'r') as infile:
-      p = re.compile('(class|struct)\s+(\w+)\s+[{:]')
+      p_name = re.compile('(class|struct)\s+(\w+)\s+[{:]')
+      p_template = re.compile('template<.*?=.*?>')
       found = False
+      is_template = False
       for line in infile:
-        match = p.match(line)
+        match = p_name.match(line)
+        match_t = p_template.match(line)
+        if match_t is not None:
+          is_template = True
         if match is not None:
-          concept_classes.append('ConceptDecl(' + match.group(2) + ')')
+          classname = 'ConceptDecl(' + match.group(2);
+          if is_template:
+            classname = classname + '<>'
+          concept_classes.append(classname + ')')
           found = True
           break
       if not found:
@@ -73,7 +82,8 @@ def generate_tupleget_specs(adapters):
   ret = ''
   i = 0
   for adapter in adapters:
-    ret += 'TupleGetSnippet(' + adapter + ', ' + str(i) + ')\n'
+    ret += project_tab + project_tab + 'TupleGetSnippet(' + adapter + ', ' + str(i) + ')\n'
+    i = i+1
   ret = ret[:-1]
   return ret
 
