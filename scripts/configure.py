@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import argparse
-from mogslib_utils import Scheduler
+from support.mogslib_utils import Scheduler
 
 ### Action for consolidating a scheduler data into an intermediary python object ###
 class SchedulerAction(argparse.Action):
@@ -22,10 +22,10 @@ parser.add_argument('-sched', '--scheduler', dest='scheds', nargs="+", type=str,
 args = parser.parse_args()
 
 ### Declaration of the RTS configuration functions ###
-from rts_configuration import *
+from support.rts_configuration import *
 
 ### Declaration of the Scheduler configuration functions ###
-from sched_configuration import *
+from support.sched_configuration import *
 
 
 generate_defs_for_rts(args.rts)

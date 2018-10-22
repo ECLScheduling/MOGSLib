@@ -1,7 +1,5 @@
 #pragma once
 
-#include <system/type_definitions.h>
-
 BEGIN_NAMESPACE(Policy)
 
 /**

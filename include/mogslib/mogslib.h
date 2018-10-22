@@ -1,12 +1,12 @@
 #pragma once
 
-#include <rts/openmp.h>
-#include <rts/openmp.ipp>
+#include <rts/charm.h>
+#include <rts/charm.ipp>
 
 #include <schedulers/binlpt.h>
 
-#include <concepts/driver/openmp/workload_aware_input.ipp>
-#include <concepts/driver/openmp/chunks_input.ipp>
+#include <concepts/driver/charm/workload_aware_input.ipp>
+#include <concepts/driver/charm/chunks_input.ipp>
 
 namespace MOGSLib {
 

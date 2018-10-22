@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "../type_definitions.h"
 #include <policies/binlpt.h>
 
 using Load = MOGSLib::Load;

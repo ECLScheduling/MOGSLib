@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from mogslib_utils import *
+from support.mogslib_utils import *
 import re
 
 included_concepts = dict()

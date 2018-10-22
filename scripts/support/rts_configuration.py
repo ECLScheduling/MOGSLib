@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from mogslib_utils import *
+from support.mogslib_utils import *
 
 ### Define the creation of a map of attributes that will aid the configuration of the RTS data in MOGSLib ###
 def rts_custom():

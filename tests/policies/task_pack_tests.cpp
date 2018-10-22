@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "../type_definitions.h"
 #include <policies/task_pack.h>
 
 using SchedulingPolicy = MOGSLib::Policy::TaskPack;
