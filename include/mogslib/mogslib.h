@@ -1,5 +1,7 @@
 #pragma once
 
+#include <system/type_definitions.h>
+
 #include <rts/charm.h>
 #include <rts/charm.ipp>
 

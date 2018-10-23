@@ -1,5 +1,7 @@
 #pragma once
 
+#include <system/type_definitions.h>
+
 @RTS_INCLUDES@
 @SCHED_INCLUDES@
 @CONCEPT_INCLUDES@
