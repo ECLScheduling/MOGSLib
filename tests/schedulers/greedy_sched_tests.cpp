@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "../type_definitions.h"
 #include <schedulers/greedy.h>
 
 using Index = MOGSLib::Index;

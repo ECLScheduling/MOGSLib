@@ -1,20 +1,16 @@
 #pragma once
 
 #include <abstractions/rts.h>
-#include <system/type_definitions.h>
-#include <iostream>
 
-BEGIN_NAMESPACE(Abstraction)
+namespace MOGSLib { namespace Abstraction {
 
 /**
  * @brief The declaration of a specific data structure to represent the OpenMP runtime system.
  * @details This structure must contain solely static data in order to be acessed globally by Binders, Initializers, Concepts and Adaptors.
  */
 template<>
-struct RTS<RuntimeSystemEnum::OpenMP> {
-  static constexpr auto id = RuntimeSystemEnum::OpenMP;
-
-  using Index = MOGSLib::Index;
+struct RTS<MOGSLib::RuntimeSystemEnum::OpenMP> : RTS<MOGSLib::RuntimeSystemEnum::OpenMP, false> {
+  using Index = MOGSLib::RuntimeTraits<id>;
 
   static Index chunk_size;
   static Index nPEs;
@@ -40,8 +36,4 @@ struct RTS<RuntimeSystemEnum::OpenMP> {
 
 };
 
-END_NAMESPACE
-
-BEGIN_NAMESPACE(RTS)
-using OpenMP = MOGSLib::Abstraction::RTS<MOGSLib::Abstraction::RuntimeSystemEnum::OpenMP>;
-END_NAMESPACE
+}}

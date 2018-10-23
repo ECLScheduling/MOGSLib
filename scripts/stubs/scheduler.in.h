@@ -2,15 +2,15 @@
 
 #include <abstractions/scheduler.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief TODO: This scheduler needs a description.
  **/
 template<typename ... _Concepts>
-class $CNAME$ : public Abstraction::Scheduler<Abstraction::SchedulerEnum::$TNAME$, _Concepts...> {
+class $CNAME$ : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::$TNAME$, _Concepts...> {
 public:
-  using Base = Abstraction::Scheduler<Abstraction::SchedulerEnum::$TNAME$, _Concepts...>;
+  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::$TNAME$, _Concepts...>;
 
   /**
    * @brief The method to obtain a task map based on this scheduler policy.
@@ -24,4 +24,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}

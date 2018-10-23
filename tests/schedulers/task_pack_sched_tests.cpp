@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "../type_definitions.h"
 #include <schedulers/task_pack.h>
 
 using Index = MOGSLib::Index;
@@ -10,11 +11,7 @@ using TaskEntry = MOGSLib::TaskEntry;
 struct DataDummyContainer {
   Index _ntasks;
   Index _nPEs;
-  Index _k;
-
-  inline Index k() const {
-    return _k;
-  }
+  Index value;
 
   inline Index ntasks() {
     return _ntasks;
@@ -41,7 +38,7 @@ struct DataDummyContainer {
   }
 };
 
-using TestScheduler = MOGSLib::Scheduler::TaskPack<DataDummyContainer, DataDummyContainer, Index>;
+using TestScheduler = MOGSLib::Scheduler::TaskPack<DataDummyContainer, DataDummyContainer, DataDummyContainer>;
 
 class TaskPackSchedTests : public ::testing::Test {
 public:
@@ -58,7 +55,7 @@ public:
   }
 
   void setpacks(const Index &npacks) {
-    data._k = npacks;
+    data.value = npacks;
   }
 
   void execute_scheduler() {
@@ -69,7 +66,7 @@ public:
     data._ntasks = 0;
     data._nPEs = 0;
 
-    scheduler.init(std::make_tuple(&data,&data,&data._k));
+    scheduler.init(std::make_tuple(&data,&data,&data));
 
     map = nullptr;
   }

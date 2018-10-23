@@ -3,9 +3,7 @@
 #include <vector>
 #include <algorithm>
 
-#include <system/type_definitions.h>
-
-BEGIN_NAMESPACE(Policy)
+namespace MOGSLib { namespace Policy {
 
 /**
  * @brief A workload aware policy that iteratively assigns the heavier load to the most underloaded processor.
@@ -78,4 +76,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}

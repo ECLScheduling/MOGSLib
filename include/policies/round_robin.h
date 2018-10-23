@@ -1,8 +1,6 @@
 #pragma once
 
-#include <system/type_definitions.h>
-
-BEGIN_NAMESPACE(Policy)
+namespace MOGSLib { namespace Policy {
 
 /**
  * @brief A workload-unaware policy that iterativelly assigns a task to a PE based on their id.
@@ -18,4 +16,4 @@ public:
   }
 };
 
-END_NAMESPACE
+}}

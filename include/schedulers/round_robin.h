@@ -3,15 +3,15 @@
 #include <abstractions/scheduler.h>
 #include <policies/round_robin.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
  **/
 template<typename ... _Concepts>
-class RoundRobin : public Abstraction::Scheduler<Abstraction::SchedulerEnum::round_robin, _Concepts...> {
+class RoundRobin : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::round_robin, _Concepts...> {
 public:
-  using Base = Abstraction::Scheduler<Abstraction::SchedulerEnum::round_robin, _Concepts...>;
+  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::round_robin, _Concepts...>;
 
   /**
    * @brief The method to obtain a task map based on a roundrobin heuristic.
@@ -29,4 +29,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}

@@ -1,8 +1,11 @@
-BEGIN_NAMESPACE(Concept)
+#pragma once
+#include <concepts/driver/workload_aware_input.h>
+
+namespace MOGSLib {
 
 template<>
-void BasicSchedulerInput::init<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>() {
-  auto input = MOGSLib::RTS::Charm::stats;
+inline void workload_aware_input_driver<RuntimeSystemEnum::Charm>(Concept::WorkloadAwareInput& concept) {
+  auto input = RTS::stats;
 
   auto nPEs = input->nprocs();
   auto nTasks = input->n_objs;
@@ -13,10 +16,10 @@ void BasicSchedulerInput::init<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>()
   for(auto pe = 0; pe < nPEs; ++pe) {
     map[pe] = -1;
     if(input->procs[pe].available) {
-      map[pe] = PE_ids.size();
+      map[pe] = concept.PE_ids.size();
 
-      PE_ids.push_back(pe);
-      PEs.push_back(input->procs[pe].bg_walltime);
+      concept.PE_ids.push_back(pe);
+      concept.PEs.push_back(input->procs[pe].bg_walltime);
     }
   }
 
@@ -27,18 +30,18 @@ void BasicSchedulerInput::init<MOGSLib::Abstraction::RuntimeSystemEnum::Charm>()
       
     if(taskData.migratable) {
       const auto load = taskData.wallTime * input->procs[pe].pe_speed; // Calculate the load of a Task.
-      tasks.push_back(taskData.wallTime * input->procs[pe].pe_speed);// Add the task load to the data array.
-      task_ids.push_back(task);// Add the task id to the data array.
+      concept.tasks.push_back(taskData.wallTime * input->procs[pe].pe_speed);// Add the task load to the data array.
+      concept.task_ids.push_back(task);// Add the task id to the data array.
     } else {
       pe = map[pe];
 
       assert(pe != -1); // Nonmigrateable task on an unavailable processor.
 
-      PEs[pe] += taskData.wallTime; //_PEVector[pe].totalLoad() += taskData.wallTime;
+      concept.PEs[pe] += taskData.wallTime; //_PEVector[pe].totalLoad() += taskData.wallTime;
     }
   }
 
   delete [] map;
 }
 
-END_NAMESPACE
+}

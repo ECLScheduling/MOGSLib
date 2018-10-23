@@ -1,9 +1,9 @@
 #pragma once
 
-#include <system/type_definitions.h>
 #include <memory>
+#include <system/traits/schedulers.h>
 
-BEGIN_NAMESPACE(Abstraction)
+namespace MOGSLib { namespace Abstraction {
 
 /**
  * @brief A scheduler abstraction that unifies all template specializations together.
@@ -44,4 +44,4 @@ public:
   virtual ~Scheduler() {}
 };
 
-END_NAMESPACE
+}}

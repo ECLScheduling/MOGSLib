@@ -1,4 +1,6 @@
 #include <gtest/gtest.h>
+
+#include "../type_definitions.h"
 #include <schedulers/binlpt.h>
 
 #include <vector>
@@ -9,7 +11,7 @@ using TaskMap = MOGSLib::TaskMap;
 using TaskEntry = MOGSLib::TaskEntry;
 
 struct DataDummyContainer {
-  Index k;
+  Index value;
   std::vector<Load> task_loads;
   std::vector<Load> PE_loads;
 
@@ -38,7 +40,7 @@ struct DataDummyContainer {
   }
 };
 
-using TestScheduler = MOGSLib::Scheduler::BinLPT<DataDummyContainer, DataDummyContainer, Index>;
+using TestScheduler = MOGSLib::Scheduler::BinLPT<DataDummyContainer, DataDummyContainer, DataDummyContainer>;
 
 class BinLPTSchedTests : public ::testing::Test {
 public:
@@ -75,7 +77,7 @@ public:
   }
 
   void k_is(const Index &k) {
-    data.k = k;
+    data.value = k;
   }
 
   void execute_scheduler() {
@@ -83,9 +85,9 @@ public:
   }
 
   void SetUp() {
-    data.k = 0;
+    data.value = 0;
 
-    scheduler.init(std::make_tuple(&data, &data, &data.k));
+    scheduler.init(std::make_tuple(&data, &data, &data));
 
     map = nullptr;
   }
@@ -129,13 +131,13 @@ TEST_F(BinLPTSchedTests, policy_irregular_tasks_unloaded_PEs) {
 TEST_F(BinLPTSchedTests, policy_irregular_tasks_decreasing_unloaded_PEs) {
   unloaded_PEs(2);
   k_is(4);
-  decreasing_loads(5); // [5,4,3,2,1] => 0:[5] 1:[4] 2:[3,2] 3:[1] => ordered:{0,2,1,3}
+  decreasing_loads(5); // [5,4,3,2,1] => 0:[5] 1:[4] 2:[3] 3:[2,1] => ordered:{0,1,3,2}
 
   execute_scheduler();
 
   EXPECT_EQ(0, map[0]);
-  EXPECT_EQ(0, map[1]);
-  EXPECT_EQ(1, map[2]);
+  EXPECT_EQ(1, map[1]);
+  EXPECT_EQ(0, map[2]);
   EXPECT_EQ(1, map[3]);
   EXPECT_EQ(1, map[4]);
 }

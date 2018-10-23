@@ -9,7 +9,7 @@ namespace MOGSLib {
  * @brief This structure holds reference to datatypes and useful information about a specific RTS.
  * @details The only required traits in these structures are Index and Load which are used in the majority of schedulers and concepts.
  */
-template<Abstraction::RuntimeSystemEnum T>
+template<RuntimeSystemEnum T>
 struct RuntimeTraits {
 
   /**
@@ -22,10 +22,11 @@ struct RuntimeTraits {
    */
   using Load = uint_fast32_t;
 
+  static constexpr auto name = "Unimplemented";
 };
 
 template<>
-struct RuntimeTraits<Abstraction::RuntimeSystemEnum::Charm> {
+struct RuntimeTraits<RuntimeSystemEnum::Charm> {
   /**
    * @brief The type definition that will serve as index in MOGSLib when used in Charm++.
    */
@@ -35,10 +36,15 @@ struct RuntimeTraits<Abstraction::RuntimeSystemEnum::Charm> {
    * @brief The type definition that will serve to quantify load values in MOGSLib when used in Charm++.
    */
   using Load = double;
+
+  /**
+   * @brief The name of the system so it can be referenced on user-friendly messages.
+   */
+  static constexpr auto name = "Charm++";
 };
 
 template<>
-struct RuntimeTraits<Abstraction::RuntimeSystemEnum::OpenMP> {
+struct RuntimeTraits<RuntimeSystemEnum::OpenMP> {
   /**
    * @brief The type definition that will serve as index in MOGSLib when used in OpenMP.
    */
@@ -48,6 +54,11 @@ struct RuntimeTraits<Abstraction::RuntimeSystemEnum::OpenMP> {
    * @brief The type definition that will serve to quantify load values in MOGSLib when used in OpenMP.
    */
   using Load = unsigned int;
+
+  /**
+   * @brief The name of the system so it can be referenced on user-friendly messages.
+   */
+  static constexpr auto name = "OpenMP";
 
 };
 

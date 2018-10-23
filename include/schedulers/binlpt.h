@@ -3,15 +3,15 @@
 #include <abstractions/scheduler.h>
 #include <policies/binlpt.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief Class that represents a scheduler which utilizes the binlpt policy to output a workload-aware task map.
  **/
 template<typename ... _Concepts>
-class BinLPT : public Abstraction::Scheduler<Abstraction::SchedulerEnum::binlpt, _Concepts...> {
+class BinLPT : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::binlpt, _Concepts...> {
 public:
-  using Base = Abstraction::Scheduler<Abstraction::SchedulerEnum::binlpt, _Concepts...>;
+  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::binlpt, _Concepts...>;
 
   /**
    * @brief The method to obtain a task map based on a binlpt policy.
@@ -21,7 +21,7 @@ public:
     
     auto PE_data = concepts->PE_data;
     auto task_data = concepts->task_data;
-    auto chunks = *concepts->k;
+    auto chunks = concepts->k->value;
 
     auto ntasks = task_data->ntasks();
 
@@ -32,4 +32,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}

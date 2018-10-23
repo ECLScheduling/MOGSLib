@@ -3,15 +3,15 @@
 #include <abstractions/scheduler.h>
 #include <policies/task_pack.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief Class that represents a scheduler which utilizes the compact policy to output a task map.
  **/
 template<typename ... _Concepts>
-class TaskPack : public Abstraction::Scheduler<Abstraction::SchedulerEnum::task_pack, _Concepts...> {
+class TaskPack : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::task_pack, _Concepts...> {
 public:
-  using Base = Abstraction::Scheduler<Abstraction::SchedulerEnum::task_pack, _Concepts...>;
+  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::task_pack, _Concepts...>;
 
   /**
    * @brief The method to obtain a task map based on a compact policy.
@@ -21,7 +21,7 @@ public:
     
     auto ntasks = concepts->task_data->ntasks();
     auto nPEs = concepts->PE_data->nPEs();
-    auto npacks = *concepts->k;
+    auto npacks = concepts->k->value;
 
     auto map = new Index[ntasks]();
     Policy::TaskPack::map(map, ntasks, nPEs, npacks);
@@ -30,4 +30,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}

@@ -1,5 +1,5 @@
 template<>
-struct SchedulerTraits<Abstraction::SchedulerEnum::$TNAME$> {
+struct SchedulerTraits<SchedulerEnum::$TNAME$> {
   static std::string name() { return "$TNAME$"; }
 
   template<typename ... Concepts>

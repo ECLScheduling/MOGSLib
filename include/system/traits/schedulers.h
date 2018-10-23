@@ -10,16 +10,16 @@ namespace MOGSLib {
  * @brief This template structures are meant to be used to hold static data about the schedulers.
  * @details The only required trait to be informed in these structures is the name of the scheduler. This is meant to be able to chose the scheduler during runtime.
  */
-template<Abstraction::SchedulerEnum T>
+template<SchedulerEnum T>
 struct SchedulerTraits {
-  static std::string name() { return "null"; }
+  static std::string name() { return "unimplemented"; }
 
   template<typename ... Concepts>
-  using Dependencies = Dependency::BasicDependencies<Concepts...>;
+  using Dependencies = Dependency::MinimalDependencies<Concepts...>;
 };
 
 template<>
-struct SchedulerTraits<Abstraction::SchedulerEnum::round_robin> {
+struct SchedulerTraits<SchedulerEnum::round_robin> {
   static std::string name() { return "roundrobin"; }
 
   template<typename ... Concepts>
@@ -27,7 +27,7 @@ struct SchedulerTraits<Abstraction::SchedulerEnum::round_robin> {
 };
 
 template<>
-struct SchedulerTraits<Abstraction::SchedulerEnum::compact> {
+struct SchedulerTraits<SchedulerEnum::compact> {
   static std::string name() { return "compact"; }
 
   template<typename ... Concepts>
@@ -35,7 +35,7 @@ struct SchedulerTraits<Abstraction::SchedulerEnum::compact> {
 };
 
 template<>
-struct SchedulerTraits<Abstraction::SchedulerEnum::task_pack> {
+struct SchedulerTraits<SchedulerEnum::task_pack> {
   static std::string name() { return "taskpack"; }
 
   template<typename ... Concepts>
@@ -43,7 +43,7 @@ struct SchedulerTraits<Abstraction::SchedulerEnum::task_pack> {
 };
 
 template<>
-struct SchedulerTraits<Abstraction::SchedulerEnum::greedy> {
+struct SchedulerTraits<SchedulerEnum::greedy> {
   static std::string name() { return "greedy"; }
 
   template<typename ... Concepts>
@@ -51,7 +51,7 @@ struct SchedulerTraits<Abstraction::SchedulerEnum::greedy> {
 };
 
 template<>
-struct SchedulerTraits<Abstraction::SchedulerEnum::binlpt> {
+struct SchedulerTraits<SchedulerEnum::binlpt> {
   static std::string name() { return "binlpt"; }
 
   template<typename ... Concepts>

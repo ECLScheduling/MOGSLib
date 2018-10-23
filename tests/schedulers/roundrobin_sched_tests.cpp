@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "../type_definitions.h"
 #include <schedulers/round_robin.h>
 
 using Index = MOGSLib::Index;
