@@ -3,7 +3,7 @@
 #include <abstractions/scheduler.h>
 #include <policies/task_pack.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief Class that represents a scheduler which utilizes the compact policy to output a task map.
@@ -21,7 +21,7 @@ public:
     
     auto ntasks = concepts->task_data->ntasks();
     auto nPEs = concepts->PE_data->nPEs();
-    auto npacks = *concepts->k->value;
+    auto npacks = concepts->k->value;
 
     auto map = new Index[ntasks]();
     Policy::TaskPack::map(map, ntasks, nPEs, npacks);
@@ -30,4 +30,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}

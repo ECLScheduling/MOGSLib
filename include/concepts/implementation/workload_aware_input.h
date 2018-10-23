@@ -2,7 +2,7 @@
 
 #include <concepts/implementation/workload_oblivious_input.h>
 
-BEGIN_NAMESPACE(Concept)
+namespace MOGSLib { namespace Concept {
 
 /**
  * @brief A concrete concept that fulfills the access to task and PE workload inputs.
@@ -29,4 +29,4 @@ public:
   }
 };
 
-END_NAMESPACE
+}}

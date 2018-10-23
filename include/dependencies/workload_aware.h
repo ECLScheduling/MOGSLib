@@ -3,7 +3,7 @@
 #include <system/static.h>
 #include <dependencies/minimal_dependencies.h>
 
-BEGIN_NAMESPACE(Dependency)
+namespace MOGSLib { namespace Dependency {
 
 /**
  * @brief This class expresses an abstract workload data dependency.
@@ -26,4 +26,4 @@ struct WorkloadAwareWithK : public WorkloadAware<TaskWorkload, PEWorkload> {
   WorkloadAwareWithK(std::tuple<TaskWorkload*, PEWorkload*, K*> concepts) : WorkloadAware<TaskWorkload, PEWorkload>(std::make_tuple(std::get<0>(concepts), std::get<1>(concepts))), k(std::get<2>(concepts)) {}
 };
 
-END_NAMESPACE
+}}

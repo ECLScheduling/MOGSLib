@@ -3,7 +3,7 @@
 #include <abstractions/scheduler.h>
 #include <policies/compact.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief Class that represents a scheduler which utilizes the compact policy to output a task map.
@@ -29,4 +29,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}

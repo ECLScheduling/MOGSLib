@@ -3,7 +3,7 @@
 #include <abstractions/scheduler.h>
 #include <policies/round_robin.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
@@ -29,4 +29,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}

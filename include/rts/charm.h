@@ -2,7 +2,7 @@
 
 #include <abstractions/rts.h>
 
-BEGIN_NAMESPACE(Abstraction)
+namespace MOGSLib { namespace Abstraction {
 
 /**
  * @brief The declaration of a specific data structure to represent the Charm++ runtime system.
@@ -16,4 +16,4 @@ struct RTS<MOGSLib::RuntimeSystemEnum::Charm> : RTS<MOGSLib::RuntimeSystemEnum::
   static LDStats stats;
 };
 
-END_NAMESPACE
+}}

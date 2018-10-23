@@ -2,7 +2,7 @@
 
 #include <abstractions/scheduler.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief TODO: This scheduler needs a description.
@@ -24,4 +24,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}

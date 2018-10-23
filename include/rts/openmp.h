@@ -4,7 +4,7 @@
 #include <system/type_definitions.h>
 #include <iostream>
 
-BEGIN_NAMESPACE(Abstraction)
+namespace MOGSLib { namespace Abstraction {
 
 /**
  * @brief The declaration of a specific data structure to represent the OpenMP runtime system.
@@ -38,4 +38,4 @@ struct RTS<MOGSLib::RuntimeSystemEnum::OpenMP> : RTS<MOGSLib::RuntimeSystemEnum:
 
 };
 
-END_NAMESPACE
+}}

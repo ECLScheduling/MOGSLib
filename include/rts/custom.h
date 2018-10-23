@@ -2,7 +2,7 @@
 
 #include <abstractions/rts.h>
 
-BEGIN_NAMESPACE(Abstraction)
+namespace MOGSLib { namespace Abstraction {
   
 /**
  * @brief The declaration of a specific data structure to represent a Custom runtime system.
@@ -11,4 +11,4 @@ BEGIN_NAMESPACE(Abstraction)
 template<>
 struct RTS<RuntimeSystemEnum::Custom> : RTS<RuntimeSystemEnum::Custom, false> {};
 
-END_NAMESPACE
+}}

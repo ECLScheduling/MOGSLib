@@ -1,6 +1,6 @@
 #pragma once
 
-BEGIN_NAMESPACE(Concept)
+namespace MOGSLib { namespace Concept {
 
 /**
  * @brief A concrete concept that serves as a container to a generic K value.
@@ -11,4 +11,4 @@ public:
   T value;
 };
 
-END_NAMESPACE
+}}

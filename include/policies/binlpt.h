@@ -1,6 +1,6 @@
 #pragma once
 
-BEGIN_NAMESPACE(Policy)
+namespace MOGSLib { namespace Policy {
 
 /**
  * @brief A workload-aware policy that packs adjacent tasks together and distribute them in a greedy fashion.
@@ -145,14 +145,11 @@ public:
       if(chunk_loads[idx] == 0)
         continue;
 
-      //std::cout << "\tWorkload in PE " << pe_id << " is " << PE_workload[pe_id] << std::endl;
-      //std::cout << "\tWorkload in PE " << 1 << " is " << PE_workload[1] << std::endl;
       /* Find the least overloaded PE */
       for(Index j = 1; j < nPEs; ++j)
         if(PE_workload[j] < PE_workload[pe_id])
           pe_id = j;
 
-      //std::cout << "Chunk " << cur_chunk_idx << " mapped to PE " << pe_id << std::endl;
       /* Assign every task in the selected chunk to the same PE. */
       for(Index j = 0; j < chunk_sizes[cur_chunk_idx]; ++j)
         map[chunk_offset[cur_chunk_idx] + j] = pe_id;
@@ -169,4 +166,4 @@ public:
   }
 };
 
-END_NAMESPACE
+}}

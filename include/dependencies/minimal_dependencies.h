@@ -2,7 +2,7 @@
 
 #include <system/static.h>
 
-BEGIN_NAMESPACE(Dependency)
+namespace MOGSLib { namespace Dependency {
 
 /**
  * @brief the minimal dependency of a Scheduler.
@@ -15,4 +15,4 @@ struct MinimalDependencies {
   MinimalDependencies(std::tuple<TaskData*> concepts) : task_data(std::get<0>(concepts)) {}
 };
 
-END_NAMESPACE
+}}

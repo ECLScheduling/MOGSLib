@@ -36,7 +36,7 @@ public:
 
   Load *call_compute_chunkloads() {
     auto chunk_sizes = call_compute_chunksizes();
-    auto out =  SchedulingPolicy::compute_chunkloads(ntasks, workloads, chunk_sizes, k);
+    auto out =  SchedulingPolicy::compute_chunkloads(workloads, chunk_sizes, k);
     
     delete [] chunk_sizes;
     return out;
@@ -192,14 +192,14 @@ TEST_F(BinlptPolicyTests, chunksizes_non_exact_division) {
   auto out = call_compute_chunksizes();
   
   /** 
-   * mean load/chunk = 15/4 = 4
-   * [5] [4] [3,2] [1]
+   * mean load/chunk = 15/4 = 3
+   * [5] [4] [3] [2,1]
    **/
 
-  ASSERT_EQ(1, out[0]);
-  ASSERT_EQ(1, out[1]);
-  ASSERT_EQ(2, out[2]);
-  ASSERT_EQ(1, out[3]);
+  EXPECT_EQ(1, out[0]);
+  EXPECT_EQ(1, out[1]);
+  EXPECT_EQ(1, out[2]);
+  EXPECT_EQ(2, out[3]);
 
   delete [] out;
 }
@@ -237,13 +237,13 @@ TEST_F(BinlptPolicyTests, chunkloads_decreasing_irregular) {
   Index tasks = 5;
   k = 4;
 
-  set_decreasing_loads(tasks); // [5,4,3,2,1]
-  auto out = call_compute_chunkloads(); // [5] , [4] , [3,2] , [1]
+  set_decreasing_loads(tasks); // [5,4,3,2,1], mean = 3
+  auto out = call_compute_chunkloads(); // [5] , [4] , [3] , [2,1]
 
-  ASSERT_EQ(5, out[0]);
-  ASSERT_EQ(4, out[1]);
-  ASSERT_EQ(5, out[2]);
-  ASSERT_EQ(1, out[3]);
+  EXPECT_EQ(5, out[0]);
+  EXPECT_EQ(4, out[1]);
+  EXPECT_EQ(3, out[2]);
+  EXPECT_EQ(3, out[3]);
 
   delete [] out;
 }
@@ -286,14 +286,14 @@ TEST_F(BinlptPolicyTests, policy_irregular_tasks_decreasing_unloaded_PEs) {
   Index PEs = 2;
   k = 4;
 
-  set_decreasing_loads(tasks); // [5,4,3,2,1] => 0:[5] 1:[4] 2:[3,2] 3:[1] => ordered:{0,2,1,3}
+  set_decreasing_loads(tasks); // [5,4,3,2,1] => 0:[5] 1:[4] 2:[3] 3:[2,1] => ordered:{0,1,3,2}
   setPEs(PEs);
 
   execute_policy();
 
   EXPECT_EQ(0, map[0]);
-  EXPECT_EQ(0, map[1]);
-  EXPECT_EQ(1, map[2]);
+  EXPECT_EQ(1, map[1]);
+  EXPECT_EQ(0, map[2]);
   EXPECT_EQ(1, map[3]);
   EXPECT_EQ(1, map[4]);
 }

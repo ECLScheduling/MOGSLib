@@ -3,7 +3,7 @@
 #include <abstractions/scheduler.h>
 #include <policies/greedy.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief Class that represents a scheduler which utilizes a greedy heuristic to output a task map.
@@ -27,4 +27,4 @@ public:
   }
 };
 
-END_NAMESPACE
+}}

@@ -2,7 +2,7 @@
 
 #include <system/traits/rts.h>
 
-BEGIN_NAMESPACE(Abstraction)
+namespace MOGSLib { namespace Abstraction {
 
 /**
  * @brief The declaration of a generic data structure to represent a runtime system.
@@ -20,4 +20,4 @@ struct RTS {
 	static_assert(!(Spec && T != RuntimeSystemEnum::NoRTS), "The RTS structure must be specialized for the runtime system.");
 };
 
-END_NAMESPACE
+}}

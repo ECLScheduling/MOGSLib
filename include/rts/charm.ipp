@@ -1,5 +1,5 @@
 #pragma once
 
-BEGIN_NAMESPACE(Abstraction)
+namespace MOGSLib { namespace Abstraction {
 decltype(RTS<RuntimeSystemEnum::Charm>::stats) RTS<RuntimeSystemEnum::Charm>::stats = nullptr;
-END_NAMESPACE
+}}

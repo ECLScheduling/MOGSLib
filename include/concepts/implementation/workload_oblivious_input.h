@@ -3,7 +3,7 @@
 #include <vector>
 #include <system/type_definitions.h>
 
-BEGIN_NAMESPACE(Concept)
+namespace MOGSLib { namespace Concept {
 
 /**
  * @brief A concrete concept that access information about the amount of PEs and work units in the system.
@@ -88,4 +88,4 @@ public:
   }
 };
 
-END_NAMESPACE
+}}

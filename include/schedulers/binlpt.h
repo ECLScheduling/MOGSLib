@@ -3,7 +3,7 @@
 #include <abstractions/scheduler.h>
 #include <policies/binlpt.h>
 
-BEGIN_NAMESPACE(Scheduler)
+namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief Class that represents a scheduler which utilizes the binlpt policy to output a workload-aware task map.
@@ -32,4 +32,4 @@ public:
 
 };
 
-END_NAMESPACE
+}}
