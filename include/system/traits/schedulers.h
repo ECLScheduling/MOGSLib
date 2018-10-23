@@ -12,7 +12,7 @@ namespace MOGSLib {
  */
 template<SchedulerEnum T>
 struct SchedulerTraits {
-  static std::string name() { return "null"; }
+  static std::string name() { return "unimplemented"; }
 
   template<typename ... Concepts>
   using Dependencies = Dependency::MinimalDependencies<Concepts...>;
