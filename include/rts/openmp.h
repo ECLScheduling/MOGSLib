@@ -10,7 +10,7 @@ namespace MOGSLib { namespace Abstraction {
  */
 template<>
 struct RTS<MOGSLib::RuntimeSystemEnum::OpenMP> : RTS<MOGSLib::RuntimeSystemEnum::OpenMP, false> {
-  using Index = MOGSLib::RuntimeTraits<id>;
+  using Index = typename MOGSLib::RuntimeTraits<id>::Index;
 
   static Index chunk_size;
   static Index nPEs;

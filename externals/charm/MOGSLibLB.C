@@ -22,10 +22,9 @@ bool MOGSLibLB::QueryBalanceNow(int _step)
 }
 
 void MOGSLibLB::work(LDStats* stats) {
-  std::string scheduler_name = "binlpt";
   MOGSLib::RTS::stats = stats;
 
-  auto map = MOGSLib::SchedulerCollection::schedule(scheduler_name);
+  auto map = MOGSLib::SchedulerCollection::schedule();
   
   /*
    * This is a temporary hack to get the first concept in the collection of concepts.
@@ -34,8 +33,8 @@ void MOGSLibLB::work(LDStats* stats) {
    */
   auto task_info = std::get<0>(MOGSLib::SchedulerCollection::ConceptTuple::concepts);
 
-  //for(auto i = 0; i < task_info.ntasks(); ++i)
-    //CkPrintf("Task %d in PE %d.\n",task_info.task_ids[i], task_info.PE_ids[map[i]]);
+  for(auto i = 0; i < task_info.ntasks(); ++i)
+    CkPrintf("Task %d in PE %d.\n",task_info.task_ids[i], task_info.PE_ids[map[i]]);
 
   for(auto i = 0; i < task_info.ntasks(); ++i)
     stats->assign(task_info.task_ids[i], task_info.PE_ids[map[i]]);

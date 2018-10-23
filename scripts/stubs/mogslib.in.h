@@ -139,12 +139,18 @@ $TUPLE_GET_SPECS$
   using SchedulerTuple = std::tuple<$SCHEDULER_TUPLE$>;
   static SchedulerTuple schedulers;
 
+  static std::string get_scheduler_name_from_environment() { return std::getenv("MOGSLIB_SCHEDULE"); }
+
+  using SchedulerPicker = std::string (*)();
+  static SchedulerPicker pick_scheduler;
+
   /**
    * @brief Evoke a scheduler and its dependencies to obtain a task map.
    * @details Calls the init method of every concept linked to the scheduler and the scheduler's init itself, then call the scheduler's work method.
    * @param scheduler_name The name of the scheduler to be invoked. The names are declared in the scheduler traits.
    */
-  static TaskMap schedule(std::string &scheduler_name) {
+  static TaskMap schedule() {
+    auto const scheduler_name = pick_scheduler();
 $SCHEDULE_SNIPPET$
     throw "Invalid scheduler name";
   }
@@ -152,5 +158,6 @@ $SCHEDULE_SNIPPET$
 
 decltype(SchedulerCollection::ConceptTuple::concepts) SchedulerCollection::ConceptTuple::concepts;
 decltype(SchedulerCollection::schedulers) SchedulerCollection::schedulers;
+decltype(SchedulerCollection::pick_scheduler) SchedulerCollection::pick_scheduler = SchedulerCollection::get_scheduler_name_from_environment;
 
 }

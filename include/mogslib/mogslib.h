@@ -1,15 +1,15 @@
 #pragma once
 
-#include <rts/charm.h>
-#include <rts/charm.ipp>
+#include <rts/openmp.h>
+#include <rts/openmp.ipp>
 
 
 #include <system/type_definitions.h>
 
 #include <schedulers/binlpt.h>
 
-#include <concepts/driver/charm/workload_aware_input.ipp>
-#include <concepts/driver/charm/chunks_input.ipp>
+#include <concepts/driver/openmp/workload_aware_input.ipp>
+#include <concepts/driver/openmp/chunks_input.ipp>
 
 namespace MOGSLib {
 
@@ -145,12 +145,18 @@ struct SchedulerCollection {
   using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(BinLPT), ConceptDecl(WorkloadAwareInput), ConceptDecl(WorkloadAwareInput), ConceptDecl(ChunksInput))>;
   static SchedulerTuple schedulers;
 
+  static std::string get_scheduler_name_from_environment() { return std::getenv("MOGSLIB_SCHEDULE"); }
+
+  using SchedulerPicker = std::string (*)();
+  static SchedulerPicker pick_scheduler;
+
   /**
    * @brief Evoke a scheduler and its dependencies to obtain a task map.
    * @details Calls the init method of every concept linked to the scheduler and the scheduler's init itself, then call the scheduler's work method.
    * @param scheduler_name The name of the scheduler to be invoked. The names are declared in the scheduler traits.
    */
-  static TaskMap schedule(std::string &scheduler_name) {
+  static TaskMap schedule() {
+    auto const scheduler_name = pick_scheduler();
 		ScheduleSnippet(0)
     throw "Invalid scheduler name";
   }
@@ -158,5 +164,6 @@ struct SchedulerCollection {
 
 decltype(SchedulerCollection::ConceptTuple::concepts) SchedulerCollection::ConceptTuple::concepts;
 decltype(SchedulerCollection::schedulers) SchedulerCollection::schedulers;
+decltype(SchedulerCollection::pick_scheduler) SchedulerCollection::pick_scheduler = SchedulerCollection::get_scheduler_name_from_environment;
 
 }
