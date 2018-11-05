@@ -1,17 +1,26 @@
 #pragma once
 
-#include <rts/openmp.h>
-#include <rts/openmp.ipp>
+#include <rts/charm.h>
+#include <rts/charm.ipp>
 
 
 #include <system/type_definitions.h>
 
-#include <schedulers/binlpt.h>
+#include <schedulers/greedy.h>
 
-#include <concepts/driver/openmp/workload_aware_input.ipp>
-#include <concepts/driver/openmp/chunks_input.ipp>
+#include <concepts/driver/charm/workload_aware_input.ipp>
 
 namespace MOGSLib {
+
+/**
+ * @brief This structure holds the current id of the schedule call to mogslib.
+ * @details The id is used to check if a concept has already been initialized in the same schedule call.
+ *  This is done by comparing the id of the scheduling call that initialized it with this value that must be updated before the check if a new call has been issued.
+ */
+struct ScheduleCall {
+  static int id;
+};
+decltype(ScheduleCall::id) ScheduleCall::id = 0;
 
 #define SchedulerDecl(Name) MOGSLib::Scheduler::Name
 #define ConceptDecl(Name) MOGSLib::Concept::Name
@@ -39,17 +48,17 @@ struct TupleGet<ConceptName, spec> { \
  */
 template<typename Tuple, unsigned Index>
 struct ConceptInitializer {
-  static bool initialized;
+  static decltype(ScheduleCall::id) init_in_call;
   static void init(Tuple &tuple) {
-    if(!initialized) {
+    if(ScheduleCall::id != init_in_call) {
       Driver<typename std::tuple_element<Index,Tuple>::type, TargetSystem>::init(std::get<Index>(tuple));
-      initialized = true;
+      init_in_call = ScheduleCall::id;
     }
   }
 };
 
 template<typename Tuple, unsigned Index>
-bool ConceptInitializer<Tuple, Index>::initialized;
+decltype(ConceptInitializer<Tuple, Index>::init_in_call) ConceptInitializer<Tuple, Index>::init_in_call;
 
 /**
  * @brief This structure assembles MOGSLibs components into a Scheduler collection that can be use within a selected RTS.
@@ -63,7 +72,7 @@ struct SchedulerCollection {
    * @details The "type" type is constructed by the precompilation step in MOGSLib as is every TupleGet specialization.
    */
   struct ConceptTuple {
-    using type = std::tuple<ConceptDecl(WorkloadAwareInput), ConceptDecl(ChunksInput)>;
+    using type = std::tuple<ConceptDecl(WorkloadAwareInput)>;
     
     static type concepts;
 
@@ -77,7 +86,6 @@ struct SchedulerCollection {
     };
 
     TupleGetSnippet(ConceptDecl(WorkloadAwareInput), 0)
-    TupleGetSnippet(ConceptDecl(ChunksInput), 1)
 
     /**
      * @brief Get a value from the concepts tuple that corresponds to the T type.
@@ -142,7 +150,7 @@ struct SchedulerCollection {
     }
   };
 
-  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(BinLPT), ConceptDecl(WorkloadAwareInput), ConceptDecl(WorkloadAwareInput), ConceptDecl(ChunksInput))>;
+  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(Greedy), ConceptDecl(WorkloadAwareInput), ConceptDecl(WorkloadAwareInput))>;
   static SchedulerTuple schedulers;
 
   static std::string get_scheduler_name_from_environment() { return std::getenv("MOGSLIB_SCHEDULE"); }
@@ -156,6 +164,7 @@ struct SchedulerCollection {
    * @param scheduler_name The name of the scheduler to be invoked. The names are declared in the scheduler traits.
    */
   static TaskMap schedule() {
+    ScheduleCall::id++;
     auto const scheduler_name = pick_scheduler();
 		ScheduleSnippet(0)
     throw "Invalid scheduler name";

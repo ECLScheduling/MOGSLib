@@ -3,6 +3,9 @@
 #include <abstractions/driver.h>
 #include <concepts/implementation/workload_aware_input.h>
 
+// The workload aware concept can reuse the workload oblivious initializer.
+#include <concepts/driver/workload_oblivious_input.h>
+
 namespace MOGSLib {
 
 template<RuntimeSystemEnum T>
