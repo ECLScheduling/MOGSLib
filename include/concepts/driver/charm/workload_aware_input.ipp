@@ -35,9 +35,10 @@ inline void workload_aware_input_driver<RuntimeSystemEnum::Charm>(Concept::Workl
   // Gather the load data for the tasks marked as migrateable.
   for(decltype(nTasks) i = 0; i < nTasks; ++i) {
     auto charm_task_id = concept.task_ids[i];
+    auto pe = input->from_proc[charm_task_id];
     LDObjData &task_data = input->objData[charm_task_id];
 
-    concept.task_loads[i] = task_data.wallTime * input->procs[charm_task_id].pe_speed; // Calculate the load of a Task.
+    concept.task_loads[i] = task_data.wallTime * input->procs[map[pe]].pe_speed; // Calculate the load of a Task.
   }
 
   // If there are no non-migrateable tasks, we are done.
