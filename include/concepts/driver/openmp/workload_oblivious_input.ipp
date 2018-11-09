@@ -5,7 +5,7 @@ namespace MOGSLib {
 
 template<>
 inline void workload_oblivious_input_driver<RuntimeSystemEnum::OpenMP>(Concept::WorkloadObliviousInput<RuntimeSystemEnum::OpenMP>& concept) {
-  concept.tasks = RTS:ntasks;
+  concept.tasks = RTS::ntasks;
   concept.PEs = RTS::nPEs;
 }
 

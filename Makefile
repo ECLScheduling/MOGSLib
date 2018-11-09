@@ -49,8 +49,8 @@ TMAINFILES :=$(shell find $(TSTDIR) -name '*.cpp' 2> /dev/null)
 TBINARIES  :=$(patsubst $(TSTDIR)/%.cpp,$(BINDIR)/%,$(TMAINFILES))
 # Compiler & linker flags
 TCXXFLAGS :=
-TLDFLAGS  :=-pthread -lgtest_main
-TLDLIBS   :=
+TLDFLAGS  :=-L/usr/lib
+TLDLIBS   :=-lgtest -lgtest_main -pthread
 TINCLUDE  :=
 ### MAKEFILE CONTROL VARIABLES
 # Debug flag, if != 0 deactivates all supressed echoing

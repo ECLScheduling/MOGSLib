@@ -8,6 +8,16 @@
 @CONCEPT_INCLUDES@
 namespace MOGSLib {
 
+/**
+ * @brief This structure holds the current id of the schedule call to mogslib.
+ * @details The id is used to check if a concept has already been initialized in the same schedule call.
+ *  This is done by comparing the id of the scheduling call that initialized it with this value that must be updated before the check if a new call has been issued.
+ */
+struct ScheduleCall {
+  static int id;
+};
+decltype(ScheduleCall::id) ScheduleCall::id = 0;
+
 #define SchedulerDecl(Name) MOGSLib::Scheduler::Name
 #define ConceptDecl(Name) MOGSLib::Concept::Name
 #define SchedulerTupleDef(SchedName, ...) CompleteScheduler<SchedName, ##__VA_ARGS__>
@@ -34,17 +44,17 @@ struct TupleGet<ConceptName, spec> { \
  */
 template<typename Tuple, unsigned Index>
 struct ConceptInitializer {
-  static bool initialized;
+  static decltype(ScheduleCall::id) init_in_call;
   static void init(Tuple &tuple) {
-    if(!initialized) {
+    if(ScheduleCall::id != init_in_call) {
       Driver<typename std::tuple_element<Index,Tuple>::type, TargetSystem>::init(std::get<Index>(tuple));
-      initialized = true;
+      init_in_call = ScheduleCall::id;
     }
   }
 };
 
 template<typename Tuple, unsigned Index>
-bool ConceptInitializer<Tuple, Index>::initialized;
+decltype(ConceptInitializer<Tuple, Index>::init_in_call) ConceptInitializer<Tuple, Index>::init_in_call;
 
 /**
  * @brief This structure assembles MOGSLibs components into a Scheduler collection that can be use within a selected RTS.
@@ -150,6 +160,7 @@ $TUPLE_GET_SPECS$
    * @param scheduler_name The name of the scheduler to be invoked. The names are declared in the scheduler traits.
    */
   static TaskMap schedule() {
+    ScheduleCall::id++;
     auto const scheduler_name = pick_scheduler();
 $SCHEDULE_SNIPPET$
     throw "Invalid scheduler name";
