@@ -3,7 +3,7 @@
 namespace MOGSLib { namespace Policy {
 
 /**
- * @brief A workload-unaware policy that iterativelly assigns a task to a PE based on their id.
+ * @brief A workload-unaware policy that iteratively assigns a task to a PE based on their id.
  */
 class RoundRobin {
 public:
