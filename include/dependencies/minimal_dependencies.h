@@ -6,7 +6,7 @@ namespace MOGSLib { namespace Dependency {
 
 /**
  * @brief the minimal dependency of a Scheduler.
- * @details A scheduler needs to at least know the number of elements to schedule, hence the task_data variable.
+ * @details A scheduler needs to at least know the amount of elements to schedule, hence the task_data variable.
  */
 template<typename TaskData>
 struct MinimalDependencies {

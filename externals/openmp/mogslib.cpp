@@ -1,27 +1,27 @@
 #include <mogslib/mogslib.h>
 
 /**
- * @brief Set the number of chunks in the OpenMP RTS datastructure.
+ * @brief Set the amount of chunks in the OpenMP RTS datastructure.
  * @details A C++ proxy function to set the chunksize data in OpenMP.
- * @param chunksize The number of chunks generated in OpenMP.
+ * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_chunksize(unsigned chunksize) {
   MOGSLib::RTS::set_chunk_size(chunksize);
 }
 
 /**
- * @brief Set the number of processing elements in the OpenMP RTS datastructure.
- * @details A C++ proxy function to set the nPEs data in OpenMP.
- * @param nPEs The number of processing elements.
+ * @brief Set the amount of chunks in the OpenMP RTS datastructure.
+ * @details A C++ proxy function to set the chunksize data in OpenMP.
+ * @param chunksize The amount of chunks generated in OpenMP.
  */
 inline void mogslib_call_set_nPEs(unsigned nPEs) {
   MOGSLib::RTS::set_nPEs(nPEs);
 }
 
 /**
- * @brief Set the number of tasks in the OpenMP RTS datastructure.
+ * @brief Set the amount of tasks in the OpenMP RTS datastructure.
  * @details A C++ proxy function to set the ntasks data in OpenMP.
- * @param ntasks The number of tasks generated in OpenMP.
+ * @param ntasks The amount of tasks generated in OpenMP.
  */
 inline void mogslib_call_set_ntasks(unsigned ntasks) {
   MOGSLib::RTS::set_ntasks(ntasks);
@@ -43,7 +43,7 @@ inline unsigned *mogslib_call_strategy_map() {
 extern "C" {
 
 /**
- * @brief A function to interface with MOGSLib to register the number of chunks in OpenMP.
+ * @brief A function to interface with MOGSLib to register the amount of chunks in OpenMP.
  * @details A C function to interface with OpenMP and direct the execution flow back to C++.
  */
 void mogslib_set_chunksize(unsigned chunksize) {
@@ -51,7 +51,7 @@ void mogslib_set_chunksize(unsigned chunksize) {
 }
 
 /**
- * @brief A function to interface with MOGSLib to register the number of PEs in OpenMP.
+ * @brief A function to interface with MOGSLib to register the amount of PEs in OpenMP.
  * @details A C function to interface with OpenMP and direct the execution flow back to C++.
  */
 void mogslib_set_nPEs(unsigned nPEs) {
@@ -59,7 +59,7 @@ void mogslib_set_nPEs(unsigned nPEs) {
 }
 
 /**
- * @brief A function to interface with MOGSLib to register the number of tasks in OpenMP.
+ * @brief A function to interface with MOGSLib to register the amount of tasks in OpenMP.
  * @details A C function to interface with OpenMP and direct the execution flow back to C++.
  */
 void mogslib_set_ntasks(unsigned ntasks) {

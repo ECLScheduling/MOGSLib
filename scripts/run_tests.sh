@@ -5,7 +5,7 @@ cd $BINDIR
 
 for dirname in $(ls */ -d); do
   cd $dirname
-  echo "Beginning tests on ${dirname} directory..."
+  echo "Begining tests on ${dirname} directory..."
   for filename in $(ls); do
     echo "Test: ${filename}"
     ./$filename

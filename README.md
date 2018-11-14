@@ -40,14 +40,14 @@ MOGSLib currently has the following scheduler implementations:
 
 # MOGSLib Integration
 
-In order to ease the configuration of MOGSLib and provide an easier way to attach the library into the RTS, a script has been made to configure the library to portray a single strategy to a target RTS. The script can be found in the scripts directory under the name `configure.py`. Make sure to run this script before compiling the library alongside the RTS in the specific steps to integrate the library in order to link the desired scheduling component to the target RTS through the desired adapter.
+In order to ease the configuration of MOGSLib and provide an easier way to attach the library into the RTS, a script has been made to configure the library to portray a single strategy to a target RTS. The script can be found in the scripts directory under the name `configure.sh`. Make sure to run this script before compiling the library alongside the RTS in the specific steps to integrate the library in order to link the desired scheduling component to the target RTS through the desired adapter.
 
 ## Charm++
 MOGSLib can be integrated with the Charm++ runtime system through the following steps.
 
 ### Library Configurations
 
-1. Set the library RTS to Charm++ though the configure script. In order to set the library to work with Charm++ using the greedy scheduler, for example, run the following command: `scripts/configure.py -s greedy -a default -rts charm`.
+1. Set the library RTS to Charm++ though the configure script. In order to set the library to work with Charm++ using the greedy scheduler, for example, run the following command: `scripts/configure.sh -s greedy -a default -rts charm`.
 
 ### Charm++ Configurations
 
@@ -80,7 +80,7 @@ In this early development stage, the only way to integrate MOGSLib into OpenMP i
 
 ## Library Configurations
 
-1. Set the library RTS to OpenMP++ though the configure script. In order to set the library to work with OpenMP++ RTS using the greedy scheduler, for example, run the following command: `scripts/configure.py -s greedy -a default -rts openmp`
+1. Set the library RTS to OpenMP++ though the configure script. In order to set the library to work with OpenMP++ RTS using the greedy scheduler, for example, run the following command: `scripts/configure.sh -s greedy -a default -rts openmp`
 
 ## OpenMP application Configurations
 
