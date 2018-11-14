@@ -35,7 +35,7 @@ TSTDIR :=tests
 DEPDIR :=.deps
 ### PROGRAM-RELATED VARIABLES
 # Files
-MAINFILES :=src/load_oblivious.cpp
+MAINFILES :=src/perf.cpp
 BINARIES  :=$(BINDIR)/execute_me
 # Compiler & linker flags
 CXXFLAGS :=-std=c++14 -Wall -O3
