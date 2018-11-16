@@ -72,7 +72,7 @@ struct SchedulerCollection {
    * @details The "type" type is constructed by the precompilation step in MOGSLib as is every TupleGet specialization.
    */
   struct ConceptTuple {
-    using type = std::tuple<ConceptDecl(WorkloadAwareInput)>;
+    using type = std::tuple<ConceptDecl(WorkloadAwareInput<>)>;
     
     static type concepts;
 
@@ -85,7 +85,7 @@ struct SchedulerCollection {
       static T* get() { return nullptr; }
     };
 
-    TupleGetSnippet(ConceptDecl(WorkloadAwareInput), 0)
+    TupleGetSnippet(ConceptDecl(WorkloadAwareInput<>), 0)
 
     /**
      * @brief Get a value from the concepts tuple that corresponds to the T type.
@@ -150,7 +150,7 @@ struct SchedulerCollection {
     }
   };
 
-  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(Greedy), ConceptDecl(WorkloadAwareInput), ConceptDecl(WorkloadAwareInput))>;
+  using SchedulerTuple = std::tuple<SchedulerTupleDef(SchedulerDecl(Greedy), ConceptDecl(WorkloadAwareInput<>), ConceptDecl(WorkloadAwareInput<>))>;
   static SchedulerTuple schedulers;
 
   static std::string get_scheduler_name_from_environment() { return std::getenv("MOGSLIB_SCHEDULE"); }

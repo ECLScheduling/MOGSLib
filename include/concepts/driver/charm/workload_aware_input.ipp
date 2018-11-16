@@ -3,37 +3,34 @@
 
 #include "workload_oblivious_input.ipp"
 
+#include <iostream>
+
 namespace MOGSLib {
 
 template<>
-inline void workload_aware_input_driver<RuntimeSystemEnum::Charm>(Concept::WorkloadAwareInput& concept) {
+inline void workload_aware_input_driver<RuntimeSystemEnum::Charm>(Concept::WorkloadAwareInput<>& concept) {
   Driver<Concept::WorkloadObliviousInput<RuntimeSystemEnum::Charm>, RuntimeSystemEnum::Charm>::init(concept);
 
   auto input = RTS::stats;
 
-  auto nPEs = concept.nPEs(); // only accounting the available processors. Check the driver for WorkloadObliviousInput.
-  auto nTasks = concept.ntasks(); // only accounting the migrateable tasks. Check the driver for WorkloadObliviousInput.
+  auto npes = concept.nPEs(); // only accounting the available processors. Check the driver for WorkloadObliviousInput.
+  auto ntasks = concept.ntasks(); // only accounting the migrateable tasks. Check the driver for WorkloadObliviousInput.
 
   int *map = new int[input->nprocs()]();
-  
-  if(!concept.can_reuse_memory(nPEs, nTasks)) {
-    concept.clear_memory();
-    concept.PE_loads = new Load[nPEs]();
-    concept.task_loads = new Load[nTasks]();
-    concept.alloc_tasks = true;
-    concept.alloc_PEs = true;
-  }
+
+  concept.pe_loads.resize(npes);
+  concept.task_loads.resize(ntasks);
 
   // Gather the load data for the processors marked as available.
-  for(decltype(nPEs) i = 0; i < nPEs; ++i) {
+  for(decltype(npes) i = 0; i < npes; ++i) {
     auto charm_PE_id = concept.PE_ids[i];
 
-    concept.PE_loads[i] = input->procs[charm_PE_id].bg_walltime;
+    concept.pe_loads[i] = input->procs[charm_PE_id].bg_walltime;
     map[charm_PE_id] = i; // map the charm id to the mogslib id.
   }
 
   // Gather the load data for the tasks marked as migrateable.
-  for(decltype(nTasks) i = 0; i < nTasks; ++i) {
+  for(decltype(ntasks) i = 0; i < ntasks; ++i) {
     auto charm_task_id = concept.task_ids[i];
     auto pe = input->from_proc[charm_task_id];
     LDObjData &task_data = input->objData[charm_task_id];
@@ -42,7 +39,7 @@ inline void workload_aware_input_driver<RuntimeSystemEnum::Charm>(Concept::Workl
   }
 
   // If there are no non-migrateable tasks, we are done.
-  if(nTasks == input->n_objs) {
+  if(ntasks == input->n_objs) {
     delete [] map;
     return;
   }
@@ -53,7 +50,7 @@ inline void workload_aware_input_driver<RuntimeSystemEnum::Charm>(Concept::Workl
 
     if(!task_data.migratable) {
       auto pe = input->from_proc[task]; // Get the PE's id where the task is allocated.
-      concept.PE_loads[map[pe]] += task_data.wallTime;
+      concept.pe_loads[map[pe]] += task_data.wallTime;
     }
   }
 
