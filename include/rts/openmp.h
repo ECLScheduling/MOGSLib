@@ -9,7 +9,7 @@ namespace MOGSLib { namespace Abstraction {
  * @details This structure must contain solely static data in order to be acessed globally by Binders, Initializers, Concepts and Adaptors.
  */
 template<>
-struct RTS<MOGSLib::RuntimeSystemEnum::OpenMP> : RTS<MOGSLib::RuntimeSystemEnum::OpenMP, false> {
+struct RTS<MOGSLib::RuntimeSystemEnum::OpenMP> : RTS<MOGSLib::RuntimeSystemEnum::OpenMP> {
   using Index = typename MOGSLib::RuntimeTraits<id>::Index;
   using Load = typename MOGSLib::RuntimeTraits<id>::Load;
 

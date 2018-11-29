@@ -41,6 +41,16 @@ struct RuntimeTraits<RuntimeSystemEnum::Charm> {
    * @brief The name of the system so it can be referenced on user-friendly messages.
    */
   static constexpr auto name = "Charm++";
+
+  /**
+   * @brief Whether should Charm++ RTS filter out the unavailable PUs when getting the available PUs.
+   */
+  static constexpr bool check_for_unavailable_pus = true;
+
+  /**
+   * @brief Whether should Charm++ RTS filter out the unmigratable chares when getting the running tasks.
+   */
+  static constexpr bool check_for_fixed_chares = true;
 };
 
 template<>

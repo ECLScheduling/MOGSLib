@@ -93,3 +93,11 @@ In this early development stage, the only way to integrate MOGSLib into OpenMP i
 7. Run the application
 
 The actual scheduling policy that will be used to schedule the parallel segment is the same as the one passed to the MOGSLib configure script.
+
+### Charm++ Tests on tests/rts/charm
+
+To test the functionalities mocked by the unit tests, the user currently has to manually change the Charm++ traits in system/traits/rts.h.
+The values `check_for_unavailable_pus` and `check_for_fixed_chares` are currently being tracked from the `RuntimeTraits<RuntimeSystemEnum::Charm>` structures even when testing.
+The tests are meta-programmed to check these values and change the expected result.
+However, to test the different configurations, the values must be changed directly in the structure.
+Another form of testing these features is currently on development.

@@ -12,12 +12,14 @@ namespace MOGSLib { namespace Abstraction {
  *
  * @error Calling a template specialization that does not exist is unintended and will yield a compile-time error.
  */
-template<RuntimeSystemEnum T, bool Spec = true>
+template<RuntimeSystemEnum T>
 struct RTS {
 	static constexpr auto id = T;
-  	static constexpr auto name = RuntimeTraits<T>::name;
+  using Traits = RuntimeTraits<id>;
 
-	static_assert(!(Spec && T != RuntimeSystemEnum::NoRTS), "The RTS structure must be specialized for the runtime system.");
+  static constexpr auto name = Traits::name;
+  using Index = typename Traits::Index;
+  using Load = typename Traits::Load;
 };
 
 }}
