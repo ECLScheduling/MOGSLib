@@ -6,7 +6,7 @@
 namespace MOGSLib { namespace Scheduler {
 
 /**
- * @brief Class that represents a scheduler which utilizes the compact policy to output a task map.
+ * \brief Class that represents a scheduler which utilizes the compact policy to output a task map.
  **/
 template<typename ... _Concepts>
 class Compact : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::compact, _Concepts...> {
@@ -14,7 +14,7 @@ public:
   using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::compact, _Concepts...>;
 
   /**
-   * @brief The method to obtain a task map based on a compact policy.
+   * \brief The method to obtain a task map based on a compact policy.
    **/
   TaskMap work() override {
     auto concepts = Base::concepts;

@@ -6,13 +6,13 @@
 namespace MOGSLib {
 
 /**
- * @brief The Initializer type is a pointer that will receive a reference for a concept, and initialize it so the scheduler can properly use it.
+ * \brief The Initializer type is a pointer that will receive a reference for a concept, and initialize it so the scheduler can properly use it.
  */
 template<typename Concept>
 using Initializer = void (*)(Concept&);
 
 /**
- * @brief The declaration of a generic data structure to represent a runtime system.
+ * \brief The declaration of a generic data structure to represent a runtime system.
  */
 template<typename Concept, RuntimeSystemEnum T>
 struct Driver {

@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <iostream>
-
-#include "mock/LDStats.h"
+#include "mock/custom_traits.h"
 
 #include <rts/charm/charm.h>
 #include <rts/charm/charm.ipp>
@@ -11,7 +9,8 @@ using Load = decltype(BaseLB::ProcStats::bg_walltime);
 using Index = decltype(BaseLB::LDStats::count);
 using Speed = decltype(BaseLB::ProcStats::pe_speed);
 
-using Charm = MOGSLib::Abstraction::RTS<MOGSLib::RuntimeSystemEnum::Charm>;
+using Traits = CustomCharmTraits<true,true>;
+using Charm = MOGSLib::RTS::Charm<Traits>;
 
 struct Chare {
   bool migratable;
@@ -117,7 +116,7 @@ TEST_F(CharmWorkloadFunctionalitiesTest, chare_load_depends_on_pe_speed) {
 
 // Unmigrateable chares are/not accounted for when check_for_fixed_chares is inactive/active.
 /**
- * @brief TODO: This test must be issued in different "check_for_fixed_chares" values in system/traits. There must be more flexibility for this test to be automated.
+ * \brief TODO: This test must be issued in different "check_for_fixed_chares" values in system/traits. There must be more flexibility for this test to be automated.
  */
 TEST_F(CharmWorkloadFunctionalitiesTest, chares_can_be_unmigratable) {
   std::vector<PU> pus {PU(true, 2, 0), PU(true, 3, 0)}; // Two PUs, both with 0 background wall time and available. First with 2 speed and the latter with 3.
@@ -127,11 +126,11 @@ TEST_F(CharmWorkloadFunctionalitiesTest, chares_can_be_unmigratable) {
   set_chares(chares);
 
   auto loads = predict_chare_load();
-  auto expected_size = (Charm::Traits::check_for_fixed_chares)? 1 : 2;
+  auto expected_size = (Traits::check_for_fixed_chares)? 1 : 2;
   
   ASSERT_EQ(expected_size, loads.size());
 
-  if(Charm::Traits::check_for_fixed_chares)
+  if(Traits::check_for_fixed_chares)
     ASSERT_EQ(6, loads[0]); // Only the second chare is accounted for.
   else {
     ASSERT_EQ(4, loads[0]); // The functionality doesnt check for the migratable status and evaluates first chare as migratable.
@@ -180,7 +179,7 @@ TEST_F(CharmWorkloadFunctionalitiesTest, pu_workload_might_accounts_for_fixed_ta
   // The expected load depends if Charm++ traits dictates that there ARE unmigratable tasks.
   auto expected_loads = [](auto pu, auto hosted_chare) {
     auto pu_load = pu.pe_speed * pu.bg_walltime;
-    return (Charm::Traits::check_for_fixed_chares)? pu_load + hosted_chare.wallTime * pu.pe_speed : pu_load; };
+    return (Traits::check_for_fixed_chares)? pu_load + hosted_chare.wallTime * pu.pe_speed : pu_load; };
 
   for(unsigned i = 0; i < pus.size(); ++i)
     EXPECT_EQ(expected_loads(pus[i], chares[i]), loads[i]);
@@ -196,10 +195,10 @@ TEST_F(CharmWorkloadFunctionalitiesTest, pu_workload_might_not_consider_unavaila
 
   auto loads = predict_pus_load();
   auto expected_loads = [](auto pu) { return pu.pe_speed * pu.bg_walltime; };
-  auto expected_size = (Charm::Traits::check_for_unavailable_pus)? 1 : 2;
+  auto expected_size = (Traits::check_for_unavailable_pus)? 1 : 2;
 
   ASSERT_EQ(expected_size, loads.size());
-  if(Charm::Traits::check_for_unavailable_pus)
+  if(Traits::check_for_unavailable_pus)
     EXPECT_EQ(expected_loads(pus[1]), loads[0]);
   else {
     EXPECT_EQ(expected_loads(pus[0]), loads[0]);

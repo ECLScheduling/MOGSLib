@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
-#include "mock/LDStats.h"
+#include "mock/custom_traits.h"
 
 #include <rts/charm/charm.h>
 #include <rts/charm/charm.ipp>
 
-using Charm = MOGSLib::Abstraction::RTS<MOGSLib::RuntimeSystemEnum::Charm>;
+using Traits = CustomCharmTraits<true,true>;
+using Charm = MOGSLib::RTS::Charm<Traits>;
 
 class CharmCountFunctionalitiesTest : public ::testing::Test {
 public:
@@ -66,7 +67,7 @@ TEST_F(CharmCountFunctionalitiesTest, will_find_two_pus_if_they_are_available) {
 TEST_F(CharmCountFunctionalitiesTest, will_find_one_pu_if_it_is_the_only_available) {
   set_pus(1, 1);
 
-  decltype(Charm::LBDB::PU::count()) expected = (Charm::Traits::check_for_unavailable_pus)? 1 : 2;
+  decltype(Charm::LBDB::PU::count()) expected = (Traits::check_for_unavailable_pus)? 1 : 2;
 
   ASSERT_EQ(expected, Charm::LBDB::PU::count());
 }
@@ -91,7 +92,7 @@ TEST_F(CharmCountFunctionalitiesTest, will_find_two_chares_if_they_are_migratabl
 TEST_F(CharmCountFunctionalitiesTest, will_find_one_chare_if_it_is_the_only_migratable) {
   set_chares(1,1);
 
-  decltype(Charm::LBDB::PU::count()) expected = (Charm::Traits::check_for_fixed_chares)? 1 : 2;
+  decltype(Charm::LBDB::PU::count()) expected = (Traits::check_for_fixed_chares)? 1 : 2;
 
   ASSERT_EQ(expected, Charm::LBDB::Chare::count());
 }

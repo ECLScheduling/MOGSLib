@@ -3,7 +3,7 @@
 namespace MOGSLib {
 
 /**
- * @brief An enumerate of all the supported runtime systems types that MOGSLib exposes.
+ * \brief An enumerate of all the supported runtime systems types that MOGSLib exposes.
  */
 enum RuntimeSystemEnum {
   NoRTS,
@@ -13,7 +13,7 @@ enum RuntimeSystemEnum {
 };
 
 /**
- * @brief An enumerate of all the schedulers types that MOGSLib can exposes.
+ * \brief An enumerate of all the schedulers types that MOGSLib can exposes.
  */
 enum SchedulerEnum {
   round_robin,
@@ -24,7 +24,7 @@ enum SchedulerEnum {
 };
 
 /**
- * @brief An enumerate of all the scheduler inputs types that MOGSLib exposes.
+ * \brief An enumerate of all the scheduler inputs types that MOGSLib exposes.
  */
 enum InputEnum {
   simple,

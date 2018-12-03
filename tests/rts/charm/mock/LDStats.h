@@ -5,7 +5,7 @@
 namespace BaseLB {
 
 /**
- * @brief A mock structure with the same data signature as its counterpart in Charm 6.9.0.
+ * \brief A mock structure with the same data signature as its counterpart in Charm 6.9.0.
  * @details This should be solely used for syntax tests sice it does not mock Charm++ functionalities.
  */
 struct ProcStats {  // per processor
@@ -26,12 +26,12 @@ struct LDObjData {
 };
 
 /**
- * @brief This structure is not yet used in any balancer.
+ * \brief This structure is not yet used in any balancer.
  */
 struct LDCommData {};
 
 /**
- * @brief A mock structure with the same data signature as its counterpart in Charm 6.9.0.
+ * \brief A mock structure with the same data signature as its counterpart in Charm 6.9.0.
  * @details This should be solely used for syntax tests sice it does not mock Charm++ functionalities.
  */
 struct LDStats { // load balancing database

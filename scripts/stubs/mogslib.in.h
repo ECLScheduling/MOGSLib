@@ -9,7 +9,7 @@
 namespace MOGSLib {
 
 /**
- * @brief This structure holds the current id of the schedule call to mogslib.
+ * \brief This structure holds the current id of the schedule call to mogslib.
  * @details The id is used to check if a concept has already been initialized in the same schedule call.
  *  This is done by comparing the id of the scheduling call that initialized it with this value that must be updated before the check if a new call has been issued.
  */
@@ -37,7 +37,7 @@ struct TupleGet<ConceptName, spec> { \
 };
 
 /**
- * @brief This specialization of ConceptInitializer is responsible for calling the init method of a single Concept within a tuple of concepts.
+ * \brief This specialization of ConceptInitializer is responsible for calling the init method of a single Concept within a tuple of concepts.
  * @details When a concept is initialized by this structure, future calls to its initialization won't invoke the init method of the previously-initialized concept.
  * @type Tuple A tuple of concepts concrete definition.
  * @type Index The index passed as template parameter to std::get.
@@ -57,14 +57,14 @@ template<typename Tuple, unsigned Index>
 decltype(ConceptInitializer<Tuple, Index>::init_in_call) ConceptInitializer<Tuple, Index>::init_in_call;
 
 /**
- * @brief This structure assembles MOGSLibs components into a Scheduler collection that can be use within a selected RTS.
+ * \brief This structure assembles MOGSLibs components into a Scheduler collection that can be use within a selected RTS.
  * @details These definitions are generated automatically when executing scripts/configure.py with proper parameters
  */
 struct SchedulerCollection {
   using RTS = MOGSLib::Abstraction::RTS<MOGSLib::TargetSystem>;
 
   /**
-   * @brief This structure defines a static collection of concepts and eases the access to its members.
+   * \brief This structure defines a static collection of concepts and eases the access to its members.
    * @details The "type" type is constructed by the precompilation step in MOGSLib as is every TupleGet specialization.
    */
   struct ConceptTuple {
@@ -73,7 +73,7 @@ struct SchedulerCollection {
     static type concepts;
 
     /**
-     * @brief This static structure serves the purpose of fetching a value from a give type present within the concepts tuple.
+     * \brief This static structure serves the purpose of fetching a value from a give type present within the concepts tuple.
      * @details Its not_required boolean value is not required. It is a work-around for full template specializations within a namespace.
      */
     template<typename T, bool not_required = false>
@@ -84,14 +84,14 @@ struct SchedulerCollection {
 $TUPLE_GET_SPECS$
 
     /**
-     * @brief Get a value from the concepts tuple that corresponds to the T type.
+     * \brief Get a value from the concepts tuple that corresponds to the T type.
      * @details This method utilizes the specialized TupleGet structures that are generated in MOGSLib precompilation step.
      */
     template<typename T>
     static T* get() { return TupleGet<T>::get(); }
 
     /**
-     * @brief This structure returns a subtuple of the type tuple containing pointers to its values.
+     * \brief This structure returns a subtuple of the type tuple containing pointers to its values.
      * @details This structure makes use of the TupleGet member structure to construct its output.
      */
     template<typename T, typename ... Ts>
@@ -100,7 +100,7 @@ $TUPLE_GET_SPECS$
     };
 
     /**
-     * @brief This is a specialization of the SubTupleGet structure that returns a tuple of size 1 of a concept contained in the concepts tuple.
+     * \brief This is a specialization of the SubTupleGet structure that returns a tuple of size 1 of a concept contained in the concepts tuple.
      * @details This is required to prevent an infinite loop of get() function calls as SubTupleGet is recursive.
      */
     template<typename T>
@@ -109,7 +109,7 @@ $TUPLE_GET_SPECS$
     };
 
     /**
-     * @brief Creates a sub-tuple of pointer to concepts contained in the concepts tuple.
+     * \brief Creates a sub-tuple of pointer to concepts contained in the concepts tuple.
      * @details This method uses the SubTupleGet member structures to construct the output.
      */
     template<typename ... T>
@@ -117,7 +117,7 @@ $TUPLE_GET_SPECS$
   };
 
   /**
-   * @brief This structure assembles all the components to form a complete scheduler in a given system.
+   * \brief This structure assembles all the components to form a complete scheduler in a given system.
    * @details The assembly is composed of a scheduler and all its dependent concepts already situated in a context.
    * @type Sched The scheduler class with its dependencies expressed.
    * @type Concepts This variadic template argument encompasses all the concrete concepts already parametrized to respect the target RTS/Libraries.
@@ -129,7 +129,7 @@ $TUPLE_GET_SPECS$
     std::unique_ptr<Scheduler> scheduler;
 
     /**
-     * @brief This method initializes the global scheduler, its concepts and then issues the work call.
+     * \brief This method initializes the global scheduler, its concepts and then issues the work call.
      */
     TaskMap init_and_work() {
       scheduler = std::make_unique<Scheduler>();
@@ -138,7 +138,7 @@ $TUPLE_GET_SPECS$
     }
 
     /**
-     * @brief This method calls the work method contained in the global scheduler.
+     * \brief This method calls the work method contained in the global scheduler.
      * @details This method works under the assumption that all the concepts and the scheduler itself is already instantiated and initialized.
      */
     TaskMap work() {
@@ -155,9 +155,9 @@ $TUPLE_GET_SPECS$
   static SchedulerPicker pick_scheduler;
 
   /**
-   * @brief Evoke a scheduler and its dependencies to obtain a task map.
+   * \brief Evoke a scheduler and its dependencies to obtain a task map.
    * @details Calls the init method of every concept linked to the scheduler and the scheduler's init itself, then call the scheduler's work method.
-   * @param scheduler_name The name of the scheduler to be invoked. The names are declared in the scheduler traits.
+   * \param scheduler_name The name of the scheduler to be invoked. The names are declared in the scheduler traits.
    */
   static TaskMap schedule() {
     ScheduleCall::id++;

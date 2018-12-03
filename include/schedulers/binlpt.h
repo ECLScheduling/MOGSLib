@@ -6,7 +6,7 @@
 namespace MOGSLib { namespace Scheduler {
 
 /**
- * @brief Class that represents a scheduler which utilizes the binlpt policy to output a workload-aware task map.
+ * \brief Class that represents a scheduler which utilizes the binlpt policy to output a workload-aware task map.
  **/
 template<typename ... _Concepts>
 class BinLPT : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::binlpt, _Concepts...> {
@@ -14,7 +14,7 @@ public:
   using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::binlpt, _Concepts...>;
 
   /**
-   * @brief The method to obtain a task map based on a binlpt policy.
+   * \brief The method to obtain a task map based on a binlpt policy.
    **/
   TaskMap work() override {
     auto concepts = Base::concepts;

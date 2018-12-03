@@ -3,7 +3,7 @@
 namespace MOGSLib { namespace Policy {
 
 /**
- * @brief A workload-aware policy that packs adjacent tasks together and distribute them in a greedy fashion.
+ * \brief A workload-aware policy that packs adjacent tasks together and distribute them in a greedy fashion.
  */
 template<typename _Load = MOGSLib::Load>
 class BinLPT {
@@ -13,7 +13,7 @@ public:
   using Load = _Load;
 
   /**
-   * @brief Swap two values by reference
+   * \brief Swap two values by reference
    **/
   template<typename T>
   static void swap(T &a, T &b) {
@@ -23,7 +23,7 @@ public:
   }
 
   /**
-   * @brief Structure to auxiliate the comparison in the sort algorithms
+   * \brief Structure to auxiliate the comparison in the sort algorithms
    **/
   template<typename T, bool decreasing_order>
   struct Compare {
@@ -33,7 +33,7 @@ public:
   };
 
   /**
-   * @brief Structure specialization to auxiliate the comparison in the sort algorithms.
+   * \brief Structure specialization to auxiliate the comparison in the sort algorithms.
    **/
   template<typename T>
   struct Compare<T, false> {
@@ -43,15 +43,15 @@ public:
   };
 
   /**
-   * @brief Insertion sort.
+   * \brief Insertion sort.
    *
    * @type T The type of elements to be sorted. Must perform < operator.
    * @type UInt The unsigned integer type to be used as the array index.
    * @type decreasing_order A boolean to choose whether the algorithm should organize in ascending order or not. This value defaults to increasing order.
    *
-   * @param map The original indices of the elements in a.
-   * @param a The array of elements to be sorted.
-   * @param n the size of the array a.
+   * \param map The original indices of the elements in a.
+   * \param a The array of elements to be sorted.
+   * \param n the size of the array a.
    **/
   template <typename T, typename UInt, bool decreasing_order = true>
   static void insertion_sort(UInt *map, T *a, const UInt n) {

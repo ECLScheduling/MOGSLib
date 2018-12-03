@@ -5,7 +5,7 @@
 namespace MOGSLib { namespace Dependency {
 
 /**
- * @brief This class expresses an abstract workload data dependency.
+ * \brief This class expresses an abstract workload data dependency.
  * @details TODO: When C++17 comes out, change the typenames for Concepts and add the necessary methods to obtain workloads.
  */
 template<typename TaskWorkload, typename PEWorkload>
@@ -16,7 +16,7 @@ struct WorkloadAware : public MinimalDependencies<TaskWorkload> {
 };
 
 /**
- * @brief This class expresses an abstract workload data dependency and a generic K value.
+ * \brief This class expresses an abstract workload data dependency and a generic K value.
  */
 template<typename TaskWorkload, typename PEWorkload, typename K>
 struct WorkloadAwareWithK : public WorkloadAware<TaskWorkload, PEWorkload> {

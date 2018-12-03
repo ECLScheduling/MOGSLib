@@ -6,7 +6,7 @@
 namespace MOGSLib { namespace Scheduler {
 
 /**
- * @brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
+ * \brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
  **/
 template<typename ... _Concepts>
 class RoundRobin : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::round_robin, _Concepts...> {
@@ -14,7 +14,7 @@ public:
   using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::round_robin, _Concepts...>;
 
   /**
-   * @brief The method to obtain a task map based on a roundrobin heuristic.
+   * \brief The method to obtain a task map based on a roundrobin heuristic.
    **/
   TaskMap work() override {
     auto concepts = Base::concepts;

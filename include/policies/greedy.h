@@ -6,7 +6,7 @@
 namespace MOGSLib { namespace Policy {
 
 /**
- * @brief A workload aware policy that iteratively assigns the heavier load to the most underloaded processor.
+ * \brief A workload aware policy that iteratively assigns the heavier load to the most underloaded processor.
  * @type _Load The type of load to be ordered. It has to be a numeric type.
  */
 template<typename _Load = MOGSLib::Load>

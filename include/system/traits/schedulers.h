@@ -7,7 +7,7 @@
 namespace MOGSLib {
 
 /**
- * @brief This template structures are meant to be used to hold static data about the schedulers.
+ * \brief This template structures are meant to be used to hold static data about the schedulers.
  * @details The only required trait to be informed in these structures is the name of the scheduler. This is meant to be able to chose the scheduler during runtime.
  */
 template<SchedulerEnum T>

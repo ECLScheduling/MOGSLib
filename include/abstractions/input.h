@@ -5,7 +5,7 @@
 namespace MOGSLib { namespace Scheduler {
 
 /**
- * @brief The base abstraction for input concepts.
+ * \brief The base abstraction for input concepts.
  */
 template<MOGSLib::InputType T>
 struct Input {};
