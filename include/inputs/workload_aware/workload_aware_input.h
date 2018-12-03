@@ -6,8 +6,9 @@ namespace MOGSLib { namespace Scheduler {
 
 /**
  * @brief The implementation of the workload aware concept.
- * @details This implementation uses vector to keep the load values for pus and tasks.
+ * @details This implementation uses a vector to keep the load values for pus and tasks if CopyInput is true.
  */
+template<bool CopyInput = true>
 struct WorkloadAwareInput : public Input<MOGSLib::InputType::workload_aware> {
   std::vector<Load> task_loads, pu_loads;
 

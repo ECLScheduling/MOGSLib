@@ -50,7 +50,7 @@ TBINARIES  :=$(patsubst $(TSTDIR)/%.cpp,$(BINDIR)/%,$(TMAINFILES))
 # Compiler & linker flags
 TCXXFLAGS :=
 TLDFLAGS  :=-L/usr/lib
-TLDLIBS   :=-lgtest -lgtest_main -pthread
+TLDLIBS   :=-lgtest_main -pthread
 TINCLUDE  :=
 ### MAKEFILE CONTROL VARIABLES
 # Debug flag, if != 0 deactivates all supressed echoing

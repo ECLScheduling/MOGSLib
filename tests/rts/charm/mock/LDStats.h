@@ -6,7 +6,7 @@ namespace BaseLB {
 
 /**
  * @brief A mock structure with the same data signature as its counterpart in Charm 6.9.0.
- * @details This is used for syntax testing before integrating schedulers to Charm++
+ * @details This should be solely used for syntax tests sice it does not mock Charm++ functionalities.
  */
 struct ProcStats {  // per processor
   double total_walltime;
@@ -32,7 +32,7 @@ struct LDCommData {};
 
 /**
  * @brief A mock structure with the same data signature as its counterpart in Charm 6.9.0.
- * @details This is used for syntax testing before integrating schedulers to Charm++
+ * @details This should be solely used for syntax tests sice it does not mock Charm++ functionalities.
  */
 struct LDStats { // load balancing database
   std::unique_ptr<ProcStats[]> procs;
@@ -47,7 +47,7 @@ struct LDStats { // load balancing database
   int   n_comm;
   std::unique_ptr<LDCommData[]> commData;
 
-  int  *from_proc, *to_proc;
+  std::unique_ptr<int[]> from_proc, to_proc;
 };
 
 }

@@ -1,17 +1,16 @@
 #pragma once
 
 #include <memory>
-
-#include "declaration.h"
 #include <inputs/simple/simple_input.h>
 
 namespace MOGSLib { namespace Scheduler {
 
 /**
- * @brief The implementation of the workload aware concept.
+ * @brief The specialization of the workload aware input witH pointers to values instead of copied vectors.
  * @details This implementation extends the SimpleInput structure and uses pointer to reference the loads of tasks and pus.
  */
-struct WorkloadAwareInputThroughPointer : public Input<MOGSLib::InputType::workload_aware>, public SimpleInput {
+template<>
+struct WorkloadAwareInput<false> : public Input<MOGSLib::InputType::workload_aware>, public SimpleInput {
   std::unique_ptr<Load> task_loads, pu_loads;
 
   /**

@@ -8,7 +8,7 @@ decltype(CHARM_RTS::stats) CHARM_RTS::stats = nullptr;
 decltype(CHARM_RTS::chare_ids) CHARM_RTS::chare_ids;
 decltype(CHARM_RTS::pu_ids) CHARM_RTS::pu_ids;
 
-template<bool Aware = CHARM_RTS::Traits::check_for_unavailable_pus>
+template<bool Aware>
 void CHARM_RTS::LBDB::PU::filter_unavailable(const unsigned &index) {
   if(Charm::stats->procs[index].available)
     Charm::pu_ids.push_back(index);
@@ -29,7 +29,7 @@ CHARM_RTS::Index CHARM_RTS::LBDB::PU::count() {
   return Charm::pu_ids.size();
 }
 
-template<bool Aware = CHARM_RTS::Traits::check_for_fixed_chares>
+template<bool Aware>
 void CHARM_RTS::LBDB::Chare::filter_unmigratable(const unsigned &index) {
   if(Charm::stats->objData[index].migratable)
     Charm::chare_ids.push_back(index);
@@ -65,7 +65,7 @@ std::vector<CHARM_RTS::Load> CHARM_RTS::LBDB::Chare::load_prediction() {
   return loads;
 }
 
-template<bool Aware = CHARM_RTS::Traits::check_for_unavailable_pus>
+template<bool Aware>
 void CHARM_RTS::LBDB::PU::apply_fixed_chares_load(std::vector<Load>& loads, std::vector<std::pair<Index, Load>> &fixed_chares) {
   for(auto chare : fixed_chares) // All the processors are available, the Charm++ id and MOGSLib id are the same.
     loads[std::get<0>(chare)] += std::get<1>(chare);
@@ -74,7 +74,7 @@ void CHARM_RTS::LBDB::PU::apply_fixed_chares_load(std::vector<Load>& loads, std:
 template<>
 void CHARM_RTS::LBDB::PU::apply_fixed_chares_load<true>(std::vector<Load>& loads, std::vector<std::pair<Index, Load>> &fixed_chares) {
   
-  // If the system did not previously detected unavailable pus.
+  // If the system have not detected unavailable pus, call the solution that is not aware of unavailable pus.
   if(Charm::pu_ids.size() == Charm::stats->nprocs()) {
     apply_fixed_chares_load<false>(loads, fixed_chares);
     return;
@@ -96,7 +96,7 @@ void CHARM_RTS::LBDB::PU::apply_fixed_chares_load<true>(std::vector<Load>& loads
   delete [] map;
 }
 
-template<bool Aware = CHARM_RTS::Traits::check_for_fixed_chares>
+template<bool Aware>
 void CHARM_RTS::LBDB::PU::add_load_from_fixed_chares(std::vector<Load>& loads) {}
 
 template<>
@@ -118,8 +118,11 @@ std::vector<CHARM_RTS::Load> CHARM_RTS::LBDB::PU::load_prediction() {
   std::vector<Load> loads;
   
   for(auto pu : Charm::pu_ids)
-    loads.push_back(Charm::stats->procs[pu].bg_walltime);
-  add_load_from_fixed_chares<>(loads);
+    loads.push_back(Charm::stats->procs[pu].bg_walltime); // The PU workload prediction is the background walltime.
+  add_load_from_fixed_chares<>(loads); // The PU workload prediction is summed to the workload of unmigratable tasks fixed in it.
+  
+  for(decltype(loads.size()) i = 0; i < loads.size(); ++i)
+    loads[i] *= Charm::stats->procs[Charm::pu_ids[i]].pe_speed; // The PU workload is normalized to account for its pe_speed.
 
   return loads;
 }
