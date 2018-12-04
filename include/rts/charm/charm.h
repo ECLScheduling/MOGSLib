@@ -45,7 +45,7 @@ struct Charm {
        *  This function yields different semantics depending on the Charm Traits.
        *  It may or may not ignore PUs availability status based on the check_for_unavailable_pus trait.
        */
-      static Index count();
+      static inline Index count();
 
       /**
        *  @brief Get the PUs predicted load based on background load and fixed chares.
@@ -54,7 +54,7 @@ struct Charm {
        *  This method must be called after PU::count.
        *  It searches only the PUs whose ids are in Charm::pu_ids.
        */
-      static std::vector<Load> load_prediction();
+      static inline std::vector<Load> load_prediction();
     };
 
     /// @brief A representation of the LBDB capabilities for the manipulation of chare data.
@@ -66,7 +66,7 @@ struct Charm {
        *  This function yields different semantics depending on Charm Traits.
        *  It may or may not ignore chare migratability status based on the check_for_fixed_chares trait.
        */
-      static Index count();
+      static inline Index count();
 
       /**
        *  @brief Get the chares predicted load based on the processor speed and time to complete on previous iterations.
@@ -75,7 +75,7 @@ struct Charm {
        *  This method must be called after Chare::count.
        *  Iit searches only the task whose ids are in Charm::chare_ids.
        */
-      static std::vector<Load> load_prediction();
+      static inline std::vector<Load> load_prediction();
     };
   };
 };

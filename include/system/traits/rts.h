@@ -6,25 +6,19 @@
 namespace MOGSLib { namespace RTS {
 
 /**
- * \brief This structure holds reference to datatypes and useful information about the specificities of a RTS.
- * @details This structure holds reference to the global definitions any RTS must have. Additional requirements fore each system are exposed in their own file at include/rts/RTSNAME/traits.ipp
+ *  @class DefaultRuntimeTraits
+ *  @brief A reference structure to the types and definitions MOGSLib requires for runtime systems.
  */
 template<MOGSLib::RuntimeSystemEnum T>
 struct DefaultRuntimeTraits {
 
-  /**
-   * \brief The type definition that will serve as index in MOGSLib.
-   */
+  /// @brief Index type used in this RTS abstraction.
   using Index = std::size_t;
 
-  /**
-   * \brief The type definition that will serve to quantify load values in MOGSLib.
-   */
+  /// @brief Load type used in this RTS abstraction.
   using Load = uint_fast32_t;
 
-  /**
-   * \brief The name of the system so it can be referenced on user-friendly messages.
-   */
+  /// @brief The RTS name used to generate user-friendly messages.
   static constexpr auto name = "Unimplemented";
 };
 

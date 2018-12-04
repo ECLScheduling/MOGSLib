@@ -3,6 +3,8 @@
 #include "../type_definitions.h"
 #include <policies/binlpt.h>
 
+#include <memory>
+
 using Load = MOGSLib::Load;
 using Index = MOGSLib::Index;
 using TaskMap = MOGSLib::TaskMap;
@@ -10,327 +12,124 @@ using TaskEntry = MOGSLib::TaskEntry;
 
 using SchedulingPolicy = MOGSLib::Policy::BinLPT<Load>;
 
-class BinlptPolicyTests : public ::testing::Test {
-public:
-  Index ntasks;
-  Load *workloads;
+struct LoadGenerator {
+  template<Load L>
+  static inline Load constant(const Index &i) { return L; }
 
-  Index nPEs;
-  Load *PE_workloads;
+  template<Index M>
+  static inline Load decreasing(const Index &i) { return M-i; }
 
-  Index k;
-
-  TaskMap map;
-
-  void execute_policy() {
-    SchedulingPolicy::map(map, ntasks, workloads, nPEs, PE_workloads, k);
-  }
-
-  Load *call_cummulativesum() {
-    return SchedulingPolicy::compute_cummulativesum<Load>(workloads, ntasks);
-  }
-
-  Index *call_compute_chunksizes() {
-    return SchedulingPolicy::compute_chunksizes(ntasks, workloads, k);
-  }
-
-  Load *call_compute_chunkloads() {
-    auto chunk_sizes = call_compute_chunksizes();
-    auto out =  SchedulingPolicy::compute_chunkloads(workloads, chunk_sizes, k);
-    
-    delete [] chunk_sizes;
-    return out;
-  }
-
-  void createMap(const Index &n) {
-    ntasks = n;
-    workloads = new Load[ntasks]();
-    map = new TaskEntry[ntasks]();
-  }
-
-  void setPEs(const Index &n) {
-    nPEs = n;
-    PE_workloads = new Load[nPEs]();
-  }
-
-  void SetUp() {
-    ntasks = 0;
-    nPEs = 0;
-    k = 0;
-
-    map = nullptr;
-    workloads = nullptr;
-    PE_workloads = nullptr;
-  }
-
-  void TearDown() {
-    if(map != nullptr) {
-      delete [] map;
-      map = nullptr;
-    }
-    if(workloads != nullptr) {
-      delete [] workloads;
-      workloads = nullptr;
-    }
-    if(PE_workloads != nullptr) {
-      delete [] PE_workloads;
-      PE_workloads = nullptr;
-    }
-  }
-
-  void set_regular_loads(const Index &n, const Load &load = 2) {
-    createMap(n);
-    for(Index i = 0; i < ntasks; ++i)
-      workloads[i] = load;
-  }
-
-  void set_increasing_loads(const Index &n) {
-    createMap(n);
-    for(Index i = 0; i < ntasks; ++i)
-      workloads[i] = i+1;
-  }
-
-  void set_decreasing_loads(const Index &n) {
-    createMap(n);
-    for(Index i = 0; i < ntasks; ++i)
-      workloads[i] = ntasks-i;
-  }
-
+  static inline Load increasing(const Index &i) { return i; }
 };
 
-TEST_F(BinlptPolicyTests, compute_cummulative_sum_one) {
-  createMap(1);
+class BinlptPolicyTests : public ::testing::Test {
+public:
+  std::vector<Load> tasks, pus;
+  Index k;
 
-  auto out = call_cummulativesum();
+  std::unique_ptr<TaskMap> map;
 
-  ASSERT_EQ(0, out[0]);
+  void SetUp() {
+    tasks.clear();
+    pus.clear();
+    map.reset(nullptr);
+  }
 
-  delete [] out;
-}
+  auto execute_policy() {
+    SchedulingPolicy::map(*map, tasks, pus, k);
+    return *map;
+  }
 
-TEST_F(BinlptPolicyTests, compute_cummulative_sum_two) {
-  createMap(2);
+  void set_pus_and_tasks(const Index &p, const Index &t) {
+    pus.resize(p);
+    tasks.resize(t);
+    map = std::make_unique<TaskMap>(new TaskEntry[t]);
+  }
 
-  workloads[0] = 3;
-  workloads[1] = 2;
-
-  auto out = call_cummulativesum();
-
-  ASSERT_EQ(0, out[0]);
-  ASSERT_EQ(workloads[0], out[1]);
-
-  delete [] out;
-}
-
-TEST_F(BinlptPolicyTests, compute_cummulative_sum_n) {
-  createMap(3);
-
-  workloads[0] = 3;
-  workloads[1] = 2;
-  workloads[2] = 4;
-
-  auto out = call_cummulativesum();
-
-  ASSERT_EQ(0, out[0]);
-  ASSERT_EQ(workloads[0], out[1]);
-  ASSERT_EQ(workloads[0] + workloads[1], out[2]);
-
-  delete [] out;
-}
-
-TEST_F(BinlptPolicyTests, chunksizes_one_chunk) {
-  createMap(3);
-  k = 1;
-
-  auto out = call_compute_chunksizes();
-
-  ASSERT_EQ(3, out[0]);
-
-  delete [] out;
-}
-
-TEST_F(BinlptPolicyTests, chunksizes_two_chunks_regular_loads) {
-  k = 2;
-  set_regular_loads(4);
-
-  auto out = call_compute_chunksizes();
-
-  ASSERT_EQ(2, out[0]);
-  ASSERT_EQ(2, out[1]);
-
-  delete [] out;
-}
-
-TEST_F(BinlptPolicyTests, chunksizes_two_chunks_irregular_loads) {
-  k = 2;
-  set_increasing_loads(4); // [1,2,3,4] => ([1,2,3] , [4])
-
-  auto out = call_compute_chunksizes();
-
-  ASSERT_EQ(3, out[0]);
-  ASSERT_EQ(1, out[1]);
-
-  delete [] out;
-}
-
-TEST_F(BinlptPolicyTests, chunksizes_two_chunks_irregular_loads_locality_grouping) {
-  k = 2;
-  set_decreasing_loads(4); // [4,3,2,1] => ([4,3] , [2,1])
-
-  auto out = call_compute_chunksizes();
-
-  ASSERT_EQ(2, out[0]);
-  ASSERT_EQ(2, out[1]);
-
-  delete [] out;
-}
-
-TEST_F(BinlptPolicyTests, chunksizes_non_exact_division) {
-  k = 4;
-  set_decreasing_loads(5); // [5,4,3,2,1]
-
-  auto out = call_compute_chunksizes();
-  
-  /** 
-   * mean load/chunk = 15/4 = 3
-   * [5] [4] [3] [2,1]
-   **/
-
-  EXPECT_EQ(1, out[0]);
-  EXPECT_EQ(1, out[1]);
-  EXPECT_EQ(1, out[2]);
-  EXPECT_EQ(2, out[3]);
-
-  delete [] out;
-}
-
-TEST_F(BinlptPolicyTests, chunkloads_regular) {
-  Load avg_load = 5;
-  Index tasks = 4;
-
-  k = 2;
-
-  set_regular_loads(tasks, avg_load);
-  auto out = call_compute_chunkloads();
-
-  auto expected_load = avg_load*tasks/k;
-  for(Index i = 0; i < k; ++i)
-    ASSERT_EQ(expected_load, out[i]);
-  delete [] out;
-}
-
-TEST_F(BinlptPolicyTests, chunkloads_irregular) {
-  Index tasks = 4;
-
-  k = 2;
-
-  set_increasing_loads(tasks); // [1,2,3,4]
-  auto out = call_compute_chunkloads(); // [1,2,3] , [4]
-
-  ASSERT_EQ(6, out[0]);
-  ASSERT_EQ(4, out[1]);
-
-  delete [] out;
-}
-
-TEST_F(BinlptPolicyTests, chunkloads_decreasing_irregular) {
-  Index tasks = 5;
-  k = 4;
-
-  set_decreasing_loads(tasks); // [5,4,3,2,1], mean = 3
-  auto out = call_compute_chunkloads(); // [5] , [4] , [3] , [2,1]
-
-  EXPECT_EQ(5, out[0]);
-  EXPECT_EQ(4, out[1]);
-  EXPECT_EQ(3, out[2]);
-  EXPECT_EQ(3, out[3]);
-
-  delete [] out;
-}
+  void set_task_loads(Load (*gen)(const Index &)) {
+    for(decltype(tasks.size()) i = 0; i < tasks.size(); ++i)
+      tasks[i] = gen(i);
+  }
+};
 
 TEST_F(BinlptPolicyTests, policy_regular_tasks_unloaded_PEs) {
-  Index tasks = 4;
-  Index PEs = 2;
+  Index ntasks = 4;
+  Index npus = 2;
   k = 2;
 
-  set_regular_loads(tasks, 5); // [5,5,5,5] => 0:[5,5] 1:[5,5] => assign order:{0,1}
-  setPEs(PEs);
+  set_pus_and_tasks(npus, ntasks);
+  set_task_loads(LoadGenerator::constant<5>); // [5,5,5,5] => 0:[5,5] 1:[5,5] => assign order:{0,1}
 
-  execute_policy();
-
-  EXPECT_EQ(1, map[0]);
-  EXPECT_EQ(1, map[1]);
-  EXPECT_EQ(0, map[2]);
-  EXPECT_EQ(0, map[3]);
+  auto map_ref = execute_policy();
+  EXPECT_EQ(1, map_ref[0]);
+  EXPECT_EQ(1, map_ref[1]);
+  EXPECT_EQ(0, map_ref[2]);
+  EXPECT_EQ(0, map_ref[3]);
 }
 
-TEST_F(BinlptPolicyTests, policy_irregular_tasks_unloaded_PEs) {
-  Index tasks = 5;
-  Index PEs = 2;
+TEST_F(BinlptPolicyTests, policy_irregular_tasks_unloaded_pus) {
+  Index ntasks = 5;
+  Index npus = 2;
   k = 2;
 
-  set_increasing_loads(tasks); // [1,2,3,4,5] => 0:[1,2,3,4] 1:[5] => assign order:{0,1}
-  setPEs(PEs);
+  set_pus_and_tasks(npus, ntasks);
+  set_task_loads(LoadGenerator::increasing); // [1,2,3,4,5] => 0:[1,2,3,4] 1:[5] => assign order:{0,1}
 
-  execute_policy();
-
-  EXPECT_EQ(0, map[0]);
-  EXPECT_EQ(0, map[1]);
-  EXPECT_EQ(0, map[2]);
-  EXPECT_EQ(0, map[3]);
-  EXPECT_EQ(1, map[4]);
+  auto map_ref = execute_policy();
+  EXPECT_EQ(0, map_ref[0]);
+  EXPECT_EQ(0, map_ref[1]);
+  EXPECT_EQ(0, map_ref[2]);
+  EXPECT_EQ(0, map_ref[3]);
+  EXPECT_EQ(1, map_ref[4]);
 }
 
-TEST_F(BinlptPolicyTests, policy_irregular_tasks_decreasing_unloaded_PEs) {
-  Index tasks = 5;
-  Index PEs = 2;
+TEST_F(BinlptPolicyTests, policy_irregular_tasks_decreasing_unloaded_pus) {
+  Index ntasks = 5;
+  Index npus = 2;
   k = 4;
 
-  set_decreasing_loads(tasks); // [5,4,3,2,1] => 0:[5] 1:[4] 2:[3] 3:[2,1] => ordered:{0,1,3,2}
-  setPEs(PEs);
+  set_pus_and_tasks(npus, ntasks);
+  set_task_loads(LoadGenerator::decreasing<5>); // [5,4,3,2,1] => 0:[5] 1:[4] 2:[3] 3:[2,1] => ordered:{0,1,3,2}
 
-  execute_policy();
-
-  EXPECT_EQ(0, map[0]);
-  EXPECT_EQ(1, map[1]);
-  EXPECT_EQ(0, map[2]);
-  EXPECT_EQ(1, map[3]);
-  EXPECT_EQ(1, map[4]);
+  auto map_ref = execute_policy();
+  EXPECT_EQ(0, map_ref[0]);
+  EXPECT_EQ(1, map_ref[1]);
+  EXPECT_EQ(0, map_ref[2]);
+  EXPECT_EQ(1, map_ref[3]);
+  EXPECT_EQ(1, map_ref[4]);
 }
 
-TEST_F(BinlptPolicyTests, policy_regular_tasks_loaded_PEs) {
-  Index tasks = 4;
-  Index PEs = 2;
+TEST_F(BinlptPolicyTests, policy_regular_tasks_loaded_pus) {
+  Index ntasks = 4;
+  Index npus = 2;
   k = 2;
 
-  set_regular_loads(tasks, 5); // [5,5,5,5] => 0:[5,1] 1:[5,5] => ordered:{0,1}
+  set_pus_and_tasks(npus, ntasks);
+  set_task_loads(LoadGenerator::constant<5>); // [5,5,5,5] => 0:[5,1] 1:[5,5] => ordered:{0,1}
   
-  setPEs(PEs);
-  PE_workloads[0] = 7;
+  pus[0] = 7;
 
-  execute_policy();
-
-  EXPECT_EQ(0, map[0]);
-  EXPECT_EQ(0, map[1]);
-  EXPECT_EQ(1, map[2]);
-  EXPECT_EQ(1, map[3]);
+  auto map_ref = execute_policy();
+  EXPECT_EQ(0, map_ref[0]);
+  EXPECT_EQ(0, map_ref[1]);
+  EXPECT_EQ(1, map_ref[2]);
+  EXPECT_EQ(1, map_ref[3]);
 }
 
-TEST_F(BinlptPolicyTests, policy_irregular_tasks_loaded_PEs) {
-  Index tasks = 5;
-  Index PEs = 4;
+TEST_F(BinlptPolicyTests, policy_irregular_tasks_loaded_pus) {
+  Index ntasks = 5;
+  Index npus = 4;
   k = 3;
 
-  set_increasing_loads(tasks); // [1,2,3,4,5] => 0:[1,2,3] 1:[4,5] 2:[] => ordered:{0,1}
+  set_pus_and_tasks(npus, ntasks);
+  set_task_loads(LoadGenerator::increasing); // [1,2,3,4,5] => 0:[1,2,3] 1:[4,5] 2:[] => ordered:{0,1}
   
-  setPEs(PEs);
-  PE_workloads[0] = 7;
+  pus[0] = 7;
 
-  execute_policy();
-
-  EXPECT_EQ(2, map[0]);
-  EXPECT_EQ(2, map[1]);
-  EXPECT_EQ(2, map[2]);
-  EXPECT_EQ(1, map[3]);
-  EXPECT_EQ(1, map[4]);
+  auto map_ref = execute_policy();
+  EXPECT_EQ(2, map_ref[0]);
+  EXPECT_EQ(2, map_ref[1]);
+  EXPECT_EQ(2, map_ref[2]);
+  EXPECT_EQ(1, map_ref[3]);
+  EXPECT_EQ(1, map_ref[4]);
 }

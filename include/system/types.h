@@ -2,9 +2,7 @@
 
 namespace MOGSLib {
 
-/**
- * \brief An enumerate of all the supported runtime systems types that MOGSLib exposes.
- */
+/// @brief An enumeration of all MOGSLib supported runtime systems.
 enum RuntimeSystemEnum {
   NoRTS,
   Custom,
@@ -12,9 +10,7 @@ enum RuntimeSystemEnum {
   OpenMP
 };
 
-/**
- * \brief An enumerate of all the schedulers types that MOGSLib can exposes.
- */
+/// @brief An enumeration of all MOGSLib implemented global schedulers.
 enum SchedulerEnum {
   round_robin,
   compact,
@@ -23,9 +19,7 @@ enum SchedulerEnum {
   binlpt
 };
 
-/**
- * \brief An enumerate of all the scheduler inputs types that MOGSLib exposes.
- */
+/// @brief An enumeration of all input types possible in MOGSLib implemented global schedulers.
 enum InputEnum {
   simple,
   workload_aware

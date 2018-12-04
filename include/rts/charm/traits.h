@@ -6,7 +6,7 @@ namespace MOGSLib { namespace RTS {
 
 /**
  *  @class CharmBaseTraits
- *  @brief The expression of Charm++ minimum traits for MOGSLib.
+ *  @brief The expression of Charm++ minimum traits required by MOGSLib.
  *  
  *  Unless intricate customization is to be made, this class should work in any Charm++ centralized load balancer.
  */

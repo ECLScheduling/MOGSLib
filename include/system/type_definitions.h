@@ -1,6 +1,5 @@
 #pragma once
 
-#include <system/traits/rts.h>
 #include <system/traits/schedulers.h>
 
 namespace MOGSLib {

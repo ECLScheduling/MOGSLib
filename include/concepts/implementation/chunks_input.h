@@ -1,11 +1,12 @@
 #pragma once
 
-#include <concepts/implementation/k.h>
+#include "k.h"
 
 namespace MOGSLib { namespace Concept {
 
 /**
- * \brief A concrete concept to hold reference to the amount of task chunks in the system.
+ *  @class ChunksInput
+ *  @brief A concept to grant access to the number of task chunks in the system.
  */
 struct ChunksInput : public K<MOGSLib::Index> {};
 
