@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../type_definitions.h"
+#include <type_definitions.h>
 #include <policies/compact.h>
 
 using SchedulingPolicy = MOGSLib::Policy::Compact;

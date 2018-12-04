@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../type_definitions.h"
+#include <type_definitions.h>
 #include <policies/round_robin.h>
 
 using SchedulingPolicy = MOGSLib::Policy::RoundRobin;

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../type_definitions.h"
+#include <type_definitions.h>
 #include <schedulers/compact.h>
 
 using Index = MOGSLib::Index;
