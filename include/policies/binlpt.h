@@ -7,6 +7,7 @@
 namespace MOGSLib { namespace Policy {
 
 /**
+ *  @class BinLPT
  *  @brief A workload-aware policy that packs adjacent tasks together and distribute them in a greedy fashion.
  *  @tparam L A load data type definition.
  */

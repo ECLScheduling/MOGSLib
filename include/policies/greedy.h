@@ -6,8 +6,9 @@
 namespace MOGSLib { namespace Policy {
 
 /**
- * \brief A workload aware policy that iteratively assigns the heavier load to the most underloaded processor.
- * @type _Load The type of load to be ordered. It has to be a numeric type.
+ *  @class Greedy
+ *  @brief A workload aware policy that iteratively assigns the heavier load to the most underloaded processor.
+ *  @tparam _Load The type of load to be ordered. It has to be a numeric type.
  */
 template<typename _Load = MOGSLib::Load>
 class Greedy {
@@ -43,7 +44,15 @@ protected:
 
 public:
 
-  static void map(TaskMap &map, const Index &ntasks, _Load *task_loads, const Index &nPEs, const _Load *PE_loads) {
+  /**
+   *  @brief map The map of task-to-pu that will serve as the output.
+   *  @param tasks A vector of task workloads.
+   *  @param pus A vector of pu workloads.
+   *
+   *  Sorts the tasks in a min heap and the pus in a max heap.
+   *  Iteratively pops from the task heap and assign the task to the head ot the pu heap iteratively.
+   */
+  static void map(TaskMap &map, std::vector<Load> &tasks, std::vector<Load> &pus) {
     std::vector<LoadContainer> tasks(ntasks);
     std::vector<LoadContainer> PEs(nPEs);
   
