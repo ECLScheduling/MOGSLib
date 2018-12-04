@@ -1,18 +1,22 @@
 #pragma once
 
-#include "functionalities.h"
+#include "functionalities.ipp"
 
 namespace MOGSLib { namespace RTS {
 
 template<typename T>
 decltype(Charm<T>::stats) Charm<T>::stats = nullptr;
+template<typename T>
+std::vector<typename T::Index> Charm<T>::chare_ids = std::vector<typename T::Index> {};
+template<typename T>
+std::vector<typename T::Index> Charm<T>::pu_ids = std::vector<typename T::Index>{};
 
 template<typename T>
 typename Charm<T>::Index Charm<T>::LBDB::PU::count() {
   auto &ids = pu_ids;
-  
   ids.clear();
-  CharmHelper::filter_unavailable<Index, Traits::check_for_unavailable_pus>(ids, stats);
+
+  Charm<T>::LBDB::Helper::filter_unavailable_pus(stats, ids, typename T::UnavailablePUs {});
 
   return ids.size();
 }
@@ -20,9 +24,9 @@ typename Charm<T>::Index Charm<T>::LBDB::PU::count() {
 template<typename T>
 typename Charm<T>::Index Charm<T>::LBDB::Chare::count() {
   auto &ids = chare_ids;
-
   ids.clear();
-  CharmHelper::filter_unmigratable_chares<Index, Traits::check_for_fixed_chares>(ids, stats);
+
+  Charm<T>::LBDB::Helper::filter_unmigratable_chares(stats, ids, typename T::FixedChares {});
 
   return ids.size();
 }
@@ -46,12 +50,17 @@ template<typename T>
 std::vector<typename Charm<T>::Load> Charm<T>::LBDB::PU::load_prediction() {
   std::vector<Load> loads;
   
+  // The PU workload prediction is the background walltime.
   for(auto pu : pu_ids)
-    loads.push_back(stats->procs[pu].bg_walltime); // The PU workload prediction is the background walltime.
-  add_load_from_fixed_chares<Index, Load, Traits::check_for_unavailable_pus, Traits::check_for_fixed_chares>(stats, loads); // The PU workload prediction is summed to the workload of unmigratable tasks fixed in it.
+    loads.push_back(stats->procs[pu].bg_walltime);
   
+  // The PU workload prediction is summed to the workload of unmigratable tasks fixed in it.
+  auto fixed_loads = Charm<T>::LBDB::Helper::loads_from_fixed_chares(stats, typename T::FixedChares {});
+  Charm<T>::LBDB::Helper::apply_fixed_chares_load(stats, loads, fixed_loads, typename T::UnavailablePUs {});
+
+  // The PU workload is normalized to account for its pe_speed.
   for(decltype(loads.size()) i = 0; i < loads.size(); ++i)
-    loads[i] *= stats->procs[pu_ids[i]].pe_speed; // The PU workload is normalized to account for its pe_speed.
+    loads[i] *= stats->procs[pu_ids[i]].pe_speed;
 
   return loads;
 }

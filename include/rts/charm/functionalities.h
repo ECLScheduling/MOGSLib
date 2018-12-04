@@ -1,107 +1,97 @@
 #pragma once
 
+#include "traits.h"
+
 namespace MOGSLib { namespace RTS {
 
 /**
- *  @class CharmHelper
+ *  @class CharmFunctionalities
  *  @brief A wrapper structure to implement the Charm++'s trait-sensitive functionalities.
  */
-struct CharmHelper {
+template<typename I, typename L>
+struct CharmFunctionalities {
   using LDStats = BaseLB::LDStats*;
 
-  /// @brief Get the amount of PUs in the Charm++ system filtering out the unavailable PUs.
-  template<typename I, bool AA>
-  static void filter_unavailable_pus(std::vector<I> &ids, LDStats stats);
+  /**
+   *  @brief Get the amount of PUs in the Charm++ system filtering out the unavailable PUs.
+   *  @param ids A vector of ids to add the PU ids.
+   *  @param tag A tag used in the tag-dispatch technique to aid the compiler to identify which function will be called.
+   *
+   *  Add each PU id from the lbdb list in Charm++ filtering out the unavailable ones.
+   */
+  static void filter_unavailable_pus(LDStats stats, std::vector<I> &ids, CharmSemantics::UnavailablePUs<true> tag);
 
-  /// @brief Get the amount of chares in the Charm++ system filtering out the unmigratable chares.
-  template<typename I, bool MA>
-  static void filter_unmigratable_chares(std::vector<I> &ids, LDStats stats);
+  /**
+   *  @brief Get the amount of PUs in the Charm++ system regardless of the availability status.
+   *  @param ids A vector of ids to add the PU ids.
+   *  @param tag A tag used in the tag-dispatch technique to aid the compiler to identify which function will be called.
+   *
+   *  Add each PU id from the lbdb list in Charm++ without any form of label checking.
+   */
+  static void filter_unavailable_pus(LDStats stats, std::vector<I> &ids, CharmSemantics::UnavailablePUs<false> tag);
 
-  /// @brief Calculate the loads of fixed chares and add them to host pus.
-  template<typename I, typename L, bool AA, bool MA>
-  static void add_load_from_fixed_chares(CharmHelper::LDStats stats, std::vector<L> &loads);
+  /**
+   *  @brief Get the amount of chares in the Charm++ system filtering out the unmigratable chares.
+   *  @param ids A vector of ids to add the chare ids.
+   *  @param tag A tag used in the tag-dispatch technique to aid the compiler to identify which function will be called.
+   *
+   *  Add each chare id from the lbdb list in Charm++ filtering out the unmigratable ones.
+   */
+  static void filter_unmigratable_chares(LDStats stats, std::vector<I> &ids, CharmSemantics::FixedChares<true> tag);
 
-  /// @brief Commit the load addition of fixed chares into the host pus.
-  template<typename I, typename L, bool AA>
-  static void apply_fixed_chares_load(CharmHelper::LDStats stats, std::vector<L>& loads, std::vector<std::pair<I, L>> &fixed_chares);
+  /**
+   *  @brief Get the amount of chares in the Charm++ system regardless of migratability status.
+   *  @param ids A vector of ids to add the chare ids.
+   *  @param tag A tag used in the tag-dispatch technique to aid the compiler to identify which function will be called.
+   *
+   *  Add each chare id from the lbdb list in Charm++ without any form of label checking.
+   */
+  static void filter_unmigratable_chares(LDStats stats, std::vector<I> &ids, CharmSemantics::FixedChares<false> tag);
+
+  /**
+   *  @brief Commit the load addition of fixed chares into the host pus.
+   *  @param loads A pre-filled vector of PU loads.
+   *  @param fixed_chares A vector of pairs containing a fixed chare's host PU id and its load respectively.
+   *  @param tag A tag used in the tag-dispatch technique to aid the compiler to identify which function will be called.
+   *
+   *  MOGSLib filters unavailable PUs to avoid complex schedulers, but Charm++ keeps them, creating different indexes between libraries.
+   *  When unavailable PUs might be present, this function should be evoked when applying the load of fixed chares to PUs.
+   *  This implementation builds a map to correlate MOGSLib and Charm++ ids to correctly assign the chare loads by id.
+   */
+  static void apply_fixed_chares_load(LDStats stats, std::vector<L>& loads, std::vector<std::pair<I, L>> &fixed_chares, CharmSemantics::UnavailablePUs<true> tag);
+
+  /**
+   *  @brief Commit the load addition of fixed chares into the host pus.
+   *  @param loads A pre-filled vector of PU loads.
+   *  @param fixed_chares A vector of pairs containing a fixed chare's host PU id and its load respectively.
+   *  @param tag A tag used in the tag-dispatch technique to aid the compiler to identify which function will be called.
+   *
+   *  MOGSLib filters unavailable PUs to avoid complex schedulers, but Charm++ keeps them, creating different indexes between libraries.
+   *  When unavailable PUs are not present, this function should be evoked when applying the load of fixed chares to PUs.
+   *  This implementation assumes that all processors are available and both MOGSLib and Charm++ PU indices are equal.
+   *  This version is more performatic and should be called even when there might be unavailable PUs but none were detected.
+   */
+  static void apply_fixed_chares_load(LDStats stats, std::vector<L>& loads, std::vector<std::pair<I, L>> &fixed_chares, CharmSemantics::UnavailablePUs<false> tag);
+
+  /**
+   *  @brief Fetch the load and the host PU of all the fixed chares.
+   *  @param tag A tag used in the tag-dispatch technique to aid the compiler to identify which function will be called.
+   *  @return This implementation return an empty vector.
+   *
+   *  When the tag template value is false, the functionality assumes that there are no fixed chares in the application.
+   *  Hence, it returns an empty vector as a result.
+   */
+  static std::vector<std::pair<I, L>> loads_from_fixed_chares(LDStats stats, CharmSemantics::FixedChares<false> tag);
+
+  /**
+   *  @brief Fetch the load and the host PU of all the fixed chares.
+   *  @param tag A tag used in the tag-dispatch technique to aid the compiler to identify which function will be called.
+   *  @return A vector of pairs, being the first value the fixed chare's host PU id and the second value, its load.
+   *
+   *  When the tag template value is true, the functionality assumes that there may be fixed chares in the application.
+   *  It might return an empty vector, but only if there are no fixed chares in the application.
+   */
+  static std::vector<std::pair<I, L>> loads_from_fixed_chares(LDStats stats, CharmSemantics::FixedChares<true> tag);
 };
-
-template<typename I, bool AA>
-void CharmHelper::filter_unavailable_pus(std::vector<I> &ids, CharmHelper::LDStats stats) {
-  auto npus = stats->nprocs();
-  for(decltype(npus) i = 0; i < npus; ++i)
-    if(stats->procs[i].available)
-      ids.push_back(i);
-}
-
-template<typename I>
-void CharmHelper::filter_unavailable_pus<I, false>(std::vector<I> &ids, CharmHelper::LDStats stats) {
-  auto npus = stats->nprocs();
-  for(decltype(npus) i = 0; i < npus; ++i)
-    ids.push_back(i);
-}
-
-template<typename I, bool MA>
-void CharmHelper::filter_unmigratable_chares(std::vector<I> &ids, CharmHelper::LDStats stats) {
-  auto nchares = stats->n_objs;
-  for(auto i = 0; i < nchares; ++i)
-    if(stats->objData[i].migratable)
-      ids.push_back(i);
-}
-
-template<typename I>
-void CharmHelper::filter_unmigratable_chares<I, false>(std::vector<I> &ids, CharmHelper::LDStats stats) {
-  auto nchares = stats->n_objs;
-  for(auto i = 0; i < nchares; ++i)
-    ids.push_back(i);
-}
-
-template<typename I, typename L, bool AA>
-void CharmHelper::apply_fixed_chares_load(CharmHelper::LDStats stats, std::vector<L>& loads, std::vector<std::pair<I, L>> &fixed_chares) {
-  for(auto chare : fixed_chares) // All the processors are available, the Charm++ id and MOGSLib id are the same.
-    loads[std::get<0>(chare)] += std::get<1>(chare);
-}
-
-template<typename I, typename L>
-void CharmHelper::apply_fixed_chares_load<I, L, true>(CharmHelper::LDStats stats, std::vector<L>& loads, std::vector<std::pair<I, L>> &fixed_chares) {
-  
-  // If the system have not detected unavailable pus, call the solution that is not aware of unavailable pus.
-  if(CharmDef::pu_ids.size() == stats->nprocs()) {
-    apply_fixed_chares_load<I, L, false>(loads, fixed_chares);
-    return;
-  }
-
-  auto map = new int[stats->nprocs()]();
-
-  // map represents the MOGSLib id
-  int i = 0;
-  for(decltype(stats->nprocs()) pu = 0; pu < stats->nprocs(); ++pu)
-    if(stats->procs[pu].available)
-      map[pu] = i++;
-    else
-      map[pu] = -1;
-
-  for(auto chare : fixed_chares)
-    loads[map[std::get<0>(chare)]] += std::get<1>(chare); 
-
-  delete [] map;
-}
-
-template<typename I, typename L, bool AA, bool MA>
-void CharmHelper::add_load_from_fixed_chares(CharmHelper::LDStats stats, std::vector<L>& loads) {}
-
-template<typename I, typename L, bool AA>
-void CharmHelper::add_load_from_fixed_chares<I, L, AA, true>(CharmHelper::LDStats stats, std::vector<L>& loads) {
-  std::vector<std::pair<I, L>> fixed_chares;
-
-  for(auto chare = 0; chare < stats->n_objs; ++chare) {
-    auto task_data = stats->objData[chare];
-    if(!task_data.migratable)
-      fixed_chares.push_back(std::make_pair(stats->from_proc[chare], task_data.wallTime));
-  }
-
-  if(fixed_chares.size()) // There were at least one fixed tasks.
-    apply_fixed_chares_load<I, L, AA>(loads, fixed_chares);
-}
 
 }}

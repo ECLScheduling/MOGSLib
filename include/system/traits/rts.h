@@ -3,13 +3,13 @@
 #include <system/types.h>
 #include <cstdint>
 
-namespace MOGSLib {
+namespace MOGSLib { namespace RTS {
 
 /**
  * \brief This structure holds reference to datatypes and useful information about the specificities of a RTS.
  * @details This structure holds reference to the global definitions any RTS must have. Additional requirements fore each system are exposed in their own file at include/rts/RTSNAME/traits.ipp
  */
-template<RuntimeSystemEnum T>
+template<MOGSLib::RuntimeSystemEnum T>
 struct DefaultRuntimeTraits {
 
   /**
@@ -28,4 +28,4 @@ struct DefaultRuntimeTraits {
   static constexpr auto name = "Unimplemented";
 };
 
-}
+}}

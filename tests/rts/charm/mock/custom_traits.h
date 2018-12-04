@@ -1,13 +1,14 @@
 #pragma once
 
 #include "LDStats.h"
-#include <rts/charm/traits.ipp>
+#include <rts/charm/traits.h>
 
 /**
- * \brief Charm++ custom traits for testing purposes
+ *  @brief Charm++ custom traits for testing purposes.
+ *  This structure let the gtests create different tests for different values of CharmTraits.
  */
 template<bool check_unavail_pu = true, bool check_fixed_chares = true>
-struct CustomCharmTraits : public MOGSLib::CharmBaseTraits {
-  static constexpr auto check_for_unavailable_pus = check_unavail_pu;
-  static constexpr auto check_for_fixed_chares = check_fixed_chares;
+struct CustomCharmTraits : public MOGSLib::RTS::CharmBaseTraits {
+  using UnavailablePUs = MOGSLib::RTS::CharmSemantics::UnavailablePUs<check_unavail_pu>;
+  using FixedChares = MOGSLib::RTS::CharmSemantics::FixedChares<check_fixed_chares>;
 };

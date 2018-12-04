@@ -1,9 +1,8 @@
 #pragma once
 
-#include <abstractions/rts.h>
-#include "traits.ipp"
-
 #include <vector>
+
+#include "functionalities.h"
 
 namespace MOGSLib { namespace RTS {
 
@@ -12,7 +11,7 @@ namespace MOGSLib { namespace RTS {
  *  @brief Declaration of specific types and core functionalities exposed by the Charm++ runtime system.
  *  @tparam Traits A traits structure to guide Charm functionalities, see reference in <tt>DefaultRuntimeTraits_Charm</tt>.
  */
-template<typename Traits = MOGSLib::DefaultRuntimeTraits<MOGSLib::RuntimeSystemEnum::Charm>>
+template<typename Traits = DefaultRuntimeTraits<MOGSLib::RuntimeSystemEnum::Charm>>
 struct Charm {
   
   /// @brief Index type is defined by the Traits parameter.
@@ -33,9 +32,11 @@ struct Charm {
 
   /// @brief A representation of the Charm++ LBDB structure capabilities.
   struct LBDB {
+    /// @brief A concrete definition of the CharmFunctionalities with correct values for index and load.
+    using Helper = CharmFunctionalities<Index, Load>;
 
     /// @brief A representation of the Charm++ LBDB functions regarding the manipulation of PU data.
-    struct PUs {
+    struct PU {
 
       /**
        *  @brief Get the amount of PUs in the Charm++ system.
@@ -57,7 +58,7 @@ struct Charm {
     };
 
     /// @brief A representation of the LBDB capabilities for the manipulation of chare data.
-    struct Chares {
+    struct Chare {
       /**
        *  @brief Get the amount of chares in the Charm++ system.
        *  @return The amount of chares in the running application.
