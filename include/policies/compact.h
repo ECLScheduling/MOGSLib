@@ -22,8 +22,8 @@ public:
    */
   static void map(TaskMap &map, const Index &ntasks, const Index &npus) {
     auto size = ntasks/npus;
-    decltype(ntasks) j = 0;
-    for(decltype(ntasks) i = 0; i < ntasks; i += size){
+    Index j = 0;
+    for(Index i = 0; i < ntasks; i += size){
       for(Index s = 0; s < size; ++s)
         map[i+s] = j;
       ++j;

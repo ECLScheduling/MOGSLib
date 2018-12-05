@@ -18,7 +18,7 @@ public:
    *  @param npus The amount of pus to be scheduled.
    */
   static void map(TaskMap &map, const Index &ntasks, const Index &npus) {
-    for(decltype(ntasks) i = 0; i < ntasks; ++i)
+    for(Index i = 0; i < ntasks; ++i)
       map[i] = npus;
   }
 };

@@ -93,15 +93,18 @@ public:
     /* Iterate over the chunks, starting from the largest, and assign them to PEs */
     for(auto chunk : chunks) {
       // Get the least overloaded PU.
-      Index pu = 0;
-      for(Index i = 1; i < pus.size(); ++i)
-        if(pus[i] < pus[pu])
-          pu = i;
+      auto &pu = std::min_element(pus.begin(), pus.end());
+        Index pu = 0;
+        for(Index i = 1; i < pus.size(); ++i)
+          if(pus[i] < pus[pu])
+            pu = i;
+
       // Assign the task to the PU.
       for(auto i = std::get<0>(chunk.range); i < std::get<1>(chunk.range); ++i)
         map[i] = pu;
       // Update the load of the PU,
       pus[pu] += chunk.load;
+
     }
   }
 };

@@ -11,16 +11,17 @@ namespace MOGSLib { namespace Scheduler {
 template<>
 struct Input<MOGSLib::InputType::WorkloadAware> : public Input<MOGSLib::InputType::Simple> {
   using Load = MOGSLib::Load;
+  using Container = std::vector<Load>;
 
   /**
    * \brief Gets the workload of every task in the input.
    */
-  virtual Load* task_workloads() = 0;
+  virtual Container& task_workloads() = 0;
 
   /**
    * \brief Gets the workload of every PE in the input.
    */
-  virtual Load* pu_workloads() = 0;
+  virtual Container& pu_workloads() = 0;
 };
 
 }}

@@ -3,8 +3,10 @@
 
 #include <type_definitions.h>
 #include <load_generator.h>
+#include <task_map_utils.h>
 
 #include <policies/binlpt.h>
+#include <inputs/workload_aware_input.h>
 
 using Index = MOGSLib::Index;
 using Load = MOGSLib::Load;
@@ -20,21 +22,21 @@ public:
   using LoadGenerator = UnitTest::LoadGenerator<Index, Load>;
   using Policy = MOGSLib::Policy::BinLPT<Load>;
   
-  std::vector<Load> tasks, pus;
-  std::unique_ptr<TaskMap> map;
+  WorkloadAwareInput<> input;
   Index k;
+
+  UnitTest::TaskMapUtils map;
 
   /// @brief Set up all the necessary data for the tests.
   void SetUp() {
-    tasks.clear();
-    pus.clear();
+    input = WorkloadAwareInput<>();
     map.reset(nullptr);
   }
 
   /// @brief a proxy function to call the policy's map function.
   auto execute_policy() {
-    Policy::map(*map, tasks, pus, k);
-    return *map;
+    Policy::map(map.get(), input.tasks, input.pus, k);
+    return map.get();
   }
 
   /**
@@ -43,7 +45,7 @@ public:
    *  @param t The amount of tasks in the system.
    */
   void set_pus_and_tasks(const Index &p, const Index &t) {
-    pus.resize(p);
+    input.pus.resize(p);
     tasks.resize(t);
     map = std::make_unique<TaskMap>(new TaskEntry[t]);
   }

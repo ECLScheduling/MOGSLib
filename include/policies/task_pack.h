@@ -20,14 +20,14 @@ public:
    *  @param npacks The amount of packs to create.
    */
   static void map(TaskMap &map, const Index &ntasks, const Index &npus, const Index &npacks) {
-    auto pack_size = ntasks/npacks;
-    auto left_over = ntasks%npacks;
+    const auto pack_size = ntasks/npacks;
+    const auto left_over = ntasks%npacks;
 
-    for(decltype(left_over) i = 0; i < left_over; ++i)
+    for(Index i = 0; i < left_over; ++i)
       map[i] = 0;
 
-    for(decltype(npacks) i = 0; i < npacks; ++i)
-      for(decltype(pack_size) j = 0; j < pack_size; ++j)
+    for(Index i = 0; i < npacks; ++i)
+      for(Index j = 0; j < pack_size; ++j)
         map[i*pack_size + j + left_over] = i%npus;
   }
 };
