@@ -1,29 +1,29 @@
 #pragma once
 
-#include <abstractions/scheduler.h>
 #include <policies/round_robin.h>
 
 namespace MOGSLib { namespace Scheduler {
 
 /**
- * \brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
+ *  @brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
  **/
-template<typename ... _Concepts>
-class RoundRobin : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::round_robin, _Concepts...> {
+template<typename PolicyTypes, template<typename ...T> typename InputT>
+class RoundRobin {
 public:
-  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::round_robin, _Concepts...>;
+  using Input = InputT<typename PolicyTypes::Index>;
+  using InputTuple = std::tuple<Input&>;
 
+  using Schedule = typename PolicyTypes::Schedule;
+  using Policy = MOGSLib::Policy::RoundRobin<PolicyTypes>;
+  
   /**
-   * \brief The method to obtain a task map based on a roundrobin heuristic.
+   *  @brief The method to obtain a task map based on a roundrobin heuristic.
    **/
-  TaskMap work() override {
-    auto concepts = Base::concepts;
-    
-    auto ntasks = concepts->task_data->ntasks();
-    auto nPEs = concepts->PE_data->nPEs();
+  Schedule work(InputTuple input) override {
+    auto data = std::get<0>(input);
 
-    auto map = new Index[ntasks]();
-    Policy::RoundRobin::map(map, ntasks, nPEs);
+    auto schedule = Schedule(data.ntasks());
+    Policy::map(schedule, data.ntasks(), data.npus());
     return map;
   }
 

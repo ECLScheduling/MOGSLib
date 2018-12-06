@@ -7,7 +7,9 @@ namespace MOGSLib { namespace Concept {
 /**
  *  @class ChunksInput
  *  @brief A concept to grant access to the number of task chunks in the system.
+ *  @param T A numeric type to represent the chunk amount.
  */
-struct ChunksInput : public K<MOGSLib::Index> {};
+template<typename T>
+struct ChunksInput : public K<T> {};
 
 }}

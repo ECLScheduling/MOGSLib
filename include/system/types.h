@@ -10,15 +10,6 @@ enum RuntimeSystemEnum {
   OpenMP
 };
 
-/// @brief An enumeration of all MOGSLib implemented global schedulers.
-enum SchedulerEnum {
-  round_robin,
-  compact,
-  task_pack,
-  greedy,
-  binlpt
-};
-
 /// @brief An enumeration of all input types possible in MOGSLib implemented global schedulers.
 enum InputEnum {
   minimal,

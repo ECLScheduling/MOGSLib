@@ -1,28 +1,29 @@
 #pragma once
 
-#include <abstractions/scheduler.h>
 #include <policies/greedy.h>
 
 namespace MOGSLib { namespace Scheduler {
 
 /**
- * \brief Class that represents a scheduler which utilizes a greedy heuristic to output a task map.
+ *  @brief Class that represents a scheduler which utilizes a greedy heuristic to output a task map.
  **/
-template<typename ... _Concepts>
-class Greedy : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::greedy, _Concepts...> {
+template<typename WorkloadTypes, template<typename ...T> typename InputT>
+class Greedy {
 public:
-  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::greedy, _Concepts...>;
+  using Input = InputT<typename WorkloadTypes::Index, typename WorkloadTypes::Load>;
+  using InputTuple = std::tuple<Input&>;
+
+  using Schedule = typename WorkloadTypes::Schedule;
+  using Policy = MOGSLib::Policy::Greedy<WorkloadTypes>;
 
   /**
-   * \brief The method to obtain a task map based on a greedy heuristic.
+   *  @brief The method to obtain a task map based on a greedy heuristic.
    **/
-  TaskMap work() override {
-    auto concepts = Base::concepts;
-
-    auto ntasks = concepts->task_data->ntasks();
-    auto map = new Index[ntasks]();
+  Schedule work(InputTuple input) override {
+    auto data = std::get<0>(input);
+    auto schedule = Schedule(data.ntasks());
     
-    Policy::Greedy<>::map(map, ntasks, concepts->task_data->tasks_workloads(), concepts->PE_data->nPEs(), concepts->PE_data->PEs_workloads());
+    Policy::map(schedule, data.task_workloads(), data.pu_workloads());
     return map;
   }
 };

@@ -1,33 +1,31 @@
 #pragma once
 
-#include <abstractions/scheduler.h>
 #include <policies/binlpt.h>
 
 namespace MOGSLib { namespace Scheduler {
 
 /**
- * \brief Class that represents a scheduler which utilizes the binlpt policy to output a workload-aware task map.
+ *  @class BinLPT
+ *  @brief A scheduler which utilizes the binlpt policy to output a workload-aware task map.
  **/
-template<typename ... _Concepts>
-class BinLPT : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::binlpt, _Concepts...> {
+template<typename WorkloadTypes, template<typename ...T> typename InputT, template<typename I> typename ChunksT>
+class BinLPT {
 public:
-  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::binlpt, _Concepts...>;
+  using Input = InputT<typename WorkloadTypes::Index, typename WorkloadTypes::Load>;
+  using Chunks = ChunksT<typename WorkloadTypes::Index>;
+  using InputTuple = std::tuple<Input&, Chunks&>;
 
-  /**
-   * \brief The method to obtain a task map based on a binlpt policy.
-   **/
-  TaskMap work() override {
-    auto concepts = Base::concepts;
+  using Schedule = typename WorkloadTypes::Schedule;
+  using Policy = MOGSLib::Policy::BinLPT<WorkloadTypes>;
+  
+  /// @brief The method to obtain a schedule based on a binlpt policy.
+  Schedule work(InputTuple input) override {
+    auto data = std::get<0>(input);
+    auto chunks = std::get<1>(input);
+    auto schedule = Schedule(data.ntasks());
     
-    auto PE_data = concepts->PE_data;
-    auto task_data = concepts->task_data;
-    auto chunks = concepts->k->value;
-
-    auto ntasks = task_data->ntasks();
-
-    auto map = new Index[ntasks]();
-    Policy::BinLPT<>::map(map, ntasks, task_data->tasks_workloads(), PE_data->nPEs(), PE_data->PEs_workloads(), chunks);
-    return map;
+    Policy::map(schedule, data.task_workloads(), data.pu_workloads(), chunks.value);
+    return schedule;
   }
 
 };
