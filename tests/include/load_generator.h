@@ -1,12 +1,14 @@
 #pragma once
 
+#include <type_definitions.h>
+
 namespace UnitTest {
 
 /**
  *  @class LoadGenerator
  *  @brief A basic load generator for simple unit tests for behavior and corretude.
  */
-template<typename I, typename L>
+template<typename I = Index, typename L = Load>
 struct LoadGenerator {
 
   /**

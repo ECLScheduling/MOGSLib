@@ -1,22 +1,23 @@
 #pragma once
 
+#include <system/datatypes.h>
+
 #include <algorithm>
 #include <numeric>
-#include <vector>
 
 namespace MOGSLib { namespace Policy {
 
 /**
  *  @class BinLPT
  *  @brief A workload-aware policy that packs adjacent tasks together and distribute them in a greedy fashion.
- *  @tparam L A load data type definition.
+ *  @tparam WorkloadTypes A specialized structure to define the necessary basic types for schedulers.
  */
-template<typename L>
+template<typename WorkloadTypes>
 class BinLPT {
 public:
-  using Index = MOGSLib::Index;
-  using TaskMap = MOGSLib::TaskMap;
-  using Load = L;
+  using Index = typename WorkloadTypes::Index;
+  using Load = typename WorkloadTypes::Load;
+  using Schedule = typename WorkloadTypes::Schedule;
 
   /**
    *  @class Chunk
@@ -51,24 +52,26 @@ public:
     std::vector<Chunk> chunks;
     
     if(tasks.empty())
-      return chunks;
+      return std::move(chunks);
 
     std::vector<Load> partial_workload = std::vector<Load>(tasks.size()+1);
     partial_workload[0] = 0; // First element is 0
     std::partial_sum(tasks.begin(), tasks.end(), partial_workload.begin()+1); // Last element is the total workload.
+
+    std::cout << std::endl;
 
     auto average_weight = partial_workload.back()/n; // average size per chunk.
 
     Index begin = 0;
     while(chunks.size() < n-1) {
       auto end = begin;
-      for(++end; end < partial_workload.size()-1; ++end) // Not interested in the last element, which is the total workload.
+      for(++end; end < partial_workload.size(); ++end) // Not interested in the last element, which is the total workload.
           if(partial_workload[end] - partial_workload[begin] >= average_weight)
             break;
-
       chunks.push_back(Chunk(begin, end, partial_workload[end] - partial_workload[begin]));
       begin = end;
     }
+
     // Get all the remainder tasks into one chunk.
     chunks.push_back(Chunk(begin, tasks.size(), partial_workload[tasks.size()] - partial_workload[begin]));
 
@@ -84,7 +87,7 @@ public:
    *  BinLPT wraps tasks into chunks trying to balance the load of each chunk.
    *  It sorts the chunk array in decreasing order and iteratively assigns them to the most underloaded pu.
    */
-  static void map(TaskMap &map, const std::vector<Load> &tasks, std::vector<Load> &pus, const Index &nchunks) {
+  static void map(Schedule &map, const std::vector<Load> &tasks, std::vector<Load> &pus, const Index &nchunks) {
     auto chunks = create_chunks(tasks, nchunks);
 
     /* Organize the chunks in decreasing order */
@@ -93,12 +96,10 @@ public:
     /* Iterate over the chunks, starting from the largest, and assign them to PEs */
     for(auto chunk : chunks) {
       // Get the least overloaded PU.
-      auto &pu = std::min_element(pus.begin(), pus.end());
-        Index pu = 0;
-        for(Index i = 1; i < pus.size(); ++i)
-          if(pus[i] < pus[pu])
-            pu = i;
-
+      Index pu = 0;
+      for(Index i = 1; i < pus.size(); ++i)
+        if(pus[i] < pus[pu])
+          pu = i;
       // Assign the task to the PU.
       for(auto i = std::get<0>(chunk.range); i < std::get<1>(chunk.range); ++i)
         map[i] = pu;

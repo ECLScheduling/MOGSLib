@@ -1,76 +1,71 @@
 #include <gtest/gtest.h>
 
-#include <type_definitions.h>
+#include <policy_tests/minimal_input_base.h>
 #include <policies/compact.h>
 
-using SchedulingPolicy = MOGSLib::Policy::Compact;
-using Index = MOGSLib::Index;
-using TaskMap = MOGSLib::TaskMap;
-using TaskEntry = MOGSLib::TaskEntry;
-
-class CompactPolicyTests : public ::testing::Test {
+/**
+ *  @class CompactPolicyTests
+ *  @brief A suite of unit tests for the Compact policy.
+ */
+class CompactPolicyTests : public MinimalInputPolicyTests {
 public:
-  Index ntasks;
-  Index nPEs;
-  TaskMap map;
+  /// @brief Set the Policy type to Compact.
+  using Policy = MOGSLib::Policy::Compact<Typedef>;
 
+  /// @brief a proxy function to call the policy's map function.
   void execute_policy() {
-    SchedulingPolicy::map(map, ntasks, nPEs);
+    Policy::map(map, input.n_tasks, input.n_pus);
   }
-
-  void createMap(const Index &n) {
-    ntasks = n;
-    map = new TaskEntry[ntasks]();
-  }
-
+  
+  /// @brief a proxy function to call the policy's map function.
   void SetUp() {
-    ntasks = 0;
-    nPEs = 0;
-    map = nullptr;
-  }
-
-  void TearDown() {
-    if(map != nullptr) {
-      delete [] map;
-      map = nullptr;
-    }
+    MinimalInputPolicyTests::SetUp();
   }
 };
 
-TEST_F(CompactPolicyTests, single_task) {
-  createMap(1);
-  nPEs = 1;
+/// @brief Test if compact can correctly assign one task to one processor.
+TEST_F(CompactPolicyTests, one_task) {
+  set_pus_and_tasks(1,1);
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
 }
 
-TEST_F(CompactPolicyTests, two_tasks_two_PEs) {
-  createMap(2);
-  nPEs = 2;
+/// @brief Test if compact can correctly assign one task to each of two processors.
+TEST_F(CompactPolicyTests, n_tasks_n_pus) {
+  set_pus_and_tasks(2, 2);
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
   ASSERT_EQ(1, map[1]);
 }
 
-TEST_F(CompactPolicyTests, two_tasks_one_PE) {
-  createMap(2);
-  nPEs = 1;
+/// @brief Test if compact can correctly assign two tasks to the only processors.
+TEST_F(CompactPolicyTests, n_tasks_less_pus) {
+  set_pus_and_tasks(1, 2);
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
   ASSERT_EQ(0, map[1]);
 }
 
-TEST_F(CompactPolicyTests, n_tasks) {
-  auto n = 6;
-  createMap(n);
-  nPEs = 2;
+/// @brief Test if compact can correctly assign few tasks to more processors.
+TEST_F(CompactPolicyTests, less_tasks_than_pus) {
+  set_pus_and_tasks(3, 2);
 
   execute_policy();
-  auto s = n/nPEs;
-  for(Index j = 0; j < n/s; ++j)
+  ASSERT_EQ(0, map[0]);
+  ASSERT_EQ(1, map[1]);
+}
+
+/// @brief Test if compact can correctly assign multiple tasks to fewer processors.
+TEST_F(CompactPolicyTests, more_than_two_tasks_for_each_pu) {
+  set_pus_and_tasks(2, 6);
+
+  execute_policy();
+  auto s = input.n_tasks/input.n_pus;
+
+  for(Index j = 0; j < input.n_tasks/s; ++j)
     for(Index i = 0; i < s; ++i)
       ASSERT_EQ(j, map[j*s + i]);
 }

@@ -1,20 +1,23 @@
 #pragma once
 
-#include <vector>
+#include <system/datatypes.h>
+
 #include <algorithm>
 
 namespace MOGSLib { namespace Policy {
 
 /**
  *  @class Greedy
+ *  @tparam WorkloadTypes A specialized structure to define the necessary basic types for schedulers.
  *  @brief A workload aware policy that iteratively assigns the heavier load to the most underloaded processor.
  *  @tparam Load The type of load to be ordered. It has to be a numeric type.
  */
-template<typename Load = MOGSLib::Load>
+template<typename WorkloadTypes>
 class Greedy {
 protected:
-  using Index = MOGSLib::Index;
-  using TaskMap = MOGSLib::TaskMap;
+  using Index = typename WorkloadTypes::Index;
+  using Load = typename WorkloadTypes::Load;
+  using Schedule = typename WorkloadTypes::Schedule;
 
   /**
    *  @brief The type definition for a Comparator of type T.
@@ -70,7 +73,7 @@ public:
    *  Sorts the tasks in a min heap and the pus in a max heap.
    *  Iteratively pops from the task heap and assign the task to the head ot the pu heap iteratively.
    */
-  static void map(TaskMap &map, const std::vector<Load> &task_loads, const std::vector<Load> &pu_loads) {
+  static void map(Schedule &map, const std::vector<Load> &task_loads, const std::vector<Load> &pu_loads) {
     auto tasks = create_workload_heap<true>(task_loads);
     auto pus = create_workload_heap<false>(pu_loads);
   

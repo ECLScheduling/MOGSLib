@@ -1,10 +1,9 @@
 #pragma once
 
-namespace MOGSLib {
+#include <system/datatypes.h>
 
-using Load = unsigned;
-using Index = unsigned;
-using TaskEntry = Index;
-using TaskMap = TaskEntry*;
+using Typedef = MOGSLib::WorkloadPolicyTypedef<unsigned, unsigned>;
 
-}
+using Index = typename Typedef::Index;
+using Load = typename Typedef::Load;
+using Schedule = typename Typedef::Schedule;

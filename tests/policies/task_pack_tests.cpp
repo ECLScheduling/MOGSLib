@@ -1,65 +1,52 @@
 #include <gtest/gtest.h>
 
-#include <type_definitions.h>
+#include <policy_tests/minimal_input_base.h>
 #include <policies/task_pack.h>
 
-using SchedulingPolicy = MOGSLib::Policy::TaskPack;
-using Index = MOGSLib::Index;
-using TaskMap = MOGSLib::TaskMap;
-using TaskEntry = MOGSLib::TaskEntry;
-
-class TaskPackPolicyTests : public ::testing::Test {
+/**
+ *  @class TaskPackPolicyTests
+ *  @brief A suite of unit tests for the TaskPack policy.
+ */
+class TaskPackPolicyTests : public MinimalInputPolicyTests {
 public:
-  Index ntasks;
-  Index nPEs;
+  /// @brief Set the Policy type to TaskPack.
+  using Policy = MOGSLib::Policy::TaskPack<Typedef>;
+
   Index npacks;
-  TaskMap map;
 
+  /// @brief a proxy function to call the policy's map function.
   void execute_policy() {
-    SchedulingPolicy::map(map, ntasks, nPEs, npacks);
+    Policy::map(map, input.n_tasks, input.n_pus, npacks);
   }
-
-  void createMap(const Index &n) {
-    ntasks = n;
-    map = new TaskEntry[ntasks]();
-  }
-
+  
+  /// @brief Set up all the necessary data for the tests.
   void SetUp() {
-    ntasks = 0;
-    nPEs = 0;
     npacks = 0;
-    map = nullptr;
-  }
-
-  void TearDown() {
-    if(map != nullptr) {
-      delete [] map;
-      map = nullptr;
-    }
+    MinimalInputPolicyTests::SetUp();
   }
 };
 
+/// @brief Trivial test for the policy.
 TEST_F(TaskPackPolicyTests, single_task) {
-  createMap(1);
-  nPEs = 1;
+  set_pus_and_tasks(1, 1);
   npacks = 1;
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
 }
 
+/// @brief Test if the policy can handle more packs than tasks available.
 TEST_F(TaskPackPolicyTests, single_task_two_packs) {
-  createMap(1);
-  nPEs = 1;
+  set_pus_and_tasks(1, 1);
   npacks = 2;
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
 }
 
+/// @brief Test if all the tasks are associated with the same processor if they are all packed together.
 TEST_F(TaskPackPolicyTests, two_tasks_two_PEs_one_pack) {
-  createMap(2);
-  nPEs = 2;
+  set_pus_and_tasks(2, 2);
   npacks = 1;
 
   execute_policy();
@@ -67,9 +54,9 @@ TEST_F(TaskPackPolicyTests, two_tasks_two_PEs_one_pack) {
   ASSERT_EQ(0, map[1]);
 }
 
+/// @brief Test if each task is assigned individually if there is as much packs as there are tasks.
 TEST_F(TaskPackPolicyTests, two_tasks_two_PEs_two_pack) {
-  createMap(2);
-  nPEs = 2;
+  set_pus_and_tasks(2, 2);
   npacks = 2;
 
   execute_policy();
@@ -77,9 +64,10 @@ TEST_F(TaskPackPolicyTests, two_tasks_two_PEs_two_pack) {
   ASSERT_EQ(1, map[1]);
 }
 
+
+/// @brief Test if the policy is aware of leftovers from unexact division.
 TEST_F(TaskPackPolicyTests, odd_tasks_even_packs) {
-  createMap(5);
-  nPEs = 3;
+  set_pus_and_tasks(3, 5);
   npacks = 3;
 
   execute_policy();
@@ -90,9 +78,9 @@ TEST_F(TaskPackPolicyTests, odd_tasks_even_packs) {
   EXPECT_EQ(2, map[4]);
 }
 
-TEST_F(TaskPackPolicyTests, less_PEs_than_packs) {
-  createMap(5);
-  nPEs = 2;
+/// @brief Test if the policy can assign multiple packs to the same PU.
+TEST_F(TaskPackPolicyTests, less_PUs_than_packs) {
+  set_pus_and_tasks(2, 5);
   npacks = 3;
 
   execute_policy();
@@ -103,9 +91,9 @@ TEST_F(TaskPackPolicyTests, less_PEs_than_packs) {
   EXPECT_EQ(0, map[4]);
 }
 
+/// @brief Test if the policy ignores PUs if there are less packs than PUs.
 TEST_F(TaskPackPolicyTests, more_PEs_than_packs) {
-  createMap(5);
-  nPEs = 4;
+  set_pus_and_tasks(4, 5);
   npacks = 2;
 
   execute_policy();

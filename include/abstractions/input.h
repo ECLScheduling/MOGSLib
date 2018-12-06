@@ -2,12 +2,12 @@
 
 #include <system/types.h>
 
-namespace MOGSLib { namespace Scheduler {
+namespace MOGSLib { namespace Input {
 
 /**
- * \brief The base abstraction for input concepts.
+ *  @brief The base abstraction for input concepts.
  */
-template<MOGSLib::InputType T>
-struct Input {};
+template<MOGSLib::InputEnum T, typename ... Typedefs>
+struct Declaration {};
 
 }}

@@ -21,7 +21,7 @@ enum SchedulerEnum {
 
 /// @brief An enumeration of all input types possible in MOGSLib implemented global schedulers.
 enum InputEnum {
-  simple,
+  minimal,
   workload_aware
 };
 

@@ -1,74 +1,60 @@
 #include <gtest/gtest.h>
 
-#include <type_definitions.h>
+#include <policy_tests/minimal_input_base.h>
 #include <policies/round_robin.h>
 
-using SchedulingPolicy = MOGSLib::Policy::RoundRobin;
-using Index = MOGSLib::Index;
-using TaskMap = MOGSLib::TaskMap;
-using TaskEntry = MOGSLib::TaskEntry;
-
-class RoundRobinTests : public ::testing::Test {
+/**
+ *  @class RoundRobinTests
+ *  @brief A suite of unit tests for the RoundRobin policy.
+ */
+class RoundRobinTests : public MinimalInputPolicyTests {
 public:
-  Index ntasks;
-  Index nPEs;
-  TaskMap map;
+  /// @brief Set the Policy type to RoundRobin.
+  using Policy = MOGSLib::Policy::RoundRobin<Typedef>;
 
+  /// @brief a proxy function to call the policy's map function.
   void execute_policy() {
-    MOGSLib::Policy::RoundRobin::map(map, ntasks, nPEs);
+    Policy::map(map, input.n_tasks, input.n_pus);
   }
-
-  void createMap(const Index &n) {
-    ntasks = n;
-    map = new TaskEntry[ntasks]();
-  }
-
+  
+  /// @brief Set up all the necessary data for the tests.
   void SetUp() {
-    ntasks = 0;
-    nPEs = 0;
-    map = nullptr;
-  }
-
-  void TearDown() {
-    if(map != nullptr) {
-      delete [] map;
-      map = nullptr;
-    }
+    MinimalInputPolicyTests::SetUp();
   }
 };
 
+/// @brief Trivial test with a single task and a processor.
 TEST_F(RoundRobinTests, single_task) {
-  createMap(1);
-  nPEs = 1;
+  set_pus_and_tasks(1, 1);
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
 }
 
+/// @brief Test if each processor receives a task.
 TEST_F(RoundRobinTests, two_tasks) {
-  createMap(2);
-  nPEs = 2;
+  set_pus_and_tasks(2, 2);
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
   ASSERT_EQ(1, map[1]);
 }
 
+/// @brief Test the same processor recieves all the tasks if its is the only processor.
 TEST_F(RoundRobinTests, two_tasks_one_PE) {
-  createMap(2);
-  nPEs = 1;
+  set_pus_and_tasks(1, 2);
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
   ASSERT_EQ(0, map[1]);
 }
 
+/// @brief Test if the first processor gets the last tasks if there is n-1 processors.
 TEST_F(RoundRobinTests, n_tasks) {
   auto n = 3;
-  createMap(n);
-  nPEs = n-1;
+  set_pus_and_tasks(n-1, n);
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
-  ASSERT_EQ(0, map[nPEs]);
+  ASSERT_EQ(0, map[input.n_pus]);
 }

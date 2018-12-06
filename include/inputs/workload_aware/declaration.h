@@ -1,27 +1,29 @@
 #pragma once
 
-#include <system/type_definitions.h>
-#include <abstractions/input.h>
+#include <inputs/minimal/declaration.h>
 
-namespace MOGSLib { namespace Scheduler {
+namespace MOGSLib { namespace Input {
 
 /**
- * \brief The concept to be implemented by workload aware input for schedulers.
+ *  @class Declaration_WorkloadAware
+ *  @brief The declaration of the workload aware input structure for schedulers.
+ *  @tparam I The index type.
+ *  @tparam L The load type.
  */
-template<>
-struct Input<MOGSLib::InputType::WorkloadAware> : public Input<MOGSLib::InputType::Simple> {
-  using Load = MOGSLib::Load;
-  using Container = std::vector<Load>;
+template<typename I, typename L>
+struct Declaration<MOGSLib::InputEnum::workload_aware, I, L> : public Declaration<MOGSLib::InputEnum::minimal, I> {
+  using Index = typename Declaration<MOGSLib::InputEnum::minimal, I>::Index;
+  using Loads = L;
 
   /**
-   * \brief Gets the workload of every task in the input.
+   *  @brief Gets the workload of every task in the input.
    */
-  virtual Container& task_workloads() = 0;
+  virtual Loads& task_workloads() = 0;
 
   /**
-   * \brief Gets the workload of every PE in the input.
+   *  @brief Gets the workload of every PU in the input.
    */
-  virtual Container& pu_workloads() = 0;
+  virtual Loads& pu_workloads() = 0;
 };
 
 }}

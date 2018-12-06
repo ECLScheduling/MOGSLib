@@ -1,62 +1,28 @@
 #include <gtest/gtest.h>
-#include <memory>
 
-#include <type_definitions.h>
-#include <load_generator.h>
-#include <task_map_utils.h>
-
+#include <iostream>
 #include <policies/binlpt.h>
-#include <inputs/workload_aware_input.h>
-
-using Index = MOGSLib::Index;
-using Load = MOGSLib::Load;
-using TaskEntry = MOGSLib::TaskEntry;
-using TaskMap = MOGSLib::TaskMap;
+#include <policy_tests/workload_aware_input_base.h>
 
 /**
  *  @class BinlptPolicyTests
  *  @brief A suite of unit tests for the BinLPT policy.
  */
-class BinlptPolicyTests : public ::testing::Test {
+class BinlptPolicyTests : public WorkloadAwarePolicyTests {
 public:
-  using LoadGenerator = UnitTest::LoadGenerator<Index, Load>;
-  using Policy = MOGSLib::Policy::BinLPT<Load>;
-  
-  WorkloadAwareInput<> input;
-  Index k;
+  /// @brief Set the Policy type to BinLPT.
+  using Policy = MOGSLib::Policy::BinLPT<Typedef>;
 
-  UnitTest::TaskMapUtils map;
+  Index k;
 
   /// @brief Set up all the necessary data for the tests.
   void SetUp() {
-    input = WorkloadAwareInput<>();
-    map.reset(nullptr);
+    WorkloadAwarePolicyTests::SetUp();
   }
 
   /// @brief a proxy function to call the policy's map function.
-  auto execute_policy() {
-    Policy::map(map.get(), input.tasks, input.pus, k);
-    return map.get();
-  }
-
-  /**
-   *  @brief Set the data about pu amount and task amount.
-   *  @param p The amount of pus in the system.
-   *  @param t The amount of tasks in the system.
-   */
-  void set_pus_and_tasks(const Index &p, const Index &t) {
-    input.pus.resize(p);
-    tasks.resize(t);
-    map = std::make_unique<TaskMap>(new TaskEntry[t]);
-  }
-
-  /**
-   *  @brief Set the workload of the tasks.
-   *  @param gen A function to generate the load of a task given its index.
-   */
-  void set_task_loads(Load (*gen)(const Index &)) {
-    for(decltype(tasks.size()) i = 0; i < tasks.size(); ++i)
-      tasks[i] = gen(i);
+  void execute_policy() {
+    Policy::map(map, input.tasks, input.pus, k);
   }
 };
 
@@ -66,13 +32,14 @@ public:
 TEST_F(BinlptPolicyTests, policy_regular_tasks_unloaded_PUs) {
   k = 2;
   set_pus_and_tasks(2, 4);
+
   set_task_loads(LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5] 1:[5,5] => assign order:{0,1}
 
-  auto map_ref = execute_policy();
-  EXPECT_EQ(0, map_ref[0]);
-  EXPECT_EQ(0, map_ref[1]);
-  EXPECT_EQ(1, map_ref[2]);
-  EXPECT_EQ(1, map_ref[3]);
+  execute_policy();
+  EXPECT_EQ(0, map[0]);
+  EXPECT_EQ(0, map[1]);
+  EXPECT_EQ(1, map[2]);
+  EXPECT_EQ(1, map[3]);
 }
 
 /**
@@ -84,12 +51,12 @@ TEST_F(BinlptPolicyTests, policy_irregular_tasks_unloaded_pus) {
   set_pus_and_tasks(2, 5);
   set_task_loads(LoadGenerator::increasing); // [1,2,3,4,5] => 0:[1,2,3,4] 1:[5] => assign order:{0,1}
 
-  auto map_ref = execute_policy();
-  EXPECT_EQ(0, map_ref[0]);
-  EXPECT_EQ(0, map_ref[1]);
-  EXPECT_EQ(0, map_ref[2]);
-  EXPECT_EQ(0, map_ref[3]);
-  EXPECT_EQ(1, map_ref[4]);
+  execute_policy();
+  EXPECT_EQ(0, map[0]);
+  EXPECT_EQ(0, map[1]);
+  EXPECT_EQ(0, map[2]);
+  EXPECT_EQ(0, map[3]);
+  EXPECT_EQ(1, map[4]);
 }
 
 /**
@@ -101,12 +68,12 @@ TEST_F(BinlptPolicyTests, policy_irregular_tasks_decreasing_unloaded_pus) {
   set_pus_and_tasks(2, 5);
   set_task_loads(LoadGenerator::decreasing<5>); // [5,4,3,2,1] => 0:[5] 1:[4] 2:[3] 3:[2,1] => ordered:{0,1,2,3}
 
-  auto map_ref = execute_policy();
-  EXPECT_EQ(0, map_ref[0]);
-  EXPECT_EQ(1, map_ref[1]);
-  EXPECT_EQ(1, map_ref[2]);
-  EXPECT_EQ(0, map_ref[3]);
-  EXPECT_EQ(0, map_ref[4]);
+  execute_policy();
+  EXPECT_EQ(0, map[0]);
+  EXPECT_EQ(1, map[1]);
+  EXPECT_EQ(1, map[2]);
+  EXPECT_EQ(0, map[3]);
+  EXPECT_EQ(0, map[4]);
 }
 
 /**
@@ -118,13 +85,13 @@ TEST_F(BinlptPolicyTests, policy_regular_tasks_loaded_pus) {
   set_pus_and_tasks(2, 4);
   set_task_loads(LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5] 1:[5,5] => ordered:{0,1}
   
-  pus[0] = 7;
+  input.pus[0] = 7;
 
-  auto map_ref = execute_policy();
-  EXPECT_EQ(1, map_ref[0]);
-  EXPECT_EQ(1, map_ref[1]);
-  EXPECT_EQ(0, map_ref[2]);
-  EXPECT_EQ(0, map_ref[3]);
+  execute_policy();
+  EXPECT_EQ(1, map[0]);
+  EXPECT_EQ(1, map[1]);
+  EXPECT_EQ(0, map[2]);
+  EXPECT_EQ(0, map[3]);
 }
 
 /**
@@ -136,14 +103,14 @@ TEST_F(BinlptPolicyTests, policy_irregular_tasks_loaded_pus) {
   set_pus_and_tasks(4, 5);
   set_task_loads(LoadGenerator::increasing); // [1,2,3,4,5] => 0:[1,2,3] 1:[4,5] => ordered:{1,0}
   
-  pus[0] = 7;
+  input.pus[0] = 7;
 
-  auto map_ref = execute_policy();
-  EXPECT_EQ(2, map_ref[0]);
-  EXPECT_EQ(2, map_ref[1]);
-  EXPECT_EQ(2, map_ref[2]);
-  EXPECT_EQ(1, map_ref[3]);
-  EXPECT_EQ(1, map_ref[4]);
+  execute_policy();
+  EXPECT_EQ(2, map[0]);
+  EXPECT_EQ(2, map[1]);
+  EXPECT_EQ(2, map[2]);
+  EXPECT_EQ(1, map[3]);
+  EXPECT_EQ(1, map[4]);
 }
 
 /**
@@ -155,12 +122,12 @@ TEST_F(BinlptPolicyTests, policy_irregular_tasks_loaded_pus_decreasing) {
   set_pus_and_tasks(2, 5);
   set_task_loads(LoadGenerator::decreasing<5>); // [5,4,3,2,1] => 0:[5] 1:[4,3] 2:[2,1] => ordered:{1,0,2}
   
-  pus[0] = 7;
+  input.pus[0] = 7;
 
-  auto map_ref = execute_policy();
-  EXPECT_EQ(0, map_ref[0]);
-  EXPECT_EQ(1, map_ref[1]);
-  EXPECT_EQ(1, map_ref[2]);
-  EXPECT_EQ(1, map_ref[3]);
-  EXPECT_EQ(1, map_ref[4]);
+  execute_policy();
+  EXPECT_EQ(0, map[0]);
+  EXPECT_EQ(1, map[1]);
+  EXPECT_EQ(1, map[2]);
+  EXPECT_EQ(1, map[3]);
+  EXPECT_EQ(1, map[4]);
 }
