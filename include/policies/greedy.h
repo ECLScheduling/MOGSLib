@@ -1,6 +1,6 @@
 #pragma once
 
-#include <system/datatypes.h>
+#include <system/traits.h>
 
 #include <algorithm>
 
@@ -9,15 +9,15 @@ namespace MOGSLib { namespace Policy {
 /**
  *  @class Greedy
  *  @tparam WorkloadTypes A specialized structure to define the necessary basic types for schedulers.
- *  @brief A workload aware policy that iteratively assigns the heavier load to the most underloaded processor.
- *  @tparam Load The type of load to be ordered. It has to be a numeric type.
+ *  @tparam Id An index type to organize PUs and tasks.
+ *  @tparam L The type of load to be ordered. It has to be a numeric type.
  */
-template<typename WorkloadTypes>
+template<typename Id, typename L>
 class Greedy {
 protected:
-  using Index = typename WorkloadTypes::Index;
-  using Load = typename WorkloadTypes::Load;
-  using Schedule = typename WorkloadTypes::Schedule;
+  using Index = Id;
+  using Load = L;
+  using Schedule = typename MOGSLib::Traits::Policy<Id>::Output;
 
   /**
    *  @brief The type definition for a Comparator of type T.

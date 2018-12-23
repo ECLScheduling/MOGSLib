@@ -1,6 +1,6 @@
 #pragma once
 
-#include <system/datatypes.h>
+#include <system/traits.h>
 
 #include <algorithm>
 #include <numeric>
@@ -10,14 +10,15 @@ namespace MOGSLib { namespace Policy {
 /**
  *  @class BinLPT
  *  @brief A workload-aware policy that packs adjacent tasks together and distribute them in a greedy fashion.
- *  @tparam WorkloadTypes A specialized structure to define the necessary basic types for schedulers.
+ *  @tparam Id An index type to organize PUs and tasks.
+ *  @tparam L The workload numeric type.
  */
-template<typename WorkloadTypes>
+template<typename Id, typename L>
 class BinLPT {
 public:
-  using Index = typename WorkloadTypes::Index;
-  using Load = typename WorkloadTypes::Load;
-  using Schedule = typename WorkloadTypes::Schedule;
+  using Index = typename Id;
+  using Load = typename L;
+  using Schedule = typename MOGSLib::Traits::Policy<Id>::Output;
 
   /**
    *  @class Chunk
@@ -105,7 +106,6 @@ public:
         map[i] = pu;
       // Update the load of the PU,
       pus[pu] += chunk.load;
-
     }
   }
 };

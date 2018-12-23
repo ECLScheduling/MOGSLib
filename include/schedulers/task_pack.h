@@ -5,27 +5,25 @@
 namespace MOGSLib { namespace Scheduler {
 
 /**
+ *  @class TaskPack
+ *  @tparam Ctx The context where the scheduler will be applied to.
  *  @brief Class that represents a scheduler which utilizes the compact policy to output a task map.
  **/
-template<typename PolicyTypes, template<typename ...T> typename InputT, template<typename ...T> typename PacksT>
+template<typename Ctx>
 class TaskPack {
 public:
-  using Input = InputT<typename PolicyTypes::Index>;
-  using Packs = PacksT<typename PolicyTypes::Index>;
-  using InputTuple = std::tuple<Input&, Packs&>;
-
-  using Schedule = typename PolicyTypes::Schedule;
-  using Policy = MOGSLib::Policy::TaskPack<PolicyTypes>;
+  using Id = typename Ctx::Index;
+  using Policy = MOGSLib::Policy::TaskPack<Id>;
 
   /**
    *  @brief The method to obtain a task map based on a compact policy.
    **/
-  Schedule work(InputTuple input) override {
-    auto data = std::get<0>(input);
-    auto packs = std::get<1>(input);
+  auto work() {
+    auto data = Ctx::basic_input();
+    auto packs = Ctx::k();
+    auto schedule = Policy::Schedule(data.ntasks());
 
-    auto schedule = Schedule(data.ntasks());
-    Policy::map(schedule, data.ntasks(), data.npus(), packs.value);
+    Policy::map(schedule, data.ntasks(), data.npus(), packs);
     return map;
   }
 

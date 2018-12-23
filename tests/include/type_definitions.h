@@ -1,6 +1,6 @@
 #pragma once
 
-#include <system/datatypes.h>
+#include <system/traits.h>
 
 using Typedef = MOGSLib::WorkloadPolicyTypedef<unsigned, unsigned>;
 

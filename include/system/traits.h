@@ -1,9 +1,13 @@
 #pragma once
 
-#include <system/types.h>
-#include <cstdint>
+#include <vector>
 
-namespace MOGSLib { namespace RTS {
+namespace MOGSLib { namespace Traits {
+
+template<typename Id>
+struct Policy {
+  using Output = std::vector<Id>;
+};
 
 /**
  *  @class DefaultRuntimeTraits

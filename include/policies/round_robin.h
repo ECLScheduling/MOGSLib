@@ -1,19 +1,19 @@
 #pragma once
 
-#include <system/datatypes.h>
+#include <system/traits.h>
 
 namespace MOGSLib { namespace Policy {
 
 /**
  *  @class RoundRobin
- *  @tparam PolicyTypes A specialized structure to define the necessary basic types for schedulers.
+ *  @tparam Id An index type to organize PUs and tasks.
  *  @brief A workload-unaware policy that iterativelly assigns a task to a PU based on their id.
  */
-template<typename PolicyTypes>
+template<typename Id>
 class RoundRobin {
 public:
-  using Index = typename PolicyTypes::Index;
-  using Schedule = typename PolicyTypes::Schedule;
+  using Index = Id;
+  using Schedule = typename MOGSLib::Traits::Policy<Id>::Output;
 
   /**
    *  @brief Iteratively assigns a task to a different PU until there are no more tasks.

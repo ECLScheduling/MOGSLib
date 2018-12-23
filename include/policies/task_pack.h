@@ -1,20 +1,20 @@
 #pragma once
 
-#include <system/datatypes.h>
+#include <system/traits.h>
 
 namespace MOGSLib { namespace Policy {
 
 /**
  *  @class TaskPack
- *  @tparam PolicyTypes A specialized structure to define the necessary basic types for schedulers.
+ *  @tparam Id An index type to organize PUs and tasks.
  *  @brief A workload-unaware policy that iterativelly assigns a task to a PU based on their id.
  *  @details This policy aggregates adjacent tasks into task packs that are assigned to the same PE.
  */
-template<typename PolicyTypes>
+template<typename Id>
 class TaskPack {
 public:
-  using Index = typename PolicyTypes::Index;
-  using Schedule = typename PolicyTypes::Schedule;
+  using Index = Id;
+  using Schedule = typename MOGSLib::Traits::Policy<Id>::Output;
 
   /**
    *  @brief Divide the tasks into packs and assign them to PUs in increasing index.
