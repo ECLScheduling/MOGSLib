@@ -1,10 +1,12 @@
 #pragma once
 
-#include <system/traits.h>
-
+#include <dependencies/workload_aware.h>
 #include <algorithm>
 
 namespace MOGSLib { namespace Policy {
+
+template<typename ... Deps>
+class Greedy;
 
 /**
  *  @class Greedy
@@ -12,13 +14,14 @@ namespace MOGSLib { namespace Policy {
  *  @tparam Id An index type to organize PUs and tasks.
  *  @tparam L The type of load to be ordered. It has to be a numeric type.
  */
-template<typename Id, typename L>
-class Greedy {
-protected:
-  using Index = Id;
-  using Load = L;
-  using Schedule = typename MOGSLib::Traits::Policy<Id>::Output;
+template<typename I, typename L>
+struct Greedy<MOGSLib::Dependency::WorkloadAware<I,L>> {
+  using Deps = MOGSLib::Dependency::WorkloadAware<I,L>;
+  using Id = typename Deps::Id;
+  using Load = typename Deps::Load;
+  using Schedule = typename Deps::Schedule;
 
+protected:
   /**
    *  @brief The type definition for a Comparator of type T.
    *  @tparam T The type to be compared.
@@ -35,13 +38,13 @@ protected:
    *  Therefore, this structure holds a reference to the original index of the load, being useful when the workload must be sorted.
    */
   struct Workload {
-    Index id;
+    Id id;
     Load load;
     
     /// @brief Constructs an empty Workload object.
     Workload() {}
     /// @brief Constructs a complete Workload object.
-    Workload(const Index &i, const Load &l) : id(i), load(l) {}
+    Workload(const Id &i, const Load &l) : id(i), load(l) {}
 
     /// @brief Compares two instances of Workload based on their load value.
     inline bool operator >(const Workload &o) const { return load > o.load; }
@@ -57,7 +60,7 @@ protected:
   template<bool DecreasingOrder>
   static inline std::vector<Workload> create_workload_heap(const std::vector<Load> &loads) {
     std::vector<Workload> v(loads.size());
-    Index i = 0;
+    Id i = 0;
     std::transform(loads.begin(), loads.end(), v.begin(), [&i](auto load) { return Workload(i++, load); });
     std::make_heap(v.begin(), v.end(), Compare<Workload, DecreasingOrder>());
     return v;

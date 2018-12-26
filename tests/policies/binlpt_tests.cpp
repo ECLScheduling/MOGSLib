@@ -11,9 +11,9 @@
 class BinlptPolicyTests : public WorkloadAwarePolicyTests {
 public:
   /// @brief Set the Policy type to BinLPT.
-  using Policy = MOGSLib::Policy::BinLPT<Typedef>;
+  using Policy = MOGSLib::Policy::BinLPT<Deps>;
 
-  Index k;
+  Id k;
 
   /// @brief Set up all the necessary data for the tests.
   void SetUp() {
@@ -66,7 +66,7 @@ TEST_F(BinlptPolicyTests, policy_irregular_tasks_decreasing_unloaded_pus) {
   k = 4;
 
   set_pus_and_tasks(2, 5);
-  set_task_loads(LoadGenerator::decreasing<5>); // [5,4,3,2,1] => 0:[5] 1:[4] 2:[3] 3:[2,1] => ordered:{0,1,2,3}
+  set_task_loads(LoadGenerator::decreasing<5>);
 
   execute_policy();
   EXPECT_EQ(0, map[0]);

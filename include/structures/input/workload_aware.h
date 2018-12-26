@@ -1,6 +1,6 @@
 #pragma once
 
-#include "declaration.h"
+#include <vector>
 
 namespace MOGSLib { namespace Input {
 
@@ -16,10 +16,10 @@ namespace MOGSLib { namespace Input {
  *  TODO: Define a structure that can reference data rather than copying.
  */
 template<typename I, typename L>
-struct WorkloadAware : public Declaration<MOGSLib::InputEnum::workload_aware, I, std::vector<L>> {
-  using Decl = Declaration<MOGSLib::InputEnum::workload_aware, I, std::vector<L>>;
-  using Loads = typename Decl::Loads;
-  using Index = typename Decl::Index;
+struct WorkloadAware {
+  using Load = L;
+  using Loads = std::vector<Load>;
+  using Id = I;
 
   Loads tasks, pus;
 
@@ -36,24 +36,24 @@ struct WorkloadAware : public Declaration<MOGSLib::InputEnum::workload_aware, I,
   /**
    *  @brief Gets the amount of tasks in a scheduler input.
    */
-  inline Index ntasks() { return tasks.size(); }
+  inline Id ntasks() { return tasks.size(); }
 
   /**
    *  @brief Gets the amount of tasks in a scheduler input.
    *  @details This method has a const specifier.
    */
-  inline Index ntasks() const { return tasks.size(); }
+  inline Id ntasks() const { return tasks.size(); }
 
   /**
    *  @brief Gets the amount of PEs in a scheduler input.
    */
-  inline Index npus() { return pus.size(); }
+  inline Id npus() { return pus.size(); }
 
   /**
    *  @brief Gets the amount of PEs in a scheduler input.
    *  @details This method has a const specifier.
    */
-  inline Index npus() const { return pus.size(); }
+  inline Id npus() const { return pus.size(); }
 };
 
 }}

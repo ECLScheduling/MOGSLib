@@ -12,17 +12,18 @@ namespace MOGSLib { namespace Scheduler {
 template<typename Ctx>
 class BinLPT {
 public:
-  using Id = typename Ctx::Index;
+  using Id = typename Ctx::Id;
   using Load = typename Ctx::Load;
-  using Policy = MOGSLib::Policy::BinLPT<Id, Load>;
+  using Policy = MOGSLib::Policy::BinLPT<MOGSLib::Dependency::WorkloadAware<Id,Load>>;
+  using Schedule = typename Policy::Schedule;
   
   /// @brief The method to obtain a schedule based on a binlpt policy.
   auto work() {
-    auto data = Ctx::workload_input();
-    auto chunks = Ctx::chunks();
-    auto schedule = Policy::Schedule(data.ntasks());
+    auto data = Ctx::input();
+    auto chunks = Ctx::k();
+    auto schedule = Schedule(data.ntasks());
     
-    Policy::map(schedule, data.tasks(), data.pus(), chunks);
+    Policy::map(schedule, data.task_workloads(), data.pu_workloads(), chunks);
     return schedule;
   }
 

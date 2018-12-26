@@ -12,19 +12,20 @@ namespace MOGSLib { namespace Scheduler {
 template<typename Ctx>
 class Greedy {
 public:
-  using Id = typename Ctx::Index;
+  using Id = typename Ctx::Id;
   using Load = typename Ctx::Load;
-  using Policy = MOGSLib::Policy::Greedy<Id, Load>;
+  using Policy = MOGSLib::Policy::Greedy<MOGSLib::Dependency::WorkloadAware<Id,Load>>;
+  using Schedule = typename Policy::Schedule;
 
   /**
    *  @brief The method to obtain a task map based on a greedy heuristic.
    **/
   auto work() {
-    auto data = Ctx::workload_input();
-    auto schedule = Policy::Schedule(data.ntasks());
+    auto data = Ctx::input();
+    auto schedule = Schedule(data.ntasks());
     
-    Policy::map(schedule, data.tasks(), data.pus());
-    return map;
+    Policy::map(schedule, data.task_workloads(), data.pu_workloads());
+    return schedule;
   }
 };
 

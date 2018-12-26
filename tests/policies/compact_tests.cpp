@@ -10,11 +10,11 @@
 class CompactPolicyTests : public MinimalInputPolicyTests {
 public:
   /// @brief Set the Policy type to Compact.
-  using Policy = MOGSLib::Policy::Compact<Typedef>;
+  using Policy = MOGSLib::Policy::Compact<Deps>;
 
   /// @brief a proxy function to call the policy's map function.
   void execute_policy() {
-    Policy::map(map, input.n_tasks, input.n_pus);
+    Policy::map(map, input.tasks, input.pus);
   }
   
   /// @brief a proxy function to call the policy's map function.
@@ -32,7 +32,7 @@ TEST_F(CompactPolicyTests, one_task) {
 }
 
 /// @brief Test if compact can correctly assign one task to each of two processors.
-TEST_F(CompactPolicyTests, n_tasks_n_pus) {
+TEST_F(CompactPolicyTests, tasks_pus) {
   set_pus_and_tasks(2, 2);
 
   execute_policy();
@@ -41,7 +41,7 @@ TEST_F(CompactPolicyTests, n_tasks_n_pus) {
 }
 
 /// @brief Test if compact can correctly assign two tasks to the only processors.
-TEST_F(CompactPolicyTests, n_tasks_less_pus) {
+TEST_F(CompactPolicyTests, tasks_less_pus) {
   set_pus_and_tasks(1, 2);
 
   execute_policy();
@@ -50,7 +50,7 @@ TEST_F(CompactPolicyTests, n_tasks_less_pus) {
 }
 
 /// @brief Test if compact can correctly assign few tasks to more processors.
-TEST_F(CompactPolicyTests, less_tasks_than_pus) {
+TEST_F(CompactPolicyTests, less_tasks_thapus) {
   set_pus_and_tasks(3, 2);
 
   execute_policy();
@@ -63,9 +63,9 @@ TEST_F(CompactPolicyTests, more_than_two_tasks_for_each_pu) {
   set_pus_and_tasks(2, 6);
 
   execute_policy();
-  auto s = input.n_tasks/input.n_pus;
+  auto s = input.tasks/input.pus;
 
-  for(Index j = 0; j < input.n_tasks/s; ++j)
-    for(Index i = 0; i < s; ++i)
+  for(Id j = 0; j < input.tasks/s; ++j)
+    for(Id i = 0; i < s; ++i)
       ASSERT_EQ(j, map[j*s + i]);
 }

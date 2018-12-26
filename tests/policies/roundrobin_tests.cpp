@@ -10,11 +10,11 @@
 class RoundRobinTests : public MinimalInputPolicyTests {
 public:
   /// @brief Set the Policy type to RoundRobin.
-  using Policy = MOGSLib::Policy::RoundRobin<Typedef>;
+  using Policy = MOGSLib::Policy::RoundRobin<Deps>;
 
   /// @brief a proxy function to call the policy's map function.
   void execute_policy() {
-    Policy::map(map, input.n_tasks, input.n_pus);
+    Policy::map(map, input.tasks, input.pus);
   }
   
   /// @brief Set up all the necessary data for the tests.
@@ -50,11 +50,11 @@ TEST_F(RoundRobinTests, two_tasks_one_PE) {
 }
 
 /// @brief Test if the first processor gets the last tasks if there is n-1 processors.
-TEST_F(RoundRobinTests, n_tasks) {
+TEST_F(RoundRobinTests, tasks) {
   auto n = 3;
   set_pus_and_tasks(n-1, n);
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
-  ASSERT_EQ(0, map[input.n_pus]);
+  ASSERT_EQ(0, map[input.pus]);
 }

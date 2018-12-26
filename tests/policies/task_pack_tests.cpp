@@ -10,13 +10,13 @@
 class TaskPackPolicyTests : public MinimalInputPolicyTests {
 public:
   /// @brief Set the Policy type to TaskPack.
-  using Policy = MOGSLib::Policy::TaskPack<Typedef>;
+  using Policy = MOGSLib::Policy::TaskPack<Deps>;
 
-  Index npacks;
+  Id npacks;
 
   /// @brief a proxy function to call the policy's map function.
   void execute_policy() {
-    Policy::map(map, input.n_tasks, input.n_pus, npacks);
+    Policy::map(map, input.tasks, input.pus, npacks);
   }
   
   /// @brief Set up all the necessary data for the tests.

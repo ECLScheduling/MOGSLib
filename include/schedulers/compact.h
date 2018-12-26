@@ -12,18 +12,19 @@ namespace MOGSLib { namespace Scheduler {
 template<typename Ctx>
 class Compact {
 public:
-  using Id = typename Ctx::Index;
-  using Policy = MOGSLib::Policy::Compact<Id>;
+  using Id = typename Ctx::Id;
+  using Policy = MOGSLib::Policy::Compact<MOGSLib::Dependency::Base<Id>>;
+  using Schedule = typename Policy::Schedule;
 
   /**
    *  @brief The method to obtain a task map based on a compact policy.
    **/
   auto work() {
-    auto data = Ctx::basic_input();
-    auto schedule = Policy::Schedule(data.ntasks());
+    auto data = Ctx::input();
+    auto schedule = Schedule(data.ntasks());
     
     Policy::map(schedule, data.ntasks(), data.npus());
-    return map;
+    return schedule;
   }
 
 };

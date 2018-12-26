@@ -1,7 +1,5 @@
 #pragma once
 
-#include "declaration.h"
-
 namespace MOGSLib { namespace Input {
 
 /**
@@ -11,32 +9,32 @@ namespace MOGSLib { namespace Input {
  *  This structure uses 2 numeric variables to track both the amount of tasks and pus.
  */
 template<typename I>
-struct Minimal : public Declaration<MOGSLib::InputEnum::minimal, I> {
-  using Index = typename Declaration<MOGSLib::InputEnum::minimal, I>::Index;
+struct Base {
+  using Id = I;
   
-  Index n_tasks, n_pus;
+  Id tasks, pus;
 
   /**
    *  @brief Gets the amount of tasks in a scheduler input.
    */
-  Index ntasks() { return n_tasks; }
+  Id ntasks() { return tasks; }
 
   /**
    *  @brief Gets the amount of tasks in a scheduler input.
    *  @details This method has a const specifier.
    */
-  Index ntasks() const { return n_tasks; }
+  Id ntasks() const { return tasks; }
 
   /**
    *  @brief Gets the amount of PEs in a scheduler input.
    */
-  Index npus() { return n_pus; }
+  Id npus() { return pus; }
 
   /**
    *  @brief Gets the amount of PEs in a scheduler input.
    *  @details This method has a const specifier.
    */
-  Index npus() const { return n_pus; }
+  Id npus() const { return pus; }
 };
 
 }}

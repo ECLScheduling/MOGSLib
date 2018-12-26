@@ -6,7 +6,7 @@
 #include <rts/charm/charm.ipp>
 
 using Load = decltype(BaseLB::ProcStats::bg_walltime);
-using Index = decltype(BaseLB::LDStats::count);
+using Id = decltype(BaseLB::LDStats::count);
 using Speed = decltype(BaseLB::ProcStats::pe_speed);
 
 /**
@@ -15,7 +15,7 @@ using Speed = decltype(BaseLB::ProcStats::pe_speed);
 struct Chare {
   bool migratable;
   Load wallTime;
-  Index from_proc;
+  Id from_proc;
 
   /// @brief Constructs an empty chare mock.
   Chare(){}
@@ -26,7 +26,7 @@ struct Chare {
    *  @param walltime How much time it took last iteration to be computed.
    *  @param proc The id of the current PU hosting this chare.
    */
-  Chare(const bool &mig, const Load &walltime, const Index &proc) : migratable(mig),  wallTime(walltime), from_proc(proc) {}
+  Chare(const bool &mig, const Load &walltime, const Id &proc) : migratable(mig),  wallTime(walltime), from_proc(proc) {}
 };
 
 /**
@@ -101,7 +101,7 @@ public:
   void make_chares(const unsigned &n) {
     stats->n_objs = n;
     stats->objData = std::make_unique<BaseLB::LDObjData[]>(n);
-    stats->from_proc = std::make_unique<Index[]>(n);
+    stats->from_proc = std::make_unique<Id[]>(n);
   }
 
   /**

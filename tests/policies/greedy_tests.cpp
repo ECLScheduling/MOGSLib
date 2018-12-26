@@ -10,7 +10,7 @@
 class GreedyPolicyTests : public WorkloadAwarePolicyTests {
 public:
   /// @brief Set the Policy type to Greedy.
-  using Policy = MOGSLib::Policy::Greedy<Typedef>;
+  using Policy = MOGSLib::Policy::Greedy<Deps>;
 
   /// @brief a proxy function to call the policy's map function.
   void execute_policy() {

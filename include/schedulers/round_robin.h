@@ -12,18 +12,19 @@ namespace MOGSLib { namespace Scheduler {
 template<typename Ctx>
 class RoundRobin {
 public:
-  using Id = typename Ctx::Index;
-  using Policy = MOGSLib::Policy::RoundRobin<Id>;
+  using Id = typename Ctx::Id;
+  using Policy = MOGSLib::Policy::RoundRobin<MOGSLib::Dependency::Base<Id>>;
+  using Schedule = typename Policy::Schedule;
   
   /**
    *  @brief The method to obtain a task map based on a roundrobin heuristic.
    **/
   auto work() {
-    auto data = Ctx::basic_input();
-    auto schedule = Policy::Schedule(data.ntasks());
+    auto data = Ctx::input();
+    auto schedule = Schedule(data.ntasks());
     
     Policy::map(schedule, data.ntasks(), data.npus());
-    return map;
+    return schedule;
   }
 
 };

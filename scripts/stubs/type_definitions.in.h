@@ -7,9 +7,9 @@ namespace MOGSLib {
   static constexpr auto TargetSystem = RuntimeSystemEnum::@RTS_ENUM_VAL@;
   using RTS = Abstraction::RTS<TargetSystem>;
 
-  using Index = RuntimeTraits<TargetSystem>::Index;
+  using Id = RuntimeTraits<TargetSystem>::Id;
   using Load = RuntimeTraits<TargetSystem>::Load;
 
-  using TaskEntry = Index;
+  using TaskEntry = Id;
   using TaskMap = TaskEntry*;
 }

@@ -32,33 +32,33 @@ decltype(ScheduleCall::id) ScheduleCall::id = 0;
 if(scheduler_name.compare(SchedulerTraits< std::tuple_element<SchedId, SchedulerTuple>::type::Scheduler::scheduler_type() >::name()) == 0) \
     return std::get<SchedId>(schedulers).init_and_work();
 
-#define TupleGetSnippet(ConceptName, ConceptIndex) \
+#define TupleGetSnippet(ConceptName, ConceptId) \
 template<bool spec> \
 struct TupleGet<ConceptName, spec> { \
   static ConceptName* get() { \
-    ConceptInitializer<type, ConceptIndex>::init(ConceptTuple::concepts); \
-    return &std::get<ConceptIndex>(ConceptTuple::concepts); } \
+    ConceptInitializer<type, ConceptId>::init(ConceptTuple::concepts); \
+    return &std::get<ConceptId>(ConceptTuple::concepts); } \
 };
 
 /**
  * \brief This specialization of ConceptInitializer is responsible for calling the init method of a single Concept within a tuple of concepts.
  * @details When a concept is initialized by this structure, future calls to its initialization won't invoke the init method of the previously-initialized concept.
  * @type Tuple A tuple of concepts concrete definition.
- * @type Index The index passed as template parameter to std::get.
+ * @type Id The index passed as template parameter to std::get.
  */
-template<typename Tuple, unsigned Index>
+template<typename Tuple, unsigned Id>
 struct ConceptInitializer {
   static decltype(ScheduleCall::id) init_in_call;
   static void init(Tuple &tuple) {
     if(ScheduleCall::id != init_in_call) {
-      Driver<typename std::tuple_element<Index,Tuple>::type, TargetSystem>::init(std::get<Index>(tuple));
+      Driver<typename std::tuple_element<Id,Tuple>::type, TargetSystem>::init(std::get<Id>(tuple));
       init_in_call = ScheduleCall::id;
     }
   }
 };
 
-template<typename Tuple, unsigned Index>
-decltype(ConceptInitializer<Tuple, Index>::init_in_call) ConceptInitializer<Tuple, Index>::init_in_call;
+template<typename Tuple, unsigned Id>
+decltype(ConceptInitializer<Tuple, Id>::init_in_call) ConceptInitializer<Tuple, Id>::init_in_call;
 
 /**
  * \brief This structure assembles MOGSLibs components into a Scheduler collection that can be use within a selected RTS.

@@ -2,7 +2,11 @@
 
 #include <type_definitions.h>
 
-#include <inputs/minimal/default.h>
+#include <dependencies/base.h>
+#include <structures/input/base.h>
+
+using Deps = MOGSLib::Dependency::Base<Id>;
+using Schedule = typename Deps::Schedule;
 
 /**
  *  @class MinimalInputPolicyTests
@@ -11,7 +15,7 @@
 class MinimalInputPolicyTests : public ::testing::Test {
 public:
   /// @brief Set the Input type to the default implementation of the minimal input type.
-  using Input = MOGSLib::Input::Minimal<Index>;
+  using Input = MOGSLib::Input::Base<Id>;
   
   Schedule map;
   Input input;
@@ -21,9 +25,9 @@ public:
    *  @param p The amount of pus in the system.
    *  @param t The amount of tasks in the system.
    */
-  void set_pus_and_tasks(const Index &p, const Index &t) {
-    input.n_pus = p;
-    input.n_tasks = t;
+  void set_pus_and_tasks(const Id &p, const Id &t) {
+    input.pus = p;
+    input.tasks = t;
     map = Schedule(t);
   }
 

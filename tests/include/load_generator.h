@@ -8,7 +8,7 @@ namespace UnitTest {
  *  @class LoadGenerator
  *  @brief A basic load generator for simple unit tests for behavior and corretude.
  */
-template<typename I = Index, typename L = Load>
+template<typename I = Id, typename L = Load>
 struct LoadGenerator {
 
   /**

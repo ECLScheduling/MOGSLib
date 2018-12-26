@@ -1,11 +1,14 @@
 #pragma once
 
-#include <system/traits.h>
+#include <dependencies/workload_aware.h>
 
 #include <algorithm>
 #include <numeric>
 
 namespace MOGSLib { namespace Policy {
+
+template<typename ... Deps>
+class BinLPT;
 
 /**
  *  @class BinLPT
@@ -13,19 +16,19 @@ namespace MOGSLib { namespace Policy {
  *  @tparam Id An index type to organize PUs and tasks.
  *  @tparam L The workload numeric type.
  */
-template<typename Id, typename L>
-class BinLPT {
-public:
-  using Index = typename Id;
-  using Load = typename L;
-  using Schedule = typename MOGSLib::Traits::Policy<Id>::Output;
+template<typename I, typename L>
+struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
+  using Deps = MOGSLib::Dependency::WorkloadAware<I,L>;
+  using Id = typename Deps::Id;
+  using Load = typename Deps::Load;
+  using Schedule = typename Deps::Schedule;
 
   /**
    *  @class Chunk
    *  @brief A chunk abstraction to wrap the range of task indices and the sum of their load.
    */
   struct Chunk {
-    std::pair<Index, Index> range;
+    std::pair<Id, Id> range;
     Load load;
     
     Chunk() {}
@@ -36,7 +39,7 @@ public:
      *  @param la The index of the last task associated with this chunk.
      *  @param l The load of the chunk.
      */
-    Chunk(const Index &f, const Index &la, const Load &l) : range(std::make_pair(f,la)), load(l) {}
+    Chunk(const Id &f, const Id &la, const Load &l) : range(std::make_pair(f,la)), load(l) {}
 
     /**
      *  @brief Compares with another chunk by its load.
@@ -49,7 +52,7 @@ public:
    *  @param tasks The task workloads.
    *  @param n The amount of chunks to be made
    */
-  static std::vector<Chunk> create_chunks(const std::vector<Load> &tasks, const Index &n) {
+  static std::vector<Chunk> create_chunks(const std::vector<Load> &tasks, const Id &n) {
     std::vector<Chunk> chunks;
     
     if(tasks.empty())
@@ -63,7 +66,7 @@ public:
 
     auto average_weight = partial_workload.back()/n; // average size per chunk.
 
-    Index begin = 0;
+    Id begin = 0;
     while(chunks.size() < n-1) {
       auto end = begin;
       for(++end; end < partial_workload.size(); ++end) // Not interested in the last element, which is the total workload.
@@ -88,7 +91,7 @@ public:
    *  BinLPT wraps tasks into chunks trying to balance the load of each chunk.
    *  It sorts the chunk array in decreasing order and iteratively assigns them to the most underloaded pu.
    */
-  static void map(Schedule &map, const std::vector<Load> &tasks, std::vector<Load> &pus, const Index &nchunks) {
+  static void map(Schedule &map, const std::vector<Load> &tasks, std::vector<Load> &pus, const Id &nchunks) {
     auto chunks = create_chunks(tasks, nchunks);
 
     /* Organize the chunks in decreasing order */
@@ -97,8 +100,8 @@ public:
     /* Iterate over the chunks, starting from the largest, and assign them to PEs */
     for(auto chunk : chunks) {
       // Get the least overloaded PU.
-      Index pu = 0;
-      for(Index i = 1; i < pus.size(); ++i)
+      Id pu = 0;
+      for(Id i = 1; i < pus.size(); ++i)
         if(pus[i] < pus[pu])
           pu = i;
       // Assign the task to the PU.

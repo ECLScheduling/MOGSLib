@@ -1,7 +1,7 @@
 #pragma once
 
 #include "LDStats.h"
-#include <rts/charm/traits.h>
+#include <abstractions/rts/charm/traits.h>
 
 /**
  *  @brief Charm++ custom traits for testing purposes.
