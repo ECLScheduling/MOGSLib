@@ -62,8 +62,6 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
     partial_workload[0] = 0; // First element is 0
     std::partial_sum(tasks.begin(), tasks.end(), partial_workload.begin()+1); // Last element is the total workload.
 
-    std::cout << std::endl;
-
     auto average_weight = partial_workload.back()/n; // average size per chunk.
 
     Id begin = 0;

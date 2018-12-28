@@ -5,7 +5,7 @@
 namespace MOGSLib {
 
 template<>
-struct SystemTraits<System::openmp> {
+struct SystemTraits<System::libgomp> {
   using Id = unsigned;
   using Load = unsigned;
 };

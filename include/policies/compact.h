@@ -1,6 +1,6 @@
 #pragma once
 
-#include <policies/round_robin.h>
+#include <dependencies/base.h>
 
 namespace MOGSLib { namespace Policy {
 
@@ -28,15 +28,18 @@ struct Compact<MOGSLib::Dependency::Base<I>> {
    *  @param npus The amount of pus to be scheduled.
    */
   static void map(Schedule &map, const Id &ntasks, const Id &npus) {
-    if(npus > ntasks) {
-      RoundRobin<Deps>::map(map, ntasks, npus);
-      return;
-    }
     auto size = ntasks/npus;
+    auto leftover = ntasks%npus;
+
     Id j = 0;
     for(Id i = 0; i < ntasks; i += size){
       for(Id s = 0; s < size; ++s)
         map[i+s] = j;
+      if(leftover) {
+        map[i+size] = j;
+        ++i;
+        --leftover;
+      }
       ++j;
     }
   }

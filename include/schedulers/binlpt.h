@@ -9,19 +9,20 @@ namespace MOGSLib { namespace Scheduler {
  *  @tparam Ctx The context where the scheduler will be applied to.
  *  @brief A scheduler which utilizes the binlpt policy to output a workload-aware task map.
  **/
-template<typename Ctx>
+template<typename C>
 class BinLPT {
 public:
+  using Ctx = C;
   using Id = typename Ctx::Id;
   using Load = typename Ctx::Load;
   using Policy = MOGSLib::Policy::BinLPT<MOGSLib::Dependency::WorkloadAware<Id,Load>>;
   using Schedule = typename Policy::Schedule;
   
   /// @brief The method to obtain a schedule based on a binlpt policy.
-  auto work() {
-    auto data = Ctx::input();
-    auto chunks = Ctx::k();
-    auto schedule = Schedule(data.ntasks());
+  auto work(Ctx &ctx) {
+    auto &data = ctx.input();
+    auto chunks = ctx.k();
+    auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
     
     Policy::map(schedule, data.task_workloads(), data.pu_workloads(), chunks);
     return schedule;

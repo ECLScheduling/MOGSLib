@@ -9,9 +9,10 @@ namespace MOGSLib { namespace Scheduler {
  *  @tparam Ctx The context where the scheduler will be applied to.
  *  @brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
  **/
-template<typename Ctx>
+template<typename C>
 class RoundRobin {
 public:
+  using Ctx = C;
   using Id = typename Ctx::Id;
   using Policy = MOGSLib::Policy::RoundRobin<MOGSLib::Dependency::Base<Id>>;
   using Schedule = typename Policy::Schedule;
@@ -19,9 +20,9 @@ public:
   /**
    *  @brief The method to obtain a task map based on a roundrobin heuristic.
    **/
-  auto work() {
-    auto data = Ctx::input();
-    auto schedule = Schedule(data.ntasks());
+  auto work(Ctx &ctx) {
+    auto& data = ctx.input();
+    auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
     
     Policy::map(schedule, data.ntasks(), data.npus());
     return schedule;
