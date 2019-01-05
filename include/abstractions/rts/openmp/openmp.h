@@ -2,6 +2,8 @@
 
 #include "traits.h"
 
+#define OMP_RTS_INCLUDED
+
 namespace MOGSLib { namespace RTS {
 
 /**

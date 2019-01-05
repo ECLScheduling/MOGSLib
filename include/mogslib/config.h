@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <structures/output/alloc.h>
+#include <structures/output/cycle.h>
 
 namespace MOGSLib { namespace Config {
 

@@ -1,4 +1,7 @@
 #include <mogslib/mogslib.h>
+#include <mogslib/mogslib.ipp>
+
+#include <iostream>
 
 /**
  *  @brief Set the amount of chunks in the OpenMP RTS datastructure.
@@ -14,7 +17,7 @@ inline void mogslib_call_set_chunksize(unsigned n) {
  *  @details A C++ proxy function to set the chunksize data in OpenMP.
  *  @param chunksize The amount of chunks generated in OpenMP.
  */
-inline void mogslib_call_set_nPEs(unsigned n) {
+inline void mogslib_call_set_npus(unsigned n) {
   MOGSLib::RTS::OpenMP::nthreads(n);
 }
 
@@ -24,7 +27,13 @@ inline void mogslib_call_set_nPEs(unsigned n) {
  *  @return The task map represented as an array to where the task should execute.
  */
 inline unsigned *mogslib_call_strategy_map() {
-  return MOGSLib::API::work().data();
+  std::string strategy = "";
+  try {
+    return MOGSLib::API::work(strategy);
+  } catch (std::string n) {
+    std::cout << n << std::endl;
+    exit(1);
+  }
 }
 
 extern "C" {
@@ -42,7 +51,7 @@ void mogslib_set_chunksize(unsigned chunksize) {
  *  @details A C function to interface with OpenMP and direct the execution flow back to C++.
  */
 void mogslib_set_nPEs(unsigned nPEs) {
-  mogslib_call_set_nPEs(nPEs);
+  mogslib_call_set_npus(nPEs);
 }
 
 /**
@@ -51,6 +60,10 @@ void mogslib_set_nPEs(unsigned nPEs) {
  */
 unsigned *mogslib_strategy_map() {
   return mogslib_call_strategy_map();
+}
+
+bool mogslib_has_persistent_taskmap() {
+  return false;
 }
 
 }

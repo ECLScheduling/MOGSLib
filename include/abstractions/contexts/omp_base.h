@@ -3,15 +3,13 @@
 #include <structures/input/workload_aware.h>
 
 #include <abstractions/rts/openmp/openmp.h>
-#include <abstractions/rts/openmp/openmp.ipp>
-
 #include <omp.h>
 
 namespace MOGSLib { namespace Context {
 
 struct OpenMPBase {
-  using Id = typename SystemTraits<System::libgomp>::Id;
-  using Load = typename SystemTraits<System::libgomp>::Load;
+  using Id = typename Traits::Id;
+  using Load = typename Traits::Load;
 
   MOGSLib::Input::WorkloadAware<Id, Load> _input;
   Id _k;

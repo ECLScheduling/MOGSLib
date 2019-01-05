@@ -23,7 +23,7 @@ public:
     auto &data = ctx.input();
     auto chunks = ctx.k();
     auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
-    
+
     Policy::map(schedule, data.task_workloads(), data.pu_workloads(), chunks);
     return schedule;
   }

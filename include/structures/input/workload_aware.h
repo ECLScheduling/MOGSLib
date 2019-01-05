@@ -17,9 +17,10 @@ namespace MOGSLib { namespace Input {
  */
 template<typename I, typename L>
 struct WorkloadAware {
-  using Load = L;
-  using Loads = std::vector<Load>;
   using Id = I;
+  using Load = L;
+  
+  using Loads = std::vector<Load>;
 
   Loads tasks, pus;
 

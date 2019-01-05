@@ -4,6 +4,8 @@
 
 #include "functionalities.h"
 
+#define CHARM_RTS_INCLUDED
+
 namespace MOGSLib { namespace RTS {
 
 /**

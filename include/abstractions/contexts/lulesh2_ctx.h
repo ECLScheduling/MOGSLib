@@ -1,17 +1,12 @@
 #pragma once
 
-#include <abstractions/context/omp_base.h>
+#include <abstractions/contexts/omp_base.h>
 #include <lulesh.h>
 
 namespace MOGSLib { namespace Context {
 
 struct Lulesh2 : public OpenMPBase {
-  using Id = typename OpenMPBase::Id;
-  using Load = typename OpenMPBase::Load;
-
-  Domain *domain;
-
-  void writeback_loop() {
+  void set_domain(Domain *domain) {
     auto n = domain->numNode();
     auto& loads = _input.tasks;
 
