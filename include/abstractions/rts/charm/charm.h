@@ -55,7 +55,7 @@ struct Charm {
        *  This method must be called after PU::count.
        *  It searches only the PUs whose ids are in Charm::pu_ids.
        */
-      static inline std::vector<Load> load_prediction();
+      static inline void load_prediction(std::vector<Load> &);
     };
 
     /// @brief A representation of the LBDB capabilities for the manipulation of chare data.
@@ -76,7 +76,7 @@ struct Charm {
        *  This method must be called after Chare::count.
        *  Iit searches only the task whose ids are in Charm::chare_ids.
        */
-      static inline std::vector<Load> load_prediction();
+      static inline void load_prediction(std::vector<Load> &);
     };
   };
 };

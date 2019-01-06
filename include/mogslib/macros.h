@@ -7,3 +7,4 @@
 #define SchedWork(N, I) \
   if(!name.compare(std::string(N))) \
     return do_work<I>();
+  

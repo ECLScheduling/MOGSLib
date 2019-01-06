@@ -4,15 +4,6 @@
 
 namespace MOGSLib {
 
-template<>
-struct SystemTraits<System::charm> {
-  /// @brief The type definition that will serve as index in MOGSLib when used in Charm++.
-  using Id = decltype(BaseLB::LDStats::n_objs);
-
-  /// @brief The type definition that will serve to quantify load values in MOGSLib when used in Charm++.
-  using Load = decltype(BaseLB::ProcStats::bg_walltime); // LBRealType
-};
-
 /**
  *  @class CharmSemantics
  *  @brief A wrapper structure to express the different semantics Charm++ can have for its functionalities.
@@ -39,6 +30,15 @@ struct CharmSemantics {
    */
   template<bool filter_fixed>
   struct RigidJobs {};
+};
+
+template<>
+struct SystemTraits<System::charm> {
+  /// @brief The type definition that will serve as index in MOGSLib when used in Charm++.
+  using Id = decltype(BaseLB::LDStats::n_objs);
+
+  /// @brief The type definition that will serve to quantify load values in MOGSLib when used in Charm++.
+  using Load = decltype(BaseLB::ProcStats::bg_walltime); // LBRealType
 };
 
 }
