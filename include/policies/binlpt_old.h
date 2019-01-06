@@ -146,7 +146,6 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
 
     /* Organize the chunks in decreasing order */
     insertion_sort<Load, Id, true>(chunk_map, chunk_loads, nchunks);
-
     /* Iterate over the chunks, starting from the largest, and assign them to PEs */
     for(Id i = nchunks; i > 0; --i) {
       const Id idx = i-1;

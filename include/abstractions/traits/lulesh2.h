@@ -5,8 +5,4 @@
 struct Lulesh2 {
   using Id = typename MOGSLib::SystemTraits<MOGSLib::System::libgomp>::Id;
   using Load = typename MOGSLib::SystemTraits<MOGSLib::System::libgomp>::Load;
-
-  struct Schedule {
-    static constexpr auto persistent = true;
-  };
 };
