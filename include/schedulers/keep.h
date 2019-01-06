@@ -23,7 +23,7 @@ public:
   /// @brief The method to obtain a schedule based on a binlpt policy.
   auto work(Ctx &ctx) {
     if(!ctx.has_schedule())
-      ctx.set_schedule(scheduler.work(ctx));
+      ctx.set_schedule(scheduler.work(ctx), ctx.input().ntasks());
     return ctx.schedule();
   }
 
