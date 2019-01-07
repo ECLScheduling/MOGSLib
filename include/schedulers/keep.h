@@ -21,10 +21,10 @@ public:
   Scheduler scheduler;
 
   /// @brief The method to obtain a schedule based on a binlpt policy.
-  auto work(Ctx &ctx) {
-    if(!ctx.has_schedule())
-      ctx.set_schedule(scheduler.work(ctx), ctx.input().ntasks());
-    return ctx.schedule();
+  auto work() {
+    if(!Ctx::has_schedule())
+      Ctx::set_schedule(scheduler.work());
+    return Ctx::schedule();
   }
 
 };

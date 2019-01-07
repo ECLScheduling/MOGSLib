@@ -77,7 +77,7 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
         if (Compare<T, decreasing_order>::value(a[j], a[i]))
         {
           swap<T>(a[i], a[j]);
-          swap<UInt>(map[i], map[j]);
+          swap<T>(map[i], map[j]);
         }
       }
     }
@@ -140,8 +140,8 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
     auto chunk_loads = compute_chunkloads(task_workload, chunk_sizes, nchunks);
     auto chunk_offset = compute_cummulativesum<Id>(chunk_sizes, nchunks);
     
-    Id *chunk_map = new Id[nchunks];
-    for(Id i = 0; i < nchunks; ++i)
+    Id chunk_map[nchunks];
+    for(Id i = 0; i < nchunks; i++)
       chunk_map[i] = i;
 
     /* Organize the chunks in decreasing order */
@@ -150,16 +150,17 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
     for(Id i = nchunks; i > 0; --i) {
       const Id idx = i-1;
       const Id cur_chunk_idx = chunk_map[idx];
-      Id pe_id = 0;
 
       if(chunk_loads[idx] == 0)
         continue;
 
+      Id pe_id = 0;
       /* Find the least overloaded PE */
       for(Id j = 1; j < nPEs; ++j)
         if(PE_workload[j] < PE_workload[pe_id])
           pe_id = j;
 
+      std::cout << "\t\tid is " << pe_id << std::endl;
       /* Assign every task in the selected chunk to the same PE. */
       for(Id j = 0; j < chunk_sizes[cur_chunk_idx]; ++j)
         map[chunk_offset[cur_chunk_idx] + j] = pe_id;
@@ -172,7 +173,6 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
     delete [] chunk_sizes;
     delete [] chunk_loads;
     delete [] chunk_offset;
-    delete [] chunk_map;
   }
 };
 

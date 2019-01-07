@@ -8,12 +8,11 @@
 
 namespace MOGSLib {
 
-API::Contexts API::contexts;
 API::Schedulers API::schedulers;
 
 template<unsigned i>
 inline typename MOGSLib::Config::Policy<typename Traits::Id>::Schedule API::do_work() {
-  return std::get<i>(schedulers).work(std::get<i>(contexts));
+  return std::get<i>(schedulers).work();
 }
 
 }

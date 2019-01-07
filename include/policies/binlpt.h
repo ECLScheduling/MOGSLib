@@ -41,11 +41,24 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
      */
     Chunk(const Id &f, const Id &la, const Load &l) : range(std::make_pair(f,la)), load(l) {}
 
+    inline void update(const Id &f, const Id &la, const Load &l) {
+      range = std::make_pair(f,la);
+      load = l;
+    }
+
     /**
      *  @brief Compares with another chunk by its load.
      */
-    bool operator >(const Chunk &o) const { return load > o.load; }
+    bool operator <(const Chunk &o) const { return load < o.load; }
   };
+
+  static void sort(std::vector<Chunk> &a) {
+    auto n = a.size();
+    for (unsigned i = 0; i < (n - 1); i++)
+      for (unsigned j = i + 1; j < n; j++)
+        if (a[j] < a[i])
+          std::swap(a[i], a[j]);
+  }
 
   /**
    *  @brief Creates the task chunks analyzing the workload of neighbour tasks (by id).
@@ -53,7 +66,7 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
    *  @param n The amount of chunks to be made
    */
   static std::vector<Chunk> create_chunks(const std::vector<Load> &tasks, const Id &n) {
-    std::vector<Chunk> chunks;
+    std::vector<Chunk> chunks(n);
     
     if(tasks.empty())
       return std::move(chunks);
@@ -65,17 +78,18 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
     auto average_weight = partial_workload.back()/n; // average size per chunk.
 
     Id begin = 0;
-    while(chunks.size() < n-1) {
+    Id cid = 0;
+    while(cid < n-1) {
       auto end = begin;
       for(++end; end < partial_workload.size(); ++end) // Not interested in the last element, which is the total workload.
-          if(partial_workload[end] - partial_workload[begin] >= average_weight)
+          if(partial_workload[end] - partial_workload[begin] > average_weight)
             break;
-      chunks.push_back(Chunk(begin, end, partial_workload[end] - partial_workload[begin]));
+      chunks[cid++].update(begin, end, partial_workload[end] - partial_workload[begin]);
       begin = end;
     }
 
     // Get all the remainder tasks into one chunk.
-    chunks.push_back(Chunk(begin, tasks.size(), partial_workload[tasks.size()] - partial_workload[begin]));
+    chunks[cid].update(begin, tasks.size(), partial_workload[tasks.size()] - partial_workload[begin]);
 
     return chunks;
   }
@@ -93,13 +107,14 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
     auto chunks = create_chunks(tasks, nchunks);
 
     /* Organize the chunks in decreasing order */
-    std::sort(chunks.begin(), chunks.end(), std::greater<Chunk>());
+    sort(chunks);
 
     /* Iterate over the chunks, starting from the largest, and assign them to PEs */
-    for(auto chunk : chunks) {
+    for(auto it = chunks.rbegin(); it < chunks.rend(); ++it) {
+      auto chunk = *it;
       // Get the least overloaded PU.
       Id pu = 0;
-      for(Id i = 1; i < pus.size(); ++i)
+      for(Id i = 1; i < pus.size(); i++)
         if(pus[i] < pus[pu])
           pu = i;
       // Assign the task to the PU.
