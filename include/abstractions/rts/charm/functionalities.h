@@ -19,7 +19,7 @@ struct CharmFunctionalities {
    *
    *  Add each PU id from the lbdb list in Charm++ filtering out the unavailable ones.
    */
-  static void filter_unavailable_pus(LDStats stats, std::vector<I> &ids, CharmSemantics::UnavailablePUs<true> tag);
+  static void filter_unavailable_pus(LDStats stats, std::vector<I> &ids, MOGSLib::CharmSemantics::UnavailablePUs<true> tag);
 
   /**
    *  @brief Get the amount of PUs in the Charm++ system regardless of the availability status.
@@ -28,7 +28,7 @@ struct CharmFunctionalities {
    *
    *  Add each PU id from the lbdb list in Charm++ without any form of label checking.
    */
-  static void filter_unavailable_pus(LDStats stats, std::vector<I> &ids, CharmSemantics::UnavailablePUs<false> tag);
+  static void filter_unavailable_pus(LDStats stats, std::vector<I> &ids, MOGSLib::CharmSemantics::UnavailablePUs<false> tag);
 
   /**
    *  @brief Get the amount of chares in the Charm++ system filtering out the unmigratable chares.
@@ -37,7 +37,7 @@ struct CharmFunctionalities {
    *
    *  Add each chare id from the lbdb list in Charm++ filtering out the unmigratable ones.
    */
-  static void filter_unmigratable_chares(LDStats stats, std::vector<I> &ids, CharmSemantics::FixedChares<true> tag);
+  static void filter_unmigratable_chares(LDStats stats, std::vector<I> &ids, MOGSLib::CharmSemantics::RigidJobs<true> tag);
 
   /**
    *  @brief Get the amount of chares in the Charm++ system regardless of migratability status.
@@ -46,7 +46,7 @@ struct CharmFunctionalities {
    *
    *  Add each chare id from the lbdb list in Charm++ without any form of label checking.
    */
-  static void filter_unmigratable_chares(LDStats stats, std::vector<I> &ids, CharmSemantics::FixedChares<false> tag);
+  static void filter_unmigratable_chares(LDStats stats, std::vector<I> &ids, MOGSLib::CharmSemantics::RigidJobs<false> tag);
 
   /**
    *  @brief Commit the load addition of fixed chares into the host pus.
@@ -58,7 +58,7 @@ struct CharmFunctionalities {
    *  When unavailable PUs might be present, this function should be evoked when applying the load of fixed chares to PUs.
    *  This implementation builds a map to correlate MOGSLib and Charm++ ids to correctly assign the chare loads by id.
    */
-  static void apply_fixed_chares_load(LDStats stats, std::vector<L>& loads, std::vector<std::pair<I, L>> &fixed_chares, CharmSemantics::UnavailablePUs<true> tag);
+  static void apply_fixed_chares_load(LDStats stats, std::vector<L>& loads, std::vector<std::pair<I, L>> &fixed_chares, MOGSLib::CharmSemantics::UnavailablePUs<true> tag);
 
   /**
    *  @brief Commit the load addition of fixed chares into the host pus.
@@ -71,7 +71,7 @@ struct CharmFunctionalities {
    *  This implementation assumes that all processors are available and both MOGSLib and Charm++ PU indices are equal.
    *  This version is more performatic and should be called even when there might be unavailable PUs but none were detected.
    */
-  static void apply_fixed_chares_load(LDStats stats, std::vector<L>& loads, std::vector<std::pair<I, L>> &fixed_chares, CharmSemantics::UnavailablePUs<false> tag);
+  static void apply_fixed_chares_load(LDStats stats, std::vector<L>& loads, std::vector<std::pair<I, L>> &fixed_chares, MOGSLib::CharmSemantics::UnavailablePUs<false> tag);
 
   /**
    *  @brief Fetch the load and the host PU of all the fixed chares.
@@ -81,7 +81,7 @@ struct CharmFunctionalities {
    *  When the tag template value is false, the functionality assumes that there are no fixed chares in the application.
    *  Hence, it returns an empty vector as a result.
    */
-  static std::vector<std::pair<I, L>> loads_from_fixed_chares(LDStats stats, CharmSemantics::FixedChares<false> tag);
+  static std::vector<std::pair<I, L>> loads_from_fixed_chares(LDStats stats, MOGSLib::CharmSemantics::RigidJobs<false> tag);
 
   /**
    *  @brief Fetch the load and the host PU of all the fixed chares.
@@ -91,7 +91,7 @@ struct CharmFunctionalities {
    *  When the tag template value is true, the functionality assumes that there may be fixed chares in the application.
    *  It might return an empty vector, but only if there are no fixed chares in the application.
    */
-  static std::vector<std::pair<I, L>> loads_from_fixed_chares(LDStats stats, CharmSemantics::FixedChares<true> tag);
+  static std::vector<std::pair<I, L>> loads_from_fixed_chares(LDStats stats, MOGSLib::CharmSemantics::RigidJobs<true> tag);
 };
 
 }}
