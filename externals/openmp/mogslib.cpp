@@ -27,7 +27,7 @@ inline void mogslib_call_set_npus(unsigned n) {
  *  @return The task map represented as an array to where the task should execute.
  */
 inline unsigned *mogslib_call_strategy_map() {
-  std::string strategy = "";
+  std::string strategy = "binlpt";
   try {
     return MOGSLib::API::work(strategy);
   } catch (std::string n) {

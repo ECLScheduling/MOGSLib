@@ -3,21 +3,21 @@
 #include <tuple>
 #include <string>
 
-#include <abstractions/traits/lulesh_charm.h>
+#include <abstractions/traits/omp_delay_test.h>
 
-namespace MOGSLib {  using Traits = LuleshCharm;  }
+namespace MOGSLib {  using Traits = OmpDelayTest;  }
 
-#include <abstractions/contexts/charm_base.h>
+#include <abstractions/contexts/omp_delay_tests.h>
 
-#include <schedulers/greedy.h>
+#include <schedulers/binlpt.h>
 
 #include "macros.h"
 
 namespace MOGSLib {
 
 struct API {
-  using Contexts = std::tuple<Ctx(CharmBase)>;
-  using Schedulers = std::tuple<Sched(Greedy, 0)>;
+  using Contexts = std::tuple<Ctx(OmpDelayTest)>;
+  using Schedulers = std::tuple<Sched(BinLPT, 0)>;
 
   static Contexts contexts;
   static Schedulers schedulers;
@@ -26,7 +26,7 @@ struct API {
   inline static typename MOGSLib::Config::Policy<typename Traits::Id>::Schedule do_work();
 
   inline static auto work(const std::string &name) {
-    SchedWork("greedy", 0)
+    SchedWork("binlpt", 0)
     throw std::string("[MOGSLib] Invalid scheduler name.");
   }
 };
