@@ -1,13 +1,13 @@
 #pragma once
 
 #include <vector>
-#include <structures/output/cycle.h>
+#include <structures/output/output.h>
 
 namespace MOGSLib { namespace Config {
 
 template<typename Id>
 struct Policy {
-  using Schedule = Id*;
+  using Schedule = std::vector<Id>;
 };
 
 }}

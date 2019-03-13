@@ -15,6 +15,10 @@ struct Output<std::vector<Id>> {
     return std::move(v);
   }
 
+  static inline void clear(std::vector<Id> out) {
+    out.clear();
+  }
+
   static inline void destroy(std::vector<Id> &n) {
     n.clear();
   }
@@ -25,6 +29,8 @@ struct Output<Id*> {
   static inline Id* alloc(const Id &n) {
     return new Id[n]();
   }
+
+  static inline void clear(Id* out) {}
 
   static inline void destroy(Id* n) {
     delete [] n;

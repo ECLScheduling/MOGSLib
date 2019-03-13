@@ -4,6 +4,9 @@
 
 namespace MOGSLib {
 
+/**
+ * @brief The system traits when using MOGSLib on OpenMP
+ */
 template<>
 struct SystemTraits<System::libgomp> {
   using Id = unsigned;

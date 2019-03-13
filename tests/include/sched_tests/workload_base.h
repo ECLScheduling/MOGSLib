@@ -2,8 +2,7 @@
 
 #include <type_definitions.h>
 
-#include <abstractions/context/workload_aware.h>
-#include <abstractions/context/workload_aware.ipp>
+#include "ctx_workload_aware.h"
 
 #include <load_generator.h>
 

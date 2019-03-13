@@ -33,12 +33,12 @@ TEST_F(BinlptPolicyTests, policy_regular_tasks_unloaded_PUs) {
   k = 2;
   set_pus_and_tasks(2, 4);
 
-  set_task_loads(LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5] 1:[5,5] => assign order:{0,1}
+  set_task_loads(LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5,5] 1:[5] => assign order:{0,1}
 
   execute_policy();
   EXPECT_EQ(0, map[0]);
   EXPECT_EQ(0, map[1]);
-  EXPECT_EQ(1, map[2]);
+  EXPECT_EQ(0, map[2]); // Because the clause to keep adding to the same chunks is ">" and not ">="
   EXPECT_EQ(1, map[3]);
 }
 
@@ -66,14 +66,14 @@ TEST_F(BinlptPolicyTests, policy_irregular_tasks_decreasing_unloaded_pus) {
   k = 4;
 
   set_pus_and_tasks(2, 5);
-  set_task_loads(LoadGenerator::decreasing<5>);
+  set_task_loads(LoadGenerator::decreasing<5>); // [5,4,3,2,1] => mean = 15/4 (3) => 0: [5], 1:[4], 2:[3,2], 3:[1] => assign order:{0,2,1,3}
 
   execute_policy();
   EXPECT_EQ(0, map[0]);
-  EXPECT_EQ(1, map[1]);
+  EXPECT_EQ(0, map[1]);
   EXPECT_EQ(1, map[2]);
-  EXPECT_EQ(0, map[3]);
-  EXPECT_EQ(0, map[4]);
+  EXPECT_EQ(1, map[3]);
+  EXPECT_EQ(1, map[4]);
 }
 
 /**
@@ -83,14 +83,14 @@ TEST_F(BinlptPolicyTests, policy_regular_tasks_loaded_pus) {
   k = 2;
 
   set_pus_and_tasks(2, 4);
-  set_task_loads(LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5] 1:[5,5] => ordered:{0,1}
+  set_task_loads(LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5,5] 1:[5] => ordered:{0,1}
   
   input.pus[0] = 7;
 
   execute_policy();
   EXPECT_EQ(1, map[0]);
   EXPECT_EQ(1, map[1]);
-  EXPECT_EQ(0, map[2]);
+  EXPECT_EQ(1, map[2]);
   EXPECT_EQ(0, map[3]);
 }
 
@@ -120,14 +120,14 @@ TEST_F(BinlptPolicyTests, policy_irregular_tasks_loaded_pus_decreasing) {
   k = 3;
 
   set_pus_and_tasks(2, 5);
-  set_task_loads(LoadGenerator::decreasing<5>); // [5,4,3,2,1] => 0:[5] 1:[4,3] 2:[2,1] => ordered:{1,0,2}
+  set_task_loads(LoadGenerator::decreasing<5>); // [5,4,3,2,1] => 0:[5,4] 1:[3,2,1] 2:[] => ordered:{1,0,2}
   
   input.pus[0] = 7;
 
   execute_policy();
-  EXPECT_EQ(0, map[0]);
+  EXPECT_EQ(1, map[0]);
   EXPECT_EQ(1, map[1]);
-  EXPECT_EQ(1, map[2]);
-  EXPECT_EQ(1, map[3]);
-  EXPECT_EQ(1, map[4]);
+  EXPECT_EQ(0, map[2]);
+  EXPECT_EQ(0, map[3]);
+  EXPECT_EQ(0, map[4]);
 }

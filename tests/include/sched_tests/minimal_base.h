@@ -2,8 +2,7 @@
 
 #include <type_definitions.h>
 
-#include <abstractions/context/base.h>
-#include <abstractions/context/base.ipp>
+#include "ctx_base.h"
 
 class BaseSchedulerTests : public ::testing::Test {
 public:

@@ -6,7 +6,7 @@
 
 namespace MOGSLib { namespace Context {
 
-struct CharmBase {
+struct Charm {
   using Id = typename Traits::Id;
   using Load = typename Traits::Load;
 

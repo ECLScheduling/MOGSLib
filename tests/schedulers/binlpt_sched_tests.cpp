@@ -18,13 +18,13 @@ public:
 TEST_F(BinLPTSchedTests, policy_regular_tasks_unloaded_PUs) {
   pu_loads(2, LoadGenerator::regular<0>);
   k(2);
-  task_loads(4, LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5] 1:[5,5] => assign order:{0,1}
+  task_loads(4, LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5,5] 1:[5] => assign order:{0,1}
 
   execute_scheduler();
 
   EXPECT_EQ(0, map[0]);
   EXPECT_EQ(0, map[1]);
-  EXPECT_EQ(1, map[2]);
+  EXPECT_EQ(0, map[2]);
   EXPECT_EQ(1, map[3]);
 }
 
@@ -45,28 +45,28 @@ TEST_F(BinLPTSchedTests, policy_irregular_tasks_unloaded_PUs) {
 TEST_F(BinLPTSchedTests, policy_irregular_tasks_decreasing_unloaded_PUs) {
   pu_loads(2, LoadGenerator::regular<0>);
   k(4);
-  task_loads(5, LoadGenerator::decreasing<5>);
+  task_loads(5, LoadGenerator::decreasing<5>); // [5,4,3,2,1] => mean = 3 (15/4) => 0:[5], 1:[4], 2:[3,2] 3:[1] => assign order:{0,2,1,3} 
 
   execute_scheduler();
 
   EXPECT_EQ(0, map[0]);
-  EXPECT_EQ(1, map[1]);
+  EXPECT_EQ(0, map[1]);
   EXPECT_EQ(1, map[2]);
-  EXPECT_EQ(0, map[3]);
-  EXPECT_EQ(0, map[4]);
+  EXPECT_EQ(1, map[3]);
+  EXPECT_EQ(1, map[4]);
 }
 
 TEST_F(BinLPTSchedTests, policy_regular_tasks_loaded_PEs) {
   pu_loads(2, LoadGenerator::regular<0>);
   k(2);
-  task_loads(4, LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5] 1:[5,5] => ordered:{0,1}
+  task_loads(4, LoadGenerator::regular<5>); // [5,5,5,5] => 0:[5,5,5] 1:[5] => ordered:{0,1}
   pu_at(0) = 7;
 
   execute_scheduler();
 
   EXPECT_EQ(1, map[0]);
   EXPECT_EQ(1, map[1]);
-  EXPECT_EQ(0, map[2]);
+  EXPECT_EQ(1, map[2]);
   EXPECT_EQ(0, map[3]);
 }
 

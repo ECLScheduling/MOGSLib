@@ -25,7 +25,8 @@ bool MOGSLibLB::QueryBalanceNow(int _step)
 void MOGSLibLB::work(LDStats* stats) {
   MOGSLib::RTS::Charm::stats = stats;
 
-  auto map = MOGSLib::API::work("greedy");
+  std::string strategy = ""; // Change here to select a strategy to call in MOGSLib.
+  auto map = MOGSLib::API::work(strategy);
   
   auto &chare_ids = MOGSLib::RTS::Charm::chare_ids;
   auto &pu_ids = MOGSLib::RTS::Charm::pu_ids;

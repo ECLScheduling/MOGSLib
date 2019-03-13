@@ -20,8 +20,8 @@ public:
   /**
    *  @brief The method to obtain a task map based on a roundrobin heuristic.
    **/
-  auto work(Ctx &ctx) {
-    auto& data = ctx.input();
+  auto work() {
+    auto& data = Ctx::input();
     auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
     
     Policy::map(schedule, data.ntasks(), data.npus());

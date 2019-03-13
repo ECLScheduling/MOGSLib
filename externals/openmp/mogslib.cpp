@@ -27,9 +27,9 @@ inline void mogslib_call_set_npus(unsigned n) {
  *  @return The task map represented as an array to where the task should execute.
  */
 inline unsigned *mogslib_call_strategy_map() {
-  std::string strategy = "";
+  std::string strategy = ""; //TODO: Change here to add the strategy or call a custom function.
   try {
-    return MOGSLib::API::work(strategy);
+    return MOGSLib::API::work(strategy).data();
   } catch (std::string n) {
     std::cout << n << std::endl;
     exit(1);
@@ -62,6 +62,11 @@ unsigned *mogslib_strategy_map() {
   return mogslib_call_strategy_map();
 }
 
+/**
+ * TODO: not properly working just yet.
+ * @brief Change to a dynamic rule to make libGOMP keep the schedule saved after a loop.
+ * @details This is still not quite working.
+ */
 bool mogslib_has_persistent_taskmap() {
   return false;
 }

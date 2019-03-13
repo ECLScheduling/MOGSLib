@@ -160,7 +160,6 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
         if(PE_workload[j] < PE_workload[pe_id])
           pe_id = j;
 
-      std::cout << "\t\tid is " << pe_id << std::endl;
       /* Assign every task in the selected chunk to the same PE. */
       for(Id j = 0; j < chunk_sizes[cur_chunk_idx]; ++j)
         map[chunk_offset[cur_chunk_idx] + j] = pe_id;
