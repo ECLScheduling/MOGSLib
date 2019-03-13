@@ -1,30 +1,31 @@
 #pragma once
 
-#include <abstractions/scheduler.h>
 #include <policies/round_robin.h>
 
 namespace MOGSLib { namespace Scheduler {
 
 /**
- * @brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
+ *  @class RoundRobin
+ *  @tparam Ctx The context where the scheduler will be applied to.
+ *  @brief Class that represents a scheduler which utilizes a round robin heuristic to output a task map.
  **/
-template<typename ... _Concepts>
-class RoundRobin : public Abstraction::Scheduler<MOGSLib::SchedulerEnum::round_robin, _Concepts...> {
+template<typename C>
+class RoundRobin {
 public:
-  using Base = Abstraction::Scheduler<MOGSLib::SchedulerEnum::round_robin, _Concepts...>;
-
+  using Ctx = C;
+  using Id = typename Ctx::Id;
+  using Policy = MOGSLib::Policy::RoundRobin<MOGSLib::Dependency::Base<Id>>;
+  using Schedule = typename Policy::Schedule;
+  
   /**
-   * @brief The method to obtain a task map based on a roundrobin heuristic.
+   *  @brief The method to obtain a task map based on a roundrobin heuristic.
    **/
-  TaskMap work() override {
-    auto concepts = Base::concepts;
+  auto work() {
+    auto& data = Ctx::input();
+    auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
     
-    auto ntasks = concepts->task_data->ntasks();
-    auto nPEs = concepts->PE_data->nPEs();
-
-    auto map = new Index[ntasks]();
-    Policy::RoundRobin::map(map, ntasks, nPEs);
-    return map;
+    Policy::map(schedule, data.ntasks(), data.npus());
+    return schedule;
   }
 
 };

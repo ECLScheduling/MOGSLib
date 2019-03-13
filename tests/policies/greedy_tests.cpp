@@ -1,121 +1,88 @@
 #include <gtest/gtest.h>
 
-#include "../type_definitions.h"
 #include <policies/greedy.h>
+#include <policy_tests/workload_aware_input_base.h>
 
-using Index = MOGSLib::Index;
-using Load = MOGSLib::Load;
-using TaskMap = MOGSLib::TaskMap;
-using TaskEntry = MOGSLib::TaskEntry;
-
-using SchedulingPolicy = MOGSLib::Policy::Greedy<>;
-
-class GreedyPolicyTests : public ::testing::Test {
+/**
+ *  @class GreedyPolicyTests
+ *  @brief A suite of unit tests for the Greedy policy.
+ */
+class GreedyPolicyTests : public WorkloadAwarePolicyTests {
 public:
+  /// @brief Set the Policy type to Greedy.
+  using Policy = MOGSLib::Policy::Greedy<Deps>;
 
-  TaskMap map;
-  Index ntasks, nPEs;
-  Load *task_loads, *PE_loads;
-
-  void setPEs(const Index &n) {
-    nPEs = n;
-    PE_loads = new Load[nPEs]();
-  }
-
-  void setTasks(const Index &n) {
-    ntasks = n;
-    task_loads = new Load[ntasks]();
-    map = new TaskEntry[ntasks]();
-  }
-
+  /// @brief a proxy function to call the policy's map function.
   void execute_policy() {
-    SchedulingPolicy::map(map, ntasks, task_loads, nPEs, PE_loads);
+    Policy::map(map, input.tasks, input.pus);
   }
 
+  /// @brief Set up all the necessary data for the tests.
   void SetUp() {
-    map = nullptr;
-    ntasks = 0;
-    nPEs = 0;
-    task_loads = nullptr;
-    PE_loads = nullptr;
-  }
-
-  void TearDown() {
-    if(task_loads != nullptr) {
-      delete [] task_loads;
-      task_loads = nullptr;
-    }
-    if(PE_loads != nullptr) {
-      delete [] PE_loads;
-      PE_loads = nullptr;
-    }
-    if(map != nullptr) {
-      delete [] map;
-      map = nullptr;
-    }
+    WorkloadAwarePolicyTests::SetUp();
   }
 
 };
 
+/// @brief Test if a single task is correctly assigned to the single processor.
 TEST_F(GreedyPolicyTests, single_task) {
-  setTasks(1);
-  setPEs(1);
+  set_pus_and_tasks(1,1);
 
   execute_policy();
   ASSERT_EQ(0, map[0]);
 }
 
+/// @brief Test if the processors recieve the tasks in decreasing workload order.
 TEST_F(GreedyPolicyTests, single_task_two_PEs) {
-  setTasks(1);
-  setPEs(2);
+  set_pus_and_tasks(2,1);
 
-  PE_loads[0] = 20;
-  PE_loads[1] = 10;
+  input.pus[0] = 20;
+  input.pus[1] = 10;
 
   execute_policy();
   ASSERT_EQ(1, map[0]); // The most unloaded one.
 }
 
+/// @brief Test if each task is assigned to a unique processor if both share the same initial load state.
 TEST_F(GreedyPolicyTests, two_task_equally_loaded_PEs) {
-  setTasks(2);
-  setPEs(2);
+  set_pus_and_tasks(2,2);
 
-  task_loads[0] = 10;
-  task_loads[1] = 10;
+  input.tasks[0] = 10;
+  input.tasks[1] = 10;
 
-  PE_loads[0] = 10;
-  PE_loads[1] = 10;
+  input.pus[0] = 10;
+  input.pus[1] = 10;
 
   execute_policy();
   EXPECT_EQ(0, map[0]);
   EXPECT_EQ(1, map[1]);
 }
 
+/// @brief Test if multiple tasks are assigned to a processor if it is still the most underloaded.
 TEST_F(GreedyPolicyTests, two_task_unequally_loaded_PEs) {
-  setTasks(2);
-  setPEs(2);
+  set_pus_and_tasks(2,2);
 
-  task_loads[0] = 10;
-  task_loads[1] = 10;
+  input.tasks[0] = 10;
+  input.tasks[1] = 10;
 
-  PE_loads[0] = 0;
-  PE_loads[1] = 30;
+  input.pus[0] = 0;
+  input.pus[1] = 30;
 
   execute_policy();
   EXPECT_EQ(0, map[0]);
   EXPECT_EQ(0, map[1]);
 }
 
+/// @brief Test if multiple tasks assignments can change the most underloaded processor.
 TEST_F(GreedyPolicyTests, three_task_unequally_loaded_PEs) {
-  setTasks(3);
-  setPEs(2);
+  set_pus_and_tasks(2,3);
 
-  task_loads[0] = 10;
-  task_loads[1] = 10;
-  task_loads[2] = 10;
+  input.tasks[0] = 10;
+  input.tasks[1] = 10;
+  input.tasks[2] = 10;
 
-  PE_loads[0] = 0;
-  PE_loads[1] = 19;
+  input.pus[0] = 0;
+  input.pus[1] = 19;
 
   execute_policy();
   EXPECT_EQ(0, map[2]); // The make_heap modifies the ordering to (2,1,0)
@@ -123,16 +90,16 @@ TEST_F(GreedyPolicyTests, three_task_unequally_loaded_PEs) {
   EXPECT_EQ(1, map[0]);
 }
 
+/// @brief Test if tasks with different load are assigned in decreasing order.
 TEST_F(GreedyPolicyTests, tasks_unequal_workload) {
-  setTasks(3);
-  setPEs(2);
+  set_pus_and_tasks(2,3);
 
-  task_loads[0] = 20;
-  task_loads[1] = 10;
-  task_loads[2] = 30;
+  input.tasks[0] = 20;
+  input.tasks[1] = 10;
+  input.tasks[2] = 30;
 
-  PE_loads[0] = 0;
-  PE_loads[1] = 40;
+  input.pus[0] = 0;
+  input.pus[1] = 40;
 
   execute_policy();
   EXPECT_EQ(0, map[2]); // The make_heap modifies the ordering to (2,0,1)

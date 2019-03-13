@@ -1,168 +1,128 @@
 #pragma once
 
+#include <dependencies/workload_aware.h>
+
+#include <algorithm>
+#include <numeric>
+
 namespace MOGSLib { namespace Policy {
 
+template<typename ... Deps>
+class BinLPT;
+
 /**
- * @brief A workload-aware policy that packs adjacent tasks together and distribute them in a greedy fashion.
+ *  @class BinLPT
+ *  @brief A workload-aware policy that packs adjacent tasks together and distribute them in a greedy fashion.
+ *  @tparam Id An index type to organize PUs and tasks.
+ *  @tparam L The workload numeric type.
  */
-template<typename _Load = MOGSLib::Load>
-class BinLPT {
-public:
-  using Index = MOGSLib::Index;
-  using TaskMap = MOGSLib::TaskMap;
-  using Load = _Load;
+template<typename I, typename L>
+struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
+  using Deps = MOGSLib::Dependency::WorkloadAware<I,L>;
+  using Id = typename Deps::Id;
+  using Load = typename Deps::Load;
+  using Schedule = typename Deps::Schedule;
 
   /**
-   * @brief Swap two values by reference
-   **/
-  template<typename T>
-  static void swap(T &a, T &b) {
-    const T t = a;
-    a = b;
-    b = t;
-  }
-
-  /**
-   * @brief Structure to auxiliate the comparison in the sort algorithms
-   **/
-  template<typename T, bool decreasing_order>
-  struct Compare {
-    static bool value(T &a, T &b) {
-      return a < b;
-    }
-  };
-
-  /**
-   * @brief Structure specialization to auxiliate the comparison in the sort algorithms.
-   **/
-  template<typename T>
-  struct Compare<T, false> {
-    static bool value(T &a, T &b) {
-      return a > b;
-    }
-  };
-
-  /**
-   * @brief Insertion sort.
-   *
-   * @type T The type of elements to be sorted. Must perform < operator.
-   * @type UInt The unsigned integer type to be used as the array index.
-   * @type decreasing_order A boolean to choose whether the algorithm should organize in ascending order or not. This value defaults to increasing order.
-   *
-   * @param map The original indices of the elements in a.
-   * @param a The array of elements to be sorted.
-   * @param n the size of the array a.
-   **/
-  template <typename T, typename UInt, bool decreasing_order = true>
-  static void insertion_sort(UInt *map, T *a, const UInt n) {
-    UInt i, j; /* Loop indexes.    */
+   *  @class Chunk
+   *  @brief A chunk abstraction to wrap the range of task indices and the sum of their load.
+   */
+  struct Chunk {
+    std::pair<Id, Id> range;
+    Load load;
     
-    /* Sort. */
-    for (i = 0; i < (n - 1); i++)
-    {
-      for (j = i + 1; j < n; j++)
-      {
-        /* Swap. */
-        if (Compare<T, decreasing_order>::value(a[j], a[i]))
-        {
-          swap<T>(a[i], a[j]);
-          swap<UInt>(map[i], map[j]);
-        }
-      }
+    Chunk() {}
+
+    /**
+     *  @brief A constructor that initialized all the necessary data.
+     *  @param f The index of the first task associated with this chunk.
+     *  @param la The index of the last task associated with this chunk.
+     *  @param l The load of the chunk.
+     */
+    Chunk(const Id &f, const Id &la, const Load &l) : range(std::make_pair(f,la)), load(l) {}
+
+    inline void update(const Id &f, const Id &la, const Load &l) {
+      range = std::make_pair(f,la);
+      load = l;
     }
+
+    /**
+     *  @brief Compares with another chunk by its load.
+     */
+    bool operator <(const Chunk &o) const { return load < o.load; }
+  };
+
+  static void sort(std::vector<Chunk> &a) {
+    auto n = a.size();
+    for (unsigned i = 0; i < (n - 1); i++)
+      for (unsigned j = i + 1; j < n; j++)
+        if (a[j] < a[i])
+          std::swap(a[i], a[j]);
   }
 
-  template<typename T>
-  static T* compute_cummulativesum(const T* arr, const Index &size) {
-    Index i;
-    T *sum = new T[size]();
+  /**
+   *  @brief Creates the task chunks analyzing the workload of neighbour tasks (by id).
+   *  @param tasks The task workloads.
+   *  @param n The amount of chunks to be made
+   */
+  static std::vector<Chunk> create_chunks(const std::vector<Load> &tasks, const Id &n) {
+    std::vector<Chunk> chunks(n);
+    
+    if(tasks.empty())
+      return std::move(chunks);
 
-    for(i = 1; i < size; ++i)
-      sum[i] = sum[i-1] + arr[i-1];
-    return sum;
-  }
+    std::vector<Load> partial_workload = std::vector<Load>(tasks.size()+1);
+    partial_workload[0] = 0; // First element is 0
+    std::partial_sum(tasks.begin(), tasks.end(), partial_workload.begin()+1); // Last element is the total workload.
 
-  static Index* compute_chunksizes(const Index ntasks, const Load *workloads, const Index &nchunks) {
-    Index i, cur_chunk;
-    Index *chunksizes = new Index[nchunks]();
-    Load *accum_workload, chunkweight;
+    auto average_weight = partial_workload.back()/n; // average size per chunk.
 
-    if(!ntasks)
-      return chunksizes;
-
-    accum_workload = compute_cummulativesum<Load>(workloads, ntasks);
-    chunkweight = (accum_workload[ntasks - 1] + workloads[ntasks - 1])/nchunks; // average size per chunk.
-
-    cur_chunk = 0;
-    for(i = 0; i < ntasks; ++cur_chunk) {
-      Index j = ntasks;
-
-      if(cur_chunk < (nchunks - 1))
-        for(j = i + 1; j < ntasks; ++j)
-          if(accum_workload[j] - accum_workload[i] >= chunkweight)
+    Id begin = 0;
+    Id cid = 0;
+    while(cid < n-1) {
+      auto end = begin;
+      for(++end; end < partial_workload.size(); ++end) // Not interested in the last element, which is the total workload.
+          if(partial_workload[end] - partial_workload[begin] > average_weight)
             break;
-
-      chunksizes[cur_chunk] = j - i;
-      i = j;
+      chunks[cid++].update(begin, end, partial_workload[end] - partial_workload[begin]);
+      begin = end;
     }
 
-    delete [] accum_workload;
-    return chunksizes;
+    // Get all the remainder tasks into one chunk.
+    chunks[cid].update(begin, tasks.size(), partial_workload[tasks.size()] - partial_workload[begin]);
+
+    return chunks;
   }
 
-  static auto compute_chunkloads(const Load *workloads, const Index *chunksizes, const Index &k) {
-    Index cur_chunk;
-    Load *chunk_loads;
-
-    chunk_loads = new Load[k]();
-
-    cur_chunk = 0;
-    for(Index i = 0; i < k; ++i)
-      for(Index j = 0; j < chunksizes[i]; ++j)
-        chunk_loads[i] += workloads[cur_chunk++];
-
-    return chunk_loads;
-  }
-
-  static void map(TaskMap &map, const Index &ntasks, Load *task_workload, const Index &nPEs, Load *PE_workload, const Index &nchunks) {
-    auto chunk_sizes = compute_chunksizes(ntasks, task_workload, nchunks);
-    auto chunk_loads = compute_chunkloads(task_workload, chunk_sizes, nchunks);
-    auto chunk_offset = compute_cummulativesum<Index>(chunk_sizes, nchunks);
-    
-    Index *chunk_map = new Index[nchunks];
-    for(Index i = 0; i < nchunks; ++i)
-      chunk_map[i] = i;
+  /**
+   *  @brief map The map of task-to-pu that will serve as the output.
+   *  @param tasks A vector of task workloads.
+   *  @param pus A vector of pu workloads.
+   *  @param nchunks The number of chunks to be created.
+   *
+   *  BinLPT wraps tasks into chunks trying to balance the load of each chunk.
+   *  It sorts the chunk array in decreasing order and iteratively assigns them to the most underloaded pu.
+   */
+  static void map(Schedule &map, const std::vector<Load> &tasks, std::vector<Load> &pus, const Id &nchunks) {
+    auto chunks = create_chunks(tasks, nchunks);
 
     /* Organize the chunks in decreasing order */
-    insertion_sort<Load, Index, true>(chunk_map, chunk_loads, nchunks);
+    sort(chunks);
 
     /* Iterate over the chunks, starting from the largest, and assign them to PEs */
-    for(Index i = nchunks; i > 0; --i) {
-      const Index idx = i-1;
-      const Index cur_chunk_idx = chunk_map[idx];
-      Index pe_id = 0;
-
-      if(chunk_loads[idx] == 0)
-        continue;
-
-      /* Find the least overloaded PE */
-      for(Index j = 1; j < nPEs; ++j)
-        if(PE_workload[j] < PE_workload[pe_id])
-          pe_id = j;
-
-      /* Assign every task in the selected chunk to the same PE. */
-      for(Index j = 0; j < chunk_sizes[cur_chunk_idx]; ++j)
-        map[chunk_offset[cur_chunk_idx] + j] = pe_id;
-
-      /* Update the load on the PE */
-      PE_workload[pe_id] += chunk_loads[idx];
+    for(auto it = chunks.rbegin(); it < chunks.rend(); ++it) {
+      auto chunk = *it;
+      // Get the least overloaded PU.
+      Id pu = 0;
+      for(Id i = 1; i < pus.size(); i++)
+        if(pus[i] < pus[pu])
+          pu = i;
+      // Assign the task to the PU.
+      for(auto i = std::get<0>(chunk.range); i < std::get<1>(chunk.range); ++i)
+        map[i] = pu;
+      // Update the load of the PU,
+      pus[pu] += chunk.load;
     }
-
-    /* Clean memory */
-    delete [] chunk_sizes;
-    delete [] chunk_loads;
-    delete [] chunk_offset;
-    delete [] chunk_map;
   }
 };
 

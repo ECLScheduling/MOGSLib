@@ -51,7 +51,7 @@ TBINARIES  :=$(patsubst $(TSTDIR)/%.cpp,$(BINDIR)/%,$(TMAINFILES))
 TCXXFLAGS :=
 TLDFLAGS  :=-L/usr/lib
 TLDLIBS   :=-lgtest -lgtest_main -pthread
-TINCLUDE  :=
+TINCLUDE  :=-Itests/include
 ### MAKEFILE CONTROL VARIABLES
 # Debug flag, if != 0 deactivates all supressed echoing
 DEBUG :=0

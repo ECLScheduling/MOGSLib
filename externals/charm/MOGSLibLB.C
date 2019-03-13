@@ -8,6 +8,7 @@
 CreateLBFunc_Def(MOGSLibLB, "A strategy that calls MOGSLib to execute its chosen global scheduler.")
 
 #include "MOGSLibLB.def.h"
+#include <mogslib/mogslib.ipp>
 
 MOGSLibLB::MOGSLibLB(const CkLBOptions &opt): CBase_MOGSLibLB(opt)
 {
@@ -22,22 +23,17 @@ bool MOGSLibLB::QueryBalanceNow(int _step)
 }
 
 void MOGSLibLB::work(LDStats* stats) {
-  MOGSLib::RTS::stats = stats;
+  MOGSLib::RTS::Charm::stats = stats;
 
-  auto map = MOGSLib::SchedulerCollection::schedule();
+  std::string strategy = ""; // Change here to select a strategy to call in MOGSLib.
+  auto map = MOGSLib::API::work(strategy);
   
-  /*
-   * This is a temporary hack to get the first concept in the collection of concepts.
-   * As of now, when the library is compiled for Charm++, the first concept will always have the task data needed to migrate the tasks.
-   * This will be revisited to be more readable and intuitive.
-   */
-  auto task_info = std::get<0>(MOGSLib::SchedulerCollection::ConceptTuple::concepts);
+  auto &chare_ids = MOGSLib::RTS::Charm::chare_ids;
+  auto &pu_ids = MOGSLib::RTS::Charm::pu_ids;
 
-  for(auto i = 0; i < task_info.ntasks(); ++i)
-    CkPrintf("Task %d in PE %d.\n",task_info.task_ids[i], task_info.PE_ids[map[i]]);
-
-  for(auto i = 0; i < task_info.ntasks(); ++i)
-    stats->assign(task_info.task_ids[i], task_info.PE_ids[map[i]]);
+  MOGSLib::RTS::Charm::Id i = 0;
+  for(auto chare : chare_ids)
+    stats->assign(chare, pu_ids[map[i++]]);
 
   delete map;
 }
