@@ -27,6 +27,4 @@ struct OmpDelayTest {
   static inline auto k() { return MOGSLib::RTS::OpenMP::chunks;  }
 };
 
-decltype(OmpDelayTest::_input) OmpDelayTest::_input;
-
 }}

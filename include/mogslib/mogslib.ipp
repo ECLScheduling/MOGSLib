@@ -15,4 +15,8 @@ inline typename MOGSLib::Config::Policy<typename Traits::Id>::Schedule API::do_w
   return std::get<i>(schedulers).work();
 }
 
+namespace Context {
+  decltype(OmpDelayTest::_input) OmpDelayTest::_input;
+}
+
 }

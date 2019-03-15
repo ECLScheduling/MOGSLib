@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include <omp.h>
+
 /**
  *  @brief Set the amount of chunks in the OpenMP RTS datastructure.
  *  @details A C++ proxy function to set the chunksize data in OpenMP.
@@ -29,7 +31,9 @@ inline void mogslib_call_set_npus(unsigned n) {
 inline unsigned *mogslib_call_strategy_map() {
   std::string strategy = ""; //TODO: Change here to add the strategy or call a custom function.
   try {
-    return MOGSLib::API::work(strategy).data();
+    auto schedule = MOGSLib::API::work(strategy);
+    omp_set_ntasks(schedule.size());
+    return schedule.data();
   } catch (std::string n) {
     std::cout << n << std::endl;
     exit(1);
@@ -50,8 +54,8 @@ void mogslib_set_chunksize(unsigned chunksize) {
  *  @brief A function to interface with MOGSLib to register the amount of PEs in OpenMP.
  *  @details A C function to interface with OpenMP and direct the execution flow back to C++.
  */
-void mogslib_set_nPEs(unsigned nPEs) {
-  mogslib_call_set_npus(nPEs);
+void mogslib_set_npus(unsigned npus) {
+  mogslib_call_set_npus(npus);
 }
 
 /**
@@ -60,15 +64,6 @@ void mogslib_set_nPEs(unsigned nPEs) {
  */
 unsigned *mogslib_strategy_map() {
   return mogslib_call_strategy_map();
-}
-
-/**
- * TODO: not properly working just yet.
- * @brief Change to a dynamic rule to make libGOMP keep the schedule saved after a loop.
- * @details This is still not quite working.
- */
-bool mogslib_has_persistent_taskmap() {
-  return false;
 }
 
 }
