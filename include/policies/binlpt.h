@@ -50,6 +50,11 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
      *  @brief Compares with another chunk by its load.
      */
     bool operator <(const Chunk &o) const { return load < o.load; }
+
+    /**
+     *  @brief Compares with another chunk by its load.
+     */
+    bool operator <=(const Chunk &o) const { return load <= o.load; }
   };
 
   static void sort(std::vector<Chunk> &a) {

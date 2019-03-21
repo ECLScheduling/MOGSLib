@@ -1,7 +1,8 @@
 #pragma once
 
-//#include <policies/binlpt.h>
-#include <policies/binlpt_old.h>
+#include <policies/binlpt.h>
+
+#include <iostream>
 
 namespace MOGSLib { namespace Scheduler {
 
@@ -27,8 +28,7 @@ public:
     auto chunks = Ctx::k();
     auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
 
-    Policy::map(schedule, data.ntasks(), data.task_workloads().data(), data.npus(), data.pu_workloads().data(), chunks);
-    //Policy::map(schedule, data.task_workloads(), data.pu_workloads(), chunks);
+    Policy::map(schedule, data.task_workloads(), data.pu_workloads(), chunks);
     
     return schedule;
   }

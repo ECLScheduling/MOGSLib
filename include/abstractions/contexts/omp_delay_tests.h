@@ -14,6 +14,7 @@ struct OmpDelayTest {
   static MOGSLib::Input::WorkloadAware<Id, Load> _input;
 
   static inline void set_loads(std::vector<Load> &loads) {
+    omp_set_ntasks(loads.size());
     _input.tasks = loads;
   }
 
