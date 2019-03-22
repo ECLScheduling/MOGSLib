@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-#include <omp.h>
-
 /**
  *  @brief Set the amount of chunks in the OpenMP RTS datastructure.
  *  @details A C++ proxy function to set the chunksize data in OpenMP.
@@ -29,11 +27,13 @@ inline void mogslib_call_set_npus(unsigned n) {
  *  @return The task map represented as an array to where the task should execute.
  */
 inline unsigned *mogslib_call_strategy_map() {
-  std::string strategy = ""; //TODO: Change here to add the strategy or call a custom function.
+  std::string strategy = "binlpt"; //TODO: Change here to add the strategy or call a custom function.
   try {
     auto schedule = MOGSLib::API::work(strategy);
-    omp_set_ntasks(schedule.size());
-    return schedule.data();
+    unsigned *arr = new unsigned[schedule.size()];
+    
+    std::copy(schedule.begin(), schedule.end(), arr);
+    return arr;
   } catch (std::string n) {
     std::cout << n << std::endl;
     exit(1);
