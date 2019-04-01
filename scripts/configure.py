@@ -56,7 +56,8 @@ def resolve_work_snippet(scheds):
     pre_tabs = ''
     if i > 0:
       pre_tabs = '\t\t'
-    snippets.append(pre_tabs + 'SchedWork("' + sched[:-2] + '", ' + str(i) + ')')
+    snippets.append(pre_tabs + 'if(test_scheduler("' + sched[:-2] + '", name))')
+    snippets.append('\t\t\treturn do_work<' + str(i) + '>();')
 
 
   with open(file, 'r+') as infile:

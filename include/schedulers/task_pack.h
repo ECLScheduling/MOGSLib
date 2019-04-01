@@ -20,9 +20,9 @@ public:
   /**
    *  @brief The method to obtain a task map based on a compact policy.
    **/
-  auto work() {
-    auto& data = Ctx::input();
-    auto packs = Ctx::k();
+  auto work(Ctx &ctx) {
+    auto &data = ctx.input();
+    auto packs = ctx.k();
     auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
 
     Policy::map(schedule, data.ntasks(), data.npus(), packs);

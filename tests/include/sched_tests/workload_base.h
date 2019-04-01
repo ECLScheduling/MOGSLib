@@ -13,38 +13,39 @@ public:
   using Context = MOGSLib::Context::WorkloadAware<Id, Load>;
   using Schedule = std::vector<typename Context::Id>;
 
+  Context ctx;
   Schedule map;
 
   void tasks(const Id &n) {
-    Context::_input.tasks.resize(n);
+    ctx._input.tasks.resize(n);
   }
 
   void pus(const Id &n) {
-    Context::_input.pus.resize(n);
+    ctx._input.pus.resize(n);
   }
 
   void k(const Id &n) {
-    Context::_k = n;
+    ctx._k = n;
   }
 
   Load& pu_at(const Id &n) {
-    return Context::_input.pus[n];
+    return ctx._input.pus[n];
   }
 
   Load& task_at(const Id &n) {
-    return Context::_input.tasks[n];
+    return ctx._input.tasks[n];
   }
 
-  virtual Schedule call_scheduler() = 0;
+  virtual Schedule call_scheduler(Context &c) = 0;
 
   void execute_scheduler() {
-    map = std::move(call_scheduler());
+    map = std::move(call_scheduler(ctx));
   }
 
   /// @brief Set up all the necessary data for the tests.
   void SetUp() {
-    Context::_input.tasks.clear();
-    Context::_input.pus.clear();
+    ctx._input.tasks.clear();
+    ctx._input.pus.clear();
   }
 
   /**
@@ -54,7 +55,7 @@ public:
   void task_loads(const Id &n, Load (*gen)(const Id &)) {
     tasks(n);
     Id i = 0;
-    std::transform(Context::_input.tasks.begin(), Context::_input.tasks.end(), Context::_input.tasks.begin(), [&i, &gen](Load) { return gen(i++); });
+    std::transform(ctx._input.tasks.begin(), ctx._input.tasks.end(), ctx._input.tasks.begin(), [&i, &gen](Load) { return gen(i++); });
   }
 
   /**
@@ -64,6 +65,6 @@ public:
   void pu_loads(const Id &n, Load (*gen)(const Id &)) {
     pus(n);
     Id i = 0;
-    std::transform(Context::_input.pus.begin(), Context::_input.pus.end(), Context::_input.pus.begin(), [&i, &gen](Load) { return gen(i++); });
+    std::transform(ctx._input.pus.begin(), ctx._input.pus.end(), ctx._input.pus.begin(), [&i, &gen](Load) { return gen(i++); });
   }
 };

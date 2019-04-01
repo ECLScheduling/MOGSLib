@@ -21,8 +21,8 @@ public:
   /**
    *  @brief The method to obtain a task map based on a greedy heuristic.
    **/
-  auto work() {
-    auto& data = Ctx::input();
+  auto work(Ctx &ctx) {
+    auto &data = ctx.input();
     auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
     
     Policy::map(schedule, data.task_workloads(), data.pu_workloads());

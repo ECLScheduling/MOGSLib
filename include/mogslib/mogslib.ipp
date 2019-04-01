@@ -12,11 +12,12 @@ API::Schedulers API::schedulers;
 
 template<unsigned i>
 inline typename MOGSLib::Config::Policy<typename Traits::Id>::Schedule API::do_work() {
-  return std::get<i>(schedulers).work();
+  return std::get<i>(schedulers).work(std::get<i>(schedulers));
 }
 
-namespace Context {
-  decltype(OmpDelayTest::_input) OmpDelayTest::_input;
+
+inline bool API::test_scheduler(const std::string &schedname, const std::string &name) {
+  return !name.compare(schedname);
 }
 
 }

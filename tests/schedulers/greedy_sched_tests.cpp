@@ -8,8 +8,8 @@ public:
   using Scheduler = MOGSLib::Scheduler::Greedy<Context>;
   Scheduler scheduler;
 
-  virtual Schedule call_scheduler() {
-    return scheduler.work();
+  virtual Schedule call_scheduler(Context &c) {
+    return scheduler.work(c);
   }
 };
 

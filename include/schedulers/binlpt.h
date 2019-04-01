@@ -23,9 +23,9 @@ public:
   int i = 0;
 
   /// @brief The method to obtain a schedule based on a binlpt policy.
-  auto work() {
-    auto &data = Ctx::input();
-    auto chunks = Ctx::k();
+  auto work(Ctx &ctx) {
+    auto &data = ctx.input();
+    auto chunks = ctx.k();
     auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
 
     Policy::map(schedule, data.task_workloads(), data.pu_workloads(), chunks);

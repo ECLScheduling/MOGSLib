@@ -24,6 +24,8 @@ struct API {
   template<unsigned i>
   inline static typename MOGSLib::Config::Policy<typename Traits::Id>::Schedule do_work();
 
+  inline bool test_scheduler(const std::string &schedname, const std::string &name);
+
   inline static auto work(const std::string &name) {
     $SCHED_WORK_SNIPPETS$
     throw std::string("[MOGSLib] Invalid scheduler name.");
