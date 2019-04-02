@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-unsigned *arr = nullptr;
 
+unsigned *arr = nullptr;
 /**
  *  @brief Set the amount of chunks in the OpenMP RTS datastructure.
  *  @details A C++ proxy function to set the chunksize data in OpenMP.
@@ -32,12 +32,11 @@ inline unsigned *mogslib_call_strategy_map() {
   std::string strategy = "binlpt"; //TODO: Change here to add the strategy or call a custom function.
   try {
     auto schedule = MOGSLib::API::work(strategy);
-    if(arr != nullptr) {
-      delete [] arr;
-      arr = nullptr;
-    }
-    arr = new unsigned[schedule.size()];
     
+    if(arr != nullptr)
+      delete [] arr;
+
+    arr = new unsigned[schedule.size()];
     std::copy(schedule.begin(), schedule.end(), arr);
     return arr;
   } catch (std::string n) {
