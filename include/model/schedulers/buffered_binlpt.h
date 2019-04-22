@@ -23,7 +23,7 @@ public:
   /// @brief The method to obtain a schedule based on a binlpt policy.
   auto work(Ctx &ctx) {
     if(!ctx.has_schedule() || ctx.recalculate())
-      ctx.set_schedule(scheduler.work(ctx));
+      ctx.set_schedule(std::move(scheduler.work(ctx)));
     return ctx.schedule();
   }
 

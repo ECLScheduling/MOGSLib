@@ -23,9 +23,13 @@ struct API {
   static Schedulers schedulers;
 
   template<unsigned i>
-  inline static typename MOGSLib::Config::Policy<typename Traits::Id>::Schedule do_work();
+  inline static typename std::vector<typename Traits::Id> do_work(){
+    return std::get<i>(schedulers).work(std::get<i>(contexts));
+  }
 
-  inline static bool test_scheduler(const std::string &schedname, const std::string &name);
+  inline static bool test_scheduler(const std::string &schedname, const std::string &name){
+    return schedname.compare(name) == 0;
+  }
 
   inline static auto work(const std::string &name) {
     if(test_scheduler("buffered_binlpt", name))

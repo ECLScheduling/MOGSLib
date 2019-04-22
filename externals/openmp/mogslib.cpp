@@ -41,12 +41,12 @@ inline unsigned *mogslib_call_strategy_map() {
 
     // Checks if the previously allocated array can store the new schedule data. If it cannot, free the memory of the previous one.
     if(MOGSLib::ConnectionLayer::array != nullptr && MOGSLib::ConnectionLayer::allocated_size < schedule_size) {
-      delete [] array;
+      delete [] MOGSLib::ConnectionLayer::array;
       MOGSLib::ConnectionLayer::array = nullptr;
     }
     // Checks if the array is not allocated. If it is not, allocate a new one to hold the schedule.
     if(MOGSLib::ConnectionLayer::array == nullptr) {
-      array = new unsigned[schedule_size];
+      MOGSLib::ConnectionLayer::array = new unsigned[schedule_size];
       MOGSLib::ConnectionLayer::allocated_size = schedule_size;
     }
     

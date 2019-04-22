@@ -1,6 +1,7 @@
 #pragma once
 
 #include "libgomp.h"
+#include <model/policies/dependencies/base.h>
 
 namespace MOGSLib { namespace Context {
 
@@ -55,7 +56,7 @@ public:
    * @brief Set the schedule decision associated with the current loop id.
    * @param s The schedule.
    */
-  void set_schedule(Schedule &s) {
+  void set_schedule(Schedule &&s) {
     if(has_schedule())
       schedules[current_loop] = s;
     else

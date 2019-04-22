@@ -1,6 +1,7 @@
 #pragma once
 
 #include "traits.h"
+#include <omp.h>
 
 #define OMP_RTS_INCLUDED
 
