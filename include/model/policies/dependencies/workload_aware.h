@@ -1,12 +1,13 @@
 #pragma once
 
-#include <dependencies/base.h>
+#include "base.h"
 
 namespace MOGSLib { namespace Dependency {
 
 /**
  *  @class WorkloadAware
- *  @brief The minimal dependencies of a workload aware policy.
+ *  @brief The minimal dependencies of a workload aware policy.\
+ *  @details It defines the Load type in addition to the Base dependencies definitions.
  */
 template<typename Idx, typename L>
 struct WorkloadAware : public Base<Idx> {

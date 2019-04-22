@@ -1,6 +1,6 @@
 #pragma once
 
-#include <policies/greedy.h>
+#include <model/policies/greedy.h>
 
 namespace MOGSLib { namespace Scheduler {
 
@@ -23,7 +23,7 @@ public:
    **/
   auto work(Ctx &ctx) {
     auto &data = ctx.input();
-    auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
+    auto schedule = Schedule(data.ntasks());
     
     Policy::map(schedule, data.task_workloads(), data.pu_workloads());
     return schedule;

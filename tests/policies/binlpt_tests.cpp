@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <iostream>
-#include <policies/binlpt.h>
+#include <model/policies/binlpt.h>
 #include <policy_tests/workload_aware_input_base.h>
 
 /**

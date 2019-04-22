@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <policies/greedy.h>
+#include <model/policies/greedy.h>
 #include <policy_tests/workload_aware_input_base.h>
 
 /**

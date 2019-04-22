@@ -1,6 +1,6 @@
 #pragma once
 
-#include <structures/input/workload_aware.h>
+#include <abstractions/structures/input/workload_aware.h>
 
 namespace MOGSLib { namespace Context {
 
@@ -17,6 +17,10 @@ struct WorkloadAware {
   }
 
   auto& k() {
+    return _k;
+  }
+
+  auto& nchunks() {
     return _k;
   }
 

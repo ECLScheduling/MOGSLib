@@ -1,6 +1,6 @@
 #pragma once
 
-#include <dependencies/workload_aware.h>
+#include "dependencies/workload_aware.h"
 
 #include <algorithm>
 #include <numeric>

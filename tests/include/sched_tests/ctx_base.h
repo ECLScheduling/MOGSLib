@@ -1,6 +1,6 @@
 #pragma once
 
-#include <structures/input/base.h>
+#include <abstractions/structures/input/base.h>
 
 namespace MOGSLib { namespace Context {
 

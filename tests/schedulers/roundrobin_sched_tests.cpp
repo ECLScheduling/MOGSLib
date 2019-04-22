@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/round_robin.h>
+#include <model/schedulers/round_robin.h>
 
 #include <sched_tests/minimal_base.h>
 

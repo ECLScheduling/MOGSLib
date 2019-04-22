@@ -4,8 +4,8 @@
 
 #include <load_generator.h>
 
-#include <dependencies/workload_aware.h>
-#include <structures/input/workload_aware.h>
+#include <model/policies/dependencies/workload_aware.h>
+#include <abstractions/structures/input/workload_aware.h>
 
 using Deps = MOGSLib::Dependency::WorkloadAware<Id, Load>;
 using Schedule = typename Deps::Schedule;

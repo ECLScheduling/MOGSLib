@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/greedy.h>
+#include <model/schedulers/greedy.h>
 #include <sched_tests/workload_base.h>
 
 class GreedySchedTests : public WorkloadSchedulerTests {

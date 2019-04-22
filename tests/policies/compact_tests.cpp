@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <policy_tests/minimal_input_base.h>
-#include <policies/compact.h>
+#include <model/policies/compact.h>
 
 /**
  *  @class CompactPolicyTests

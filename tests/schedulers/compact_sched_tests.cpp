@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/compact.h>
+#include <model/schedulers/compact.h>
 
 #include <sched_tests/minimal_base.h>
 

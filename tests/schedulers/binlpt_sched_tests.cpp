@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/binlpt.h>
+#include <model/schedulers/binlpt.h>
 
 #include <sched_tests/workload_base.h>
 

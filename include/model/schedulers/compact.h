@@ -1,6 +1,6 @@
 #pragma once
 
-#include <policies/compact.h>
+#include <model/policies/compact.h>
 
 namespace MOGSLib { namespace Scheduler {
 
@@ -22,7 +22,7 @@ public:
    **/
   auto work(Ctx &ctx) {
     auto &data = ctx.input();
-    auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
+    auto schedule = Schedule(data.ntasks());
     Policy::map(schedule, data.ntasks(), data.npus());
     return schedule;
   }

@@ -13,4 +13,8 @@ struct SystemTraits<System::libgomp> {
   using Load = unsigned;
 };
 
+namespace RTS {
+  using LibGOMPTraits = MOGSLib::SystemTraits<MOGSLib::System::libgomp>;
+}
+
 }

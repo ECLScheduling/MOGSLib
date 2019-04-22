@@ -1,9 +1,9 @@
 #pragma once
 
-#include "openmp.h"
+#include "libgomp.h"
 
 namespace MOGSLib { namespace Context {
 
-struct OmpDelayTest : public OpenMP<Traits::Id, Traits::Load> {};
+struct OmpDelayTest : public LibGOMP<Traits::Id, Traits::Load> {};
 
 }}

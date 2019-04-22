@@ -1,6 +1,6 @@
 #pragma once
 
-#include <dependencies/base.h>
+#include "dependencies/base.h"
 
 namespace MOGSLib { namespace Policy {
 

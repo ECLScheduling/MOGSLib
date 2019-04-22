@@ -1,6 +1,6 @@
 #pragma once
 
-#include <structures/input/workload_aware.h>
+#include <abstractions/structures/input/workload_aware.h>
 
 #include <abstractions/rts/openmp/openmp.h>
 #include <omp.h>
