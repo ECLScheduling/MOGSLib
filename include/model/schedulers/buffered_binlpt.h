@@ -1,7 +1,6 @@
 #pragma once
 
 #include <model/schedulers/binlpt.h>
-
 namespace MOGSLib { namespace Scheduler {
 
 /**
@@ -21,10 +20,9 @@ public:
   Scheduler scheduler;
 
   /// @brief The method to obtain a schedule based on a binlpt policy.
-  auto work(Ctx &ctx) {
-    if(!ctx.has_schedule() || ctx.recalculate())
-      ctx.set_schedule(std::move(scheduler.work(ctx)));
-    return ctx.schedule();
+  void work(Ctx &ctx) {
+    if(ctx.recalculate())
+      scheduler.work(ctx);
   }
 
 };

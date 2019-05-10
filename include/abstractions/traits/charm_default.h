@@ -2,7 +2,7 @@
 
 #include <abstractions/rts/charm/traits.h>
 
-struct LuleshCharm {
+struct CharmDefault {
   using Id = typename MOGSLib::SystemTraits<MOGSLib::System::charm>::Id;
   using Load = typename MOGSLib::SystemTraits<MOGSLib::System::charm>::Load;
 

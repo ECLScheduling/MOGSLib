@@ -9,7 +9,7 @@ namespace MOGSLib { namespace Context {
  * @class LibGOMPMultiloop
  * @brief An extension for the LibGOMP context where the schedules can be kept for future use.
  */
-struct LibGOMPMultiloop : public LibGOMP<Traits::Id, Traits::Load> {
+struct LibGOMPMultiloop : public LibGOMP{
 public:
   using Schedule = typename MOGSLib::Dependency::Base<Id>::Schedule;
 
@@ -19,6 +19,10 @@ protected:
   std::vector<Schedule> schedules;
 
 public:
+
+  inline Id* scheduleRaw() {
+    return schedules[current_loop].data();
+  }
 
   /**
    * @brief Set the loop id for the next OpenMP loop.
@@ -49,24 +53,16 @@ public:
    * @brief Evaluates if the next schedule decision should be recalculated.
    */
   virtual bool recalculate() const {
-    return overwrite;
-  }
-
-  /**
-   * @brief Set the schedule decision associated with the current loop id.
-   * @param s The schedule.
-   */
-  void set_schedule(Schedule &&s) {
-    if(has_schedule())
-      schedules[current_loop] = s;
-    else
-      schedules.push_back(s);
+    return !has_schedule() || overwrite;
   }
 
   /**
    * @brief Returns the current schedule decision associated with the current loop id.
    */
-  auto schedule() const {
+  inline Schedule& schedule() {
+    if(!has_schedule())
+      schedules.push_back(Schedule());
+    schedules[current_loop].resize(_input.ntasks());
     return schedules[current_loop];
   }
 

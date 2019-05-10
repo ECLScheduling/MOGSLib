@@ -19,14 +19,9 @@ public:
   using Schedule = typename Policy::Schedule;
   
   /// @brief The method to obtain a schedule based on a binlpt policy.
-  auto work(Ctx &ctx) {
-    auto &data = ctx.input();
-    auto chunks = ctx.nchunks();
-    auto schedule = Schedule(data.ntasks());
-
-    Policy::map(schedule, data.task_workloads(), data.pu_workloads(), chunks);
-    
-    return schedule;
+  void work(Ctx &ctx) {
+    auto &input = ctx.input();
+    Policy::map(ctx.schedule(), input.task_workloads(), input.pu_workloads(), ctx.nchunks());
   }
 
 };

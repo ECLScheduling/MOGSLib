@@ -20,11 +20,9 @@ public:
   /**
    *  @brief The method to obtain a task map based on a compact policy.
    **/
-  auto work(Ctx &ctx) {
-    auto &data = ctx.input();
-    auto schedule = Schedule(data.ntasks());
-    Policy::map(schedule, data.ntasks(), data.npus());
-    return schedule;
+  void work(Ctx &ctx) {
+    auto &input = ctx.input();
+    Policy::map(ctx.schedule(), input.ntasks(), input.npus());
   }
 
 };

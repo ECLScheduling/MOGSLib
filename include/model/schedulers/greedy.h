@@ -21,12 +21,9 @@ public:
   /**
    *  @brief The method to obtain a task map based on a greedy heuristic.
    **/
-  auto work(Ctx &ctx) {
-    auto &data = ctx.input();
-    auto schedule = Schedule(data.ntasks());
-    
-    Policy::map(schedule, data.task_workloads(), data.pu_workloads());
-    return schedule;
+  void work(Ctx &ctx) {
+    auto &input = ctx.input();
+    Policy::map(ctx.schedule(), input.task_workloads(), input.pu_workloads());
   }
 };
 

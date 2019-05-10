@@ -1,6 +1,7 @@
 #pragma once
 
 #include <abstractions/structures/input/workload_aware.h>
+#include <model/policies/dependencies/base.h>
 
 #include <abstractions/rts/charm/charm.h>
 
@@ -9,8 +10,11 @@ namespace MOGSLib { namespace Context {
 struct Charm {
   using Id = typename Traits::Id;
   using Load = typename Traits::Load;
+  using Schedule = typename MOGSLib::Dependency::Base<Id>::Schedule;
 
   MOGSLib::Input::WorkloadAware<Id, Load> _input;
+
+  Schedule _schedule;
 
 protected:
   inline void update_tasks() {
@@ -24,6 +28,15 @@ protected:
   }
 
 public:
+
+  inline Id* scheduleRaw() {
+    return _schedule.data();
+  }
+
+  inline Schedule& schedule() {
+    _schedule.resize(_input.ntasks());
+    return _schedule;
+  }
 
   inline auto& input() {
     update_tasks();

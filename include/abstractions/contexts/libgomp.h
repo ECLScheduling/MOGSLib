@@ -1,6 +1,7 @@
 #pragma once
 
 #include <abstractions/structures/input/workload_aware.h>
+#include <model/policies/dependencies/base.h>
 
 #include <abstractions/rts/openmp/openmp.h>
 
@@ -10,13 +11,24 @@ namespace MOGSLib { namespace Context {
  * @class LibGOMP
  * @brief The necessary definitions and functions to perform workload aware load balancing through MOGSLib in the context of LibGOMP.
  */
-template<typename I, typename L>
 struct LibGOMP {
-  using Id = I;
-  using Load = L;
+  using Id = Traits::Id;
+  using Load = Traits::Load;
   using SchedulerInput = MOGSLib::Input::WorkloadAware<Id, Load>;
-
+  using Schedule = typename MOGSLib::Dependency::Base<Id>::Schedule;
+  
   SchedulerInput _input;
+
+  Schedule _schedule;
+
+  inline Id* scheduleRaw() {
+    return _schedule.data();
+  }
+
+  inline Schedule& schedule() {
+    _schedule.resize(_input.ntasks());
+    return _schedule;
+  }
 
   /**
    * @brief An auxiliar method to set the input loads for the input structure used by the scheduler.
