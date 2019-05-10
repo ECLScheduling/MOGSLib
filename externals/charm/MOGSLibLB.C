@@ -26,8 +26,12 @@ void MOGSLibLB::work(LDStats* stats) {
   MOGSLib::RTS::Charm::stats = stats;
 
   std::string strategy = "greedy"; // Change here to select a strategy to call in MOGSLib.
+  
   CkPrintf("MOGSLibLB calling %s scheduler\n", strategy);
-  auto map = MOGSLib::API::work(strategy);
+  
+  MOGSLib::API::work(strategy);
+  auto map = std::get<0>(MOGSLib::API::contexts).scheduleRaw();
+  
   CkPrintf("MOGSLibLB decided Mapping\n");
 
   // Code to assign the mapping from MOGSLib to the Charm++ centralized loadbalancing API
