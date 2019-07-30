@@ -28,7 +28,7 @@ inline void mogslib_call_set_npus(unsigned n) {
  */
 inline unsigned *mogslib_call_strategy_map() {
   
-  std::string strategy = "buffered_binlpt"; //TODO: Change here to call another strategy (you may call functions to change it dynamically).
+  std::string strategy = "binlpt"; //TODO: Change here to call another strategy (you may call functions to change it dynamically).
 
   try {
     
