@@ -3,7 +3,7 @@
 #include <random>
 
 #include <omp.h>
-#include <policies/binlpt.h>
+#include <model/policies/binlpt.h>
 
 #ifndef N
 #define N 27000

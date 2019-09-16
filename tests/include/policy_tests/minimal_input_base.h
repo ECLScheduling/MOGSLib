@@ -2,8 +2,8 @@
 
 #include <type_definitions.h>
 
-#include <dependencies/base.h>
-#include <structures/input/base.h>
+#include <model/policies/dependencies/base.h>
+#include <abstractions/structures/input/base.h>
 
 using Deps = MOGSLib::Dependency::Base<Id>;
 using Schedule = typename Deps::Schedule;

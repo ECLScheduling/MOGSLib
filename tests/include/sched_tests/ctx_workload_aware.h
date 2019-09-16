@@ -1,6 +1,6 @@
 #pragma once
 
-#include <structures/input/workload_aware.h>
+#include <abstractions/structures/input/workload_aware.h>
 
 namespace MOGSLib { namespace Context {
 
@@ -9,22 +9,21 @@ struct WorkloadAware {
   using Id = _Id;
   using Load = _Load;
 
-  static MOGSLib::Input::WorkloadAware<Id, Load> _input;
-  static Id _k;
+  MOGSLib::Input::WorkloadAware<Id, Load> _input;
+  Id _k;
 
-  static auto& input() {
+  auto& input() {
     return _input;
   }
 
-  static auto& k() {
+  auto& k() {
+    return _k;
+  }
+
+  auto& nchunks() {
     return _k;
   }
 
 };
 
-template<typename I, typename L>
-MOGSLib::Input::WorkloadAware<I, L> WorkloadAware<I,L>::_input;
-
-template<typename I, typename L>
-I WorkloadAware<I,L>::_k;
 }}

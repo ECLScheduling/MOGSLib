@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/greedy.h>
+#include <model/schedulers/greedy.h>
 #include <sched_tests/workload_base.h>
 
 class GreedySchedTests : public WorkloadSchedulerTests {
@@ -8,8 +8,8 @@ public:
   using Scheduler = MOGSLib::Scheduler::Greedy<Context>;
   Scheduler scheduler;
 
-  virtual Schedule call_scheduler() {
-    return scheduler.work();
+  virtual Schedule call_scheduler(Context &c) {
+    return scheduler.work(c);
   }
 };
 

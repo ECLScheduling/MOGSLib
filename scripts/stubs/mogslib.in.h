@@ -22,11 +22,19 @@ struct API {
   static Schedulers schedulers;
 
   template<unsigned i>
-  inline static typename MOGSLib::Config::Policy<typename Traits::Id>::Schedule do_work();
+  inline static void do_work(){
+    std::get<i>(schedulers).work(std::get<i>(contexts));
+  }
 
-  inline static auto work(const std::string &name) {
+  inline static bool test_scheduler(const std::string &schedname, const std::string &name){
+    return schedname.compare(name) == 0;
+  }
+
+  inline static void work(const std::string &name) {
     $SCHED_WORK_SNIPPETS$
-    throw std::string("[MOGSLib] Invalid scheduler name.");
+    else {
+      throw std::string("[MOGSLib] Invalid scheduler name.");
+    }
   }
 };
 

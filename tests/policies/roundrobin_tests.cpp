@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <policy_tests/minimal_input_base.h>
-#include <policies/round_robin.h>
+#include <model/policies/round_robin.h>
 
 /**
  *  @class RoundRobinTests

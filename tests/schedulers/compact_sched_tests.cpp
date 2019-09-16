@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/compact.h>
+#include <model/schedulers/compact.h>
 
 #include <sched_tests/minimal_base.h>
 
@@ -9,8 +9,8 @@ public:
   using Scheduler = MOGSLib::Scheduler::Compact<Context>;
   Scheduler scheduler;
 
-  virtual Schedule call_scheduler() {
-    return scheduler.work();
+  virtual Schedule call_scheduler(Context &c) {
+    return scheduler.work(c);
   }
 
   void SetUp() {

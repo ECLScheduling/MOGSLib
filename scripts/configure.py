@@ -16,19 +16,23 @@ class MOGSLib:
   folders = dict()
 
   def init():
-    MOGSLib.folders['schedulers'] = 'schedulers'
-
     MOGSLib.folders['abstractions'] = 'abstractions'
+    MOGSLib.folders['model'] = 'model'
+
     MOGSLib.folders['contexts'] = os.path.join(MOGSLib.folders['abstractions'], 'contexts')
     MOGSLib.folders['traits'] = os.path.join(MOGSLib.folders['abstractions'], 'traits')
 
+    MOGSLib.folders['schedulers'] = os.path.join(MOGSLib.folders['model'], 'schedulers')
+
     MOGSLib.folders['stub'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'stubs')
+
     MOGSLib.folders['include_abs'] = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'include')
     MOGSLib.folders['mogslib_abs'] = os.path.join(MOGSLib.folders['include_abs'], 'mogslib')
-    MOGSLib.folders['abstractions_abs'] = os.path.join(MOGSLib.folders['include_abs'], 'abstractions')
-    MOGSLib.folders['schedulers_abs'] = os.path.join(MOGSLib.folders['include_abs'], 'schedulers')
-    MOGSLib.folders['contexts_abs'] = os.path.join(MOGSLib.folders['abstractions_abs'], 'contexts')
-    MOGSLib.folders['traits_abs'] = os.path.join(MOGSLib.folders['abstractions_abs'], 'traits')
+    
+    MOGSLib.folders['abstractions_abs'] = os.path.join(MOGSLib.folders['include_abs'], MOGSLib.folders['abstractions'])
+    MOGSLib.folders['schedulers_abs'] = os.path.join(MOGSLib.folders['include_abs'], MOGSLib.folders['schedulers'])
+    MOGSLib.folders['contexts_abs'] = os.path.join(MOGSLib.folders['include_abs'], MOGSLib.folders['contexts'])
+    MOGSLib.folders['traits_abs'] = os.path.join(MOGSLib.folders['include_abs'], MOGSLib.folders['traits'])
 MOGSLib.init()
 
 ### Action for consolidating a scheduler data into an intermediary python object ###
@@ -56,7 +60,8 @@ def resolve_work_snippet(scheds):
     pre_tabs = ''
     if i > 0:
       pre_tabs = '\t\t'
-    snippets.append(pre_tabs + 'SchedWork("' + sched[:-2] + '", ' + str(i) + ')')
+    snippets.append(pre_tabs + 'if(test_scheduler("' + sched[:-2] + '", name))')
+    snippets.append('\t\t\tdo_work<' + str(i) + '>();')
 
 
   with open(file, 'r+') as infile:

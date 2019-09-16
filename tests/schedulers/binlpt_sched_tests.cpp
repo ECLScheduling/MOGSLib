@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/binlpt.h>
+#include <model/schedulers/binlpt.h>
 
 #include <sched_tests/workload_base.h>
 
@@ -9,8 +9,8 @@ public:
   using Scheduler = MOGSLib::Scheduler::BinLPT<Context>;
   Scheduler scheduler;
 
-  virtual Schedule call_scheduler() {
-    return scheduler.work();
+  virtual Schedule call_scheduler(Context &c) {
+    return scheduler.work(c);
   }
 };
 

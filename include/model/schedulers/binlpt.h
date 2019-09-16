@@ -1,7 +1,6 @@
 #pragma once
 
-//#include <policies/binlpt.h>
-#include <policies/binlpt_old.h>
+#include <model/policies/binlpt.h>
 
 namespace MOGSLib { namespace Scheduler {
 
@@ -19,18 +18,10 @@ public:
   using Policy = MOGSLib::Policy::BinLPT<MOGSLib::Dependency::WorkloadAware<Id,Load>>;
   using Schedule = typename Policy::Schedule;
   
-  int i = 0;
-
   /// @brief The method to obtain a schedule based on a binlpt policy.
-  auto work() {
-    auto &data = Ctx::input();
-    auto chunks = Ctx::k();
-    auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
-
-    Policy::map(schedule, data.ntasks(), data.task_workloads().data(), data.npus(), data.pu_workloads().data(), chunks);
-    //Policy::map(schedule, data.task_workloads(), data.pu_workloads(), chunks);
-    
-    return schedule;
+  void work(Ctx &ctx) {
+    auto &input = ctx.input();
+    Policy::map(ctx.schedule(), input.task_workloads(), input.pu_workloads(), ctx.nchunks());
   }
 
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <policies/round_robin.h>
+#include <model/policies/round_robin.h>
 
 namespace MOGSLib { namespace Scheduler {
 
@@ -20,12 +20,9 @@ public:
   /**
    *  @brief The method to obtain a task map based on a roundrobin heuristic.
    **/
-  auto work() {
-    auto& data = Ctx::input();
-    auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
-    
-    Policy::map(schedule, data.ntasks(), data.npus());
-    return schedule;
+  void work(Ctx &ctx) {
+    auto &input = ctx.input();
+    Policy::map(ctx.schedule(), input.ntasks(), input.npus());
   }
 
 };

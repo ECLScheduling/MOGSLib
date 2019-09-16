@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <policy_tests/minimal_input_base.h>
-#include <policies/task_pack.h>
+#include <model/policies/task_pack.h>
 
 /**
  *  @class TaskPackPolicyTests

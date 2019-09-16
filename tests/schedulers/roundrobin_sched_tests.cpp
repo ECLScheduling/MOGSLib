@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/round_robin.h>
+#include <model/schedulers/round_robin.h>
 
 #include <sched_tests/minimal_base.h>
 
@@ -9,8 +9,8 @@ public:
   using Scheduler = MOGSLib::Scheduler::RoundRobin<Context>;
   Scheduler scheduler;
 
-  virtual Schedule call_scheduler() {
-    return scheduler.work();
+  virtual Schedule call_scheduler(Context &c) {
+    return scheduler.work(c);
   }
 
   void SetUp() {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <policies/greedy.h>
+#include <model/policies/greedy.h>
 
 namespace MOGSLib { namespace Scheduler {
 
@@ -21,12 +21,9 @@ public:
   /**
    *  @brief The method to obtain a task map based on a greedy heuristic.
    **/
-  auto work() {
-    auto& data = Ctx::input();
-    auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
-    
-    Policy::map(schedule, data.task_workloads(), data.pu_workloads());
-    return schedule;
+  void work(Ctx &ctx) {
+    auto &input = ctx.input();
+    Policy::map(ctx.schedule(), input.task_workloads(), input.pu_workloads());
   }
 };
 

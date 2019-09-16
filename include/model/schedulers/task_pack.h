@@ -1,6 +1,6 @@
 #pragma once
 
-#include <policies/task_pack.h>
+#include <model/policies/task_pack.h>
 
 namespace MOGSLib { namespace Scheduler {
 
@@ -20,13 +20,11 @@ public:
   /**
    *  @brief The method to obtain a task map based on a compact policy.
    **/
-  auto work() {
-    auto& data = Ctx::input();
-    auto packs = Ctx::k();
-    auto schedule = MOGSLib::Output<Schedule>::alloc(data.ntasks());
+  void work(Ctx &ctx) {
+    auto &input = ctx.input();
+    auto packs = ctx.k();
 
-    Policy::map(schedule, data.ntasks(), data.npus(), packs);
-    return schedule;
+    Policy::map(ctx.schedule(), input.ntasks(), input.npus(), packs);
   }
 
 };

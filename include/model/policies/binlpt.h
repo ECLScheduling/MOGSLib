@@ -1,6 +1,6 @@
 #pragma once
 
-#include <dependencies/workload_aware.h>
+#include "dependencies/workload_aware.h"
 
 #include <algorithm>
 #include <numeric>
@@ -50,6 +50,11 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
      *  @brief Compares with another chunk by its load.
      */
     bool operator <(const Chunk &o) const { return load < o.load; }
+
+    /**
+     *  @brief Compares with another chunk by its load.
+     */
+    bool operator <=(const Chunk &o) const { return load <= o.load; }
   };
 
   static void sort(std::vector<Chunk> &a) {
@@ -81,7 +86,7 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
     Id cid = 0;
     while(cid < n-1) {
       auto end = begin;
-      for(++end; end < partial_workload.size(); ++end) // Not interested in the last element, which is the total workload.
+      for(; end < partial_workload.size()-1; ++end) // Not interested in the last element, which is the total workload.
           if(partial_workload[end] - partial_workload[begin] > average_weight)
             break;
       chunks[cid++].update(begin, end, partial_workload[end] - partial_workload[begin]);
@@ -118,11 +123,14 @@ struct BinLPT<MOGSLib::Dependency::WorkloadAware<I,L>> {
         if(pus[i] < pus[pu])
           pu = i;
       // Assign the task to the PU.
-      for(auto i = std::get<0>(chunk.range); i < std::get<1>(chunk.range); ++i)
+      for(auto i = std::get<0>(chunk.range); i < std::get<1>(chunk.range); ++i) {
         map[i] = pu;
+      }
       // Update the load of the PU,
       pus[pu] += chunk.load;
     }
+
+    
   }
 };
 

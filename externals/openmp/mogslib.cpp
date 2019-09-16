@@ -27,12 +27,19 @@ inline void mogslib_call_set_npus(unsigned n) {
  *  @return The task map represented as an array to where the task should execute.
  */
 inline unsigned *mogslib_call_strategy_map() {
-  std::string strategy = ""; //TODO: Change here to add the strategy or call a custom function.
+  
+  std::string strategy = "binlpt"; //TODO: Change here to call another strategy (you may call functions to change it dynamically).
+
   try {
-    return MOGSLib::API::work(strategy).data();
+    
+    MOGSLib::API::work(strategy);
+    return std::get<0>(MOGSLib::API::contexts).scheduleRaw();
+
   } catch (std::string n) {
+    
     std::cout << n << std::endl;
     exit(1);
+    
   }
 }
 
@@ -50,8 +57,8 @@ void mogslib_set_chunksize(unsigned chunksize) {
  *  @brief A function to interface with MOGSLib to register the amount of PEs in OpenMP.
  *  @details A C function to interface with OpenMP and direct the execution flow back to C++.
  */
-void mogslib_set_nPEs(unsigned nPEs) {
-  mogslib_call_set_npus(nPEs);
+void mogslib_set_npus(unsigned npus) {
+  mogslib_call_set_npus(npus);
 }
 
 /**
@@ -60,15 +67,6 @@ void mogslib_set_nPEs(unsigned nPEs) {
  */
 unsigned *mogslib_strategy_map() {
   return mogslib_call_strategy_map();
-}
-
-/**
- * TODO: not properly working just yet.
- * @brief Change to a dynamic rule to make libGOMP keep the schedule saved after a loop.
- * @details This is still not quite working.
- */
-bool mogslib_has_persistent_taskmap() {
-  return false;
 }
 
 }

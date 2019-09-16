@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <schedulers/task_pack.h>
+#include <model/schedulers/task_pack.h>
 
 #include <sched_tests/minimal_base.h>
 
@@ -9,12 +9,12 @@ public:
   using Scheduler = MOGSLib::Scheduler::TaskPack<Context>;
   Scheduler scheduler;
 
-  virtual Schedule call_scheduler() {
-    return scheduler.work();
+  virtual Schedule call_scheduler(Context &c) {
+    return scheduler.work(c);
   }
 
   void packs(const Id &n) {
-    Context::_k = n;
+    ctx._k = n;
   }
 
   void SetUp() {
