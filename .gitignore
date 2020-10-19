@@ -35,6 +35,7 @@ bin/
 # Custom files
 config_script_args
 include/rts/rts_includes.h
+include/mogslig/mogslib.h
 
 #Python directories
 __pycache__/
