@@ -31,10 +31,8 @@ struct API {
   }
 
   inline static void work(const std::string &name) {
-    $SCHED_WORK_SNIPPETS$
-    else {
-      throw std::string("[MOGSLib] Invalid scheduler name.");
-    }
+$SCHED_WORK_SNIPPETS$
+    throw std::string("[MOGSLib] Invalid scheduler name: " + name);
   }
 };
 

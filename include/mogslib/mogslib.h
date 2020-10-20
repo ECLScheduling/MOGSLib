@@ -10,14 +10,15 @@ namespace MOGSLib {  using Traits = LibgompDefault;  }
 #include <abstractions/contexts/libgomp.h>
 
 #include <model/schedulers/binlpt.h>
+#include <model/schedulers/greedy.h>
 
 #include "macros.h"
 
 namespace MOGSLib {
 
 struct API {
-  using Contexts = std::tuple<Ctx(LibGOMP)>;
-  using Schedulers = std::tuple<Sched(BinLPT, 0)>;
+  using Contexts = std::tuple<Ctx(LibGOMP), Ctx(LibGOMP)>;
+  using Schedulers = std::tuple<Sched(BinLPT, 0), Sched(Greedy, 1)>;
 
   static Contexts contexts;
   static Schedulers schedulers;
@@ -32,11 +33,15 @@ struct API {
   }
 
   inline static void work(const std::string &name) {
-    if(test_scheduler("binlpt", name))
-			do_work<0>();
-    else {
-      throw std::string("[MOGSLib] Invalid scheduler name.");
-    }
+	if(test_scheduler("binlpt", name)) {
+		do_work<0>();
+		return;
+	}
+	if(test_scheduler("greedy", name)) {
+		do_work<1>();
+		return;
+	}
+    throw std::string("[MOGSLib] Invalid scheduler name: " + name);
   }
 };
 
