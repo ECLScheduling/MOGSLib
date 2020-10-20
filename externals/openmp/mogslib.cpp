@@ -2,6 +2,7 @@
 #include <mogslib/mogslib.ipp>
 
 #include <iostream>
+#include <cstdlib>
 
 /**
  *  @brief Set the amount of chunks in the OpenMP RTS datastructure.
@@ -28,7 +29,7 @@ inline void mogslib_call_set_npus(unsigned n) {
  */
 inline unsigned *mogslib_call_strategy_map() {
   
-  std::string strategy = "binlpt"; //TODO: Change here to call another strategy (you may call functions to change it dynamically).
+  std::string strategy = std::getenv("MOGSLIB_SCHEDULE"); //TODO: Change here to call another strategy (you may call functions to change it dynamically).
 
   try {
     
