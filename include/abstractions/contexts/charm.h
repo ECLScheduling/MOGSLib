@@ -43,6 +43,8 @@ public:
     update_pus();
     return _input;
   }
+
+  inline auto nchunks() { return _input.npus()*4; }
 };
 
 }}
